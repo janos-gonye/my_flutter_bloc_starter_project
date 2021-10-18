@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
+import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
 import 'package:my_flutter_bloc_starter_project/home/views/home_page.dart';
 
 class MyStartProjectApp extends StatelessWidget {
@@ -22,8 +22,11 @@ class AppView extends StatefulWidget {
 class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomePage(),
+    return MaterialApp(
+      routes: {
+        '/': (context) => const HomePage(),
+        '/app-settings': (context) => const AppSettingsPage(),
+      },
     );
   }
 }

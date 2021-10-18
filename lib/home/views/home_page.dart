@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -16,8 +18,10 @@ class HomePage extends StatelessWidget {
         child: Row(
           children: [
             ElevatedButton(
-              onPressed: null,
-              child: Text('Navigate to App Settings'),
+              onPressed: () {
+                Navigator.of(context).pushNamed(AppSettingsPage.routeName);
+              },
+              child: const Text('Navigate to App Settings'),
             ),
           ],
         ),

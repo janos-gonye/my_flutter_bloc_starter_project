@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
 import 'package:my_flutter_bloc_starter_project/home/views/home_page.dart';
 
 void main() {
@@ -32,6 +33,16 @@ void main() {
         (WidgetTester tester) async {
       await _pumpMaterialAppWithHomePage(tester);
       expect(_findNavigatetoAppSettingsButton(tester), findsOneWidget);
+    });
+
+    testWidgets("navigates to 'AppSettingsPage' after pushed",
+        (WidgetTester tester) async {
+      await _pumpMaterialAppWithHomePage(tester);
+      final finder = _findNavigatetoAppSettingsButton(tester);
+      await tester.tap(finder);
+      await tester.pumpAndSettle();
+      expect(find.byType(AppSettingsPage), findsOneWidget);
+      expect(find.byType(HomePage), findsNothing);
     });
   });
 }
