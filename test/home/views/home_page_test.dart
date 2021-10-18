@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
-import 'package:my_flutter_bloc_starter_project/home/views/home_page.dart';
+import 'package:my_flutter_bloc_starter_project/home/home.dart';
 
 void main() {
   Future<void> _pumpMaterialAppWithHomePage(WidgetTester tester) =>
