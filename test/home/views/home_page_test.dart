@@ -10,8 +10,8 @@ void main() {
       tester.pumpWidget(const MaterialApp(home: HomePage()));
 
   group('HomePage', () {
-    test("has a route named '/home'", () {
-      expect(HomePage.routeName, '/home');
+    test("has a route named '/'", () {
+      expect(HomePage.routeName, '/');
     });
 
     testWidgets("displays an 'AppBar' with title 'Home'",

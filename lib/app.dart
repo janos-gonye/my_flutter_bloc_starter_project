@@ -24,8 +24,8 @@ class _AppViewState extends State<AppView> {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/': (context) => const HomePage(),
-        '/app-settings': (context) => const AppSettingsPage(),
+        HomePage.routeName: (context) => const HomePage(),
+        AppSettingsPage.routeName: (context) => const AppSettingsPage(),
       },
     );
   }
