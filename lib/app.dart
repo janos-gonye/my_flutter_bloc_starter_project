@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import 'package:my_flutter_bloc_starter_project/home/views/home_page.dart';
+
 class MyStartProjectApp extends StatelessWidget {
   const MyStartProjectApp({Key? key}) : super(key: key);
 
@@ -20,14 +22,8 @@ class AppView extends StatefulWidget {
 class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      builder: (BuildContext context, Widget? child) {
-        return const Scaffold(
-          body: Center(
-            child: Text('Hello world'),
-          ),
-        );
-      },
+    return const MaterialApp(
+      home: HomePage(),
     );
   }
 }
