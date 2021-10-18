@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:my_flutter_bloc_starter_project/app.dart';
 import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
 import 'package:my_flutter_bloc_starter_project/home/home.dart';
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
 
 void main() {
   Future<void> _pumpMaterialAppWithHomePage(WidgetTester tester) =>
-      tester.pumpWidget(const MaterialApp(home: HomePage()));
+      tester.pumpWidget(const AppView());
 
   group('HomePage', () {
     test("has a route named '/'", () {
