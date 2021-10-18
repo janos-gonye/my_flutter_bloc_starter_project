@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class AppSettingsPage extends StatelessWidget {
@@ -7,8 +8,13 @@ class AppSettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('To be continued...'),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Application Settings'),
+      ),
+      body: const Center(
+        child: Text('To be continued'),
+      ),
     );
   }
 }
