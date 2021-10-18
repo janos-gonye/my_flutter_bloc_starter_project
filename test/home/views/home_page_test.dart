@@ -23,7 +23,7 @@ void main() {
   });
 
   group('HomePage/Navigate to App Settings Button', () {
-    Finder _findNavigatetoAppSettingsButton(WidgetTester tester) {
+    Finder _findNavigatetoAppSettingsButton() {
       return find.ancestor(
         of: find.text('Navigate to App Settings'),
         matching: find.byType(ElevatedButton),
@@ -33,13 +33,13 @@ void main() {
     testWidgets("is displayed with text 'Navigate to App Settings'",
         (WidgetTester tester) async {
       await _pumpMaterialAppWithHomePage(tester);
-      expect(_findNavigatetoAppSettingsButton(tester), findsOneWidget);
+      expect(_findNavigatetoAppSettingsButton(), findsOneWidget);
     });
 
     testWidgets("navigates to 'AppSettingsPage' after pushed",
         (WidgetTester tester) async {
       await _pumpMaterialAppWithHomePage(tester);
-      final finder = _findNavigatetoAppSettingsButton(tester);
+      final finder = _findNavigatetoAppSettingsButton();
       await tester.tap(finder);
       await tester.pumpAndSettle();
       expect(find.byType(AppSettingsPage), findsOneWidget);
@@ -48,7 +48,7 @@ void main() {
   });
 
   group('HomePage/Navigate to Login Page Button', () {
-    Finder _findNavigatetoLoginButton(WidgetTester tester) {
+    Finder _findNavigatetoLoginButton() {
       return find.ancestor(
         of: find.text('Navigate to Login Page'),
         matching: find.byType(ElevatedButton),
@@ -58,17 +58,17 @@ void main() {
     testWidgets("is displayed with text 'Navigate to Login Page'",
         (WidgetTester tester) async {
       await _pumpMaterialAppWithHomePage(tester);
-      expect(_findNavigatetoLoginButton(tester), findsOneWidget);
+      expect(_findNavigatetoLoginButton(), findsOneWidget);
     });
 
     testWidgets("navigates to 'LoginPage' after pushed",
         (WidgetTester tester) async {
       await _pumpMaterialAppWithHomePage(tester);
-      final finder = _findNavigatetoLoginButton(tester);
+      final finder = _findNavigatetoLoginButton();
       await tester.tap(finder);
       await tester.pumpAndSettle();
-      expect(find.byType(AppSettingsPage), findsOneWidget);
-      expect(find.byType(LoginPage), findsNothing);
+      expect(find.byType(LoginPage), findsOneWidget);
+      expect(find.byType(HomePage), findsNothing);
     });
   });
 }
