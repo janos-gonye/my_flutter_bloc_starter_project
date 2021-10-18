@@ -1,0 +1,12 @@
+{
+    "saveAndRun": {
+    "commands": [
+      {
+        "match": ".*",
+        "cmd": "flutter pub run import_sorter:main lib\/* test\/* packages\/* --no-comments",
+        "useShortcut": false,
+        "silent": false
+      }
+    ]
+  }
+}

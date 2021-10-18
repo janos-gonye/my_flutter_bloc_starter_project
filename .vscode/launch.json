@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "passman_app",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "passman_app (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "authentication_repository",
+            "cwd": "packages/authentication_repository",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "user_repository",
+            "cwd": "packages/user_repository",
+            "request": "launch",
+            "type": "dart"
+        }
+    ]
+}
