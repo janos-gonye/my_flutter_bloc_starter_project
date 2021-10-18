@@ -10,6 +10,16 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Home'),
       ),
+      body: Center(
+        child: Row(
+          children: [
+            ElevatedButton(
+              onPressed: null,
+              child: Text('Navigate to App Settings'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
