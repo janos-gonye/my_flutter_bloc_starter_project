@@ -9,7 +9,7 @@ void main() {
       tester.pumpWidget(const MaterialApp(home: HomePage()));
 
   group('HomePage', () {
-    test("has a route name '/home'", () {
+    test("has a route named '/home'", () {
       expect(HomePage.routeName, '/home');
     });
 
