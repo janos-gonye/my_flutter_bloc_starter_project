@@ -48,11 +48,21 @@ class _HostnameInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      onChanged: (username) {},
-      decoration: const InputDecoration(
-        labelText: 'hostname',
-      ),
+    return BlocBuilder<AppSettingsBloc, AppSettingsState>(
+      buildWhen: (previous, current) => previous.hostname != current.hostname,
+      builder: (context, state) {
+        return TextFormField(
+          initialValue: state.hostname.value,
+          onChanged: (hostname) {
+            BlocProvider.of<AppSettingsBloc>(context)
+                .add(AppSettingsHostnameUpdated(hostname));
+          },
+          decoration: InputDecoration(
+            labelText: 'hostname',
+            errorText: state.hostname.errorMessage,
+          ),
+        );
+      },
     );
   }
 }
