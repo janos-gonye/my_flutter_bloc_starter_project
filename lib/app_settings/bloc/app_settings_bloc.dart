@@ -24,7 +24,6 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     Emitter<AppSettingsState> emit,
   ) async {
     emit(state.copyWith(fetching: true));
-    await Future.delayed(const Duration(seconds: 2));
     final protocol = await appSettingsRepository.protocol;
     final hostname = await appSettingsRepository.hostname;
     final port = await appSettingsRepository.port;

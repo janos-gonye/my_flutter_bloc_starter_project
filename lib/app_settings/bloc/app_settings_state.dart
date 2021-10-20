@@ -7,7 +7,7 @@ class AppSettingsState extends Equatable {
     this.hostname = const Hostname.pure(),
     this.port = const Port.pure(),
     this.fetching = false,
-  }) : super();
+  });
 
   final FormzStatus formStatus;
   final Protocol protocol;
