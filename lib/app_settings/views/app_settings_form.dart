@@ -72,15 +72,25 @@ class _PortInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      onChanged: (username) {},
-      decoration: const InputDecoration(
-        labelText: 'port',
-      ),
-      keyboardType: TextInputType.number,
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-      ],
+    return BlocBuilder<AppSettingsBloc, AppSettingsState>(
+      buildWhen: (previous, current) => previous.port != current.port,
+      builder: (context, state) {
+        return TextFormField(
+          initialValue: state.port.value,
+          onChanged: (port) {
+            BlocProvider.of<AppSettingsBloc>(context)
+                .add(AppSettingsPortUpdated(port));
+          },
+          decoration: InputDecoration(
+            labelText: 'port',
+            errorText: state.port.errorMessage,
+          ),
+          keyboardType: TextInputType.number,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+          ],
+        );
+      },
     );
   }
 }
