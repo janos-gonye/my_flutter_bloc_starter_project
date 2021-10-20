@@ -29,16 +29,26 @@ class _ProtocolInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      onChanged: (protocol) {},
-      value: 'http',
-      items: <String>['http', 'https']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
+    return BlocBuilder<AppSettingsBloc, AppSettingsState>(
+      buildWhen: (previous, current) => previous.protocol != current.protocol,
+      builder: (context, state) {
+        return DropdownButton<String>(
+          onChanged: (protocol) {
+            if (protocol != null) {
+              BlocProvider.of<AppSettingsBloc>(context)
+                  .add(AppSettingsProtocolUpdated(protocol));
+            }
+          },
+          value: state.protocol.value,
+          items: <String>['http', 'https']
+              .map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
         );
-      }).toList(),
+      },
     );
   }
 }
