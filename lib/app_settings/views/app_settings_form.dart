@@ -100,9 +100,22 @@ class _SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {},
-      child: const Text('Save'),
+    return BlocBuilder<AppSettingsBloc, AppSettingsState>(
+      buildWhen: (previous, current) =>
+          previous.formStatus != current.formStatus,
+      builder: (context, state) {
+        return ElevatedButton(
+          onPressed: state.fetching ||
+                  state.formStatus.isSubmissionInProgress ||
+                  state.formStatus.isInvalid
+              ? null
+              : () {
+                  BlocProvider.of<AppSettingsBloc>(context)
+                      .add(const AppSettingsFormSubmitted());
+                },
+          child: const Text('Save'),
+        );
+      },
     );
   }
 }
