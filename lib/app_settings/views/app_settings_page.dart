@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import 'package:my_flutter_bloc_starter_project/app_settings/views/app_settings_form.dart';
+
 class AppSettingsPage extends StatelessWidget {
   const AppSettingsPage({Key? key}) : super(key: key);
 
@@ -12,8 +14,9 @@ class AppSettingsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Application Settings'),
       ),
-      body: const Center(
-        child: Text('To be continued'),
+      body: const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: AppSettingsForm(),
       ),
     );
   }
