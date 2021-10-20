@@ -1,15 +1,32 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
 import 'package:my_flutter_bloc_starter_project/home/home.dart';
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
 
 class MyStarterProjectApp extends StatelessWidget {
-  const MyStarterProjectApp({Key? key}) : super(key: key);
+  const MyStarterProjectApp({
+    Key? key,
+    required this.appSettingsRepository,
+  }) : super(key: key);
+
+  final AppSettingsRepository appSettingsRepository;
 
   @override
   Widget build(BuildContext context) {
-    return const AppView();
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(
+          create: (context) => appSettingsRepository,
+        ),
+      ],
+      child: MultiBlocProvider(
+        providers: const [],
+        child: const AppView(),
+      ),
+    );
   }
 }
 
