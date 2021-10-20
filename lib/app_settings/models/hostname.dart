@@ -11,7 +11,8 @@ class Hostname extends FormzInput<String, HostnameValidationError> {
   HostnameValidationError? validator(String? value) {
     if (value == null || value.isEmpty) {
       return HostnameValidationError.empty;
-    } else if (isFQDN(value, {'require_tld': false})) {
+    }
+    if (isFQDN(value, {'require_tld': false}) == false) {
       return HostnameValidationError.invalid;
     }
   }
