@@ -7,6 +7,7 @@ import 'package:my_flutter_bloc_starter_project/app_settings/repositories/app_se
 
 void main() {
   runApp(const MyStarterProjectApp(
-    appSettingsRepository: AppSettingsRepository(FlutterSecureStorage()),
+    appSettingsRepository:
+        AppSettingsRepository(secureStorage: FlutterSecureStorage()),
   ));
 }

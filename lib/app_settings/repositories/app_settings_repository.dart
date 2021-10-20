@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
 
 class AppSettingsRepository {
-  const AppSettingsRepository(this.secureStorage) : super();
+  const AppSettingsRepository({required this.secureStorage}) : super();
 
   final FlutterSecureStorage secureStorage;
 

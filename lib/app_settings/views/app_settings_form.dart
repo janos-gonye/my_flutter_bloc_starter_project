@@ -67,6 +67,9 @@ class _PortInput extends StatelessWidget {
         labelText: 'port',
       ),
       keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+      ],
     );
   }
 }
