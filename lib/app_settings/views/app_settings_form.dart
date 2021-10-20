@@ -2,24 +2,61 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-class AppSettingsForm extends StatelessWidget {
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:formz/formz.dart';
+
+import 'package:my_flutter_bloc_starter_project/app_settings/bloc/app_settings_bloc.dart';
+
+class AppSettingsForm extends StatefulWidget {
   const AppSettingsForm({Key? key}) : super(key: key);
 
   @override
+  State<AppSettingsForm> createState() => _AppSettingsFormState();
+}
+
+class _AppSettingsFormState extends State<AppSettingsForm> {
+  @override
+  void initState() {
+    BlocProvider.of<AppSettingsBloc>(context)
+        .add(const AppSettingsInitialized());
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text('Protocol: '),
-            _ProtocolInput(),
-          ],
-        ),
-        const _HostnameInput(),
-        const _PortInput(),
-        const _SubmitButton(),
-      ],
+    return BlocListener<AppSettingsBloc, AppSettingsState>(
+      listenWhen: (previous, current) =>
+          previous.formStatus != current.formStatus ||
+          previous.fetching != current.fetching,
+      listener: (context, state) {
+        if (state.fetching ||
+            state.formStatus == FormzStatus.submissionInProgress) {
+          EasyLoading.show(
+              status: 'loading...', maskType: EasyLoadingMaskType.clear);
+        } else {
+          EasyLoading.dismiss();
+        }
+        if (state.formStatus.isSubmissionSuccess) {
+          EasyLoading.showSuccess('Settings saved');
+        } else if (state.formStatus.isSubmissionFailure) {
+          EasyLoading.showError('Saving settings failed');
+        }
+      },
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text('Protocol: '),
+              _ProtocolInput(),
+            ],
+          ),
+          const _HostnameInput(),
+          const _PortInput(),
+          const _SubmitButton(),
+        ],
+      ),
     );
   }
 }
