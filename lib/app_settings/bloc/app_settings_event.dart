@@ -17,7 +17,7 @@ class AppSettingsInitialized extends AppSettingsEvent {
 class AppSettingsProtocolUpdated extends AppSettingsEvent {
   const AppSettingsProtocolUpdated(this.protocol);
 
-  final Protocol protocol;
+  final String protocol;
 
   @override
   List<Object> get props => [protocol];
@@ -26,7 +26,7 @@ class AppSettingsProtocolUpdated extends AppSettingsEvent {
 class AppSettingsHostnameUpdated extends AppSettingsEvent {
   const AppSettingsHostnameUpdated(this.hostname);
 
-  final Hostname hostname;
+  final String hostname;
 
   @override
   List<Object> get props => [hostname];
@@ -35,7 +35,7 @@ class AppSettingsHostnameUpdated extends AppSettingsEvent {
 class AppSettingsPortUpdated extends AppSettingsEvent {
   const AppSettingsPortUpdated(this.port);
 
-  final Port port;
+  final String port;
 
   @override
   List<Object> get props => [port];
