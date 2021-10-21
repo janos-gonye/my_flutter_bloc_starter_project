@@ -18,20 +18,18 @@ class AppSettingsForm extends StatefulWidget {
 class _AppSettingsFormState extends State<AppSettingsForm> {
   @override
   void initState() {
+    super.initState();
     BlocProvider.of<AppSettingsBloc>(context)
         .add(const AppSettingsInitialized());
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<AppSettingsBloc, AppSettingsState>(
       listenWhen: (previous, current) =>
-          previous.formStatus != current.formStatus ||
-          previous.fetching != current.fetching,
+          previous.formStatus != current.formStatus,
       listener: (context, state) {
-        if (state.fetching ||
-            state.formStatus == FormzStatus.submissionInProgress) {
+        if (state.formStatus == FormzStatus.submissionInProgress) {
           EasyLoading.show(
               status: 'loading...', maskType: EasyLoadingMaskType.clear);
         } else {
@@ -43,19 +41,28 @@ class _AppSettingsFormState extends State<AppSettingsForm> {
           EasyLoading.showError('Saving settings failed');
         }
       },
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text('Protocol: '),
-              _ProtocolInput(),
-            ],
-          ),
-          const _HostnameInput(),
-          const _PortInput(),
-          const _SubmitButton(),
-        ],
+      child: BlocBuilder<AppSettingsBloc, AppSettingsState>(
+        buildWhen: (previous, current) => previous.fetching != current.fetching,
+        builder: (context, state) {
+          if (state.fetching) {
+            return const SizedBox();
+          } else {
+            return Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text('Protocol: '),
+                    _ProtocolInput(),
+                  ],
+                ),
+                const _HostnameInput(),
+                const _PortInput(),
+                const _SubmitButton(),
+              ],
+            );
+          }
+        },
       ),
     );
   }

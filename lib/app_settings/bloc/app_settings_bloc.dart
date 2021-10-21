@@ -9,7 +9,7 @@ part 'app_settings_state.dart';
 
 class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
   AppSettingsBloc({required this.appSettingsRepository})
-      : super(const AppSettingsState()) {
+      : super(const AppSettingsState(fetching: true)) {
     on<AppSettingsInitialized>(_onInitialized);
     on<AppSettingsProtocolUpdated>(_onProtocolChanged);
     on<AppSettingsHostnameUpdated>(_onHostnameChanged);
