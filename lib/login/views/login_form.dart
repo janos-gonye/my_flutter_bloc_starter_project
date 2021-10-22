@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:formz/formz.dart';
 
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
+import 'package:my_flutter_bloc_starter_project/user/views/user_page.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -16,22 +18,26 @@ class LoginForm extends StatelessWidget {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              const SnackBar(content: Text('Login Failure')),
+              const SnackBar(
+                content: Text('Login Failure'),
+              ),
             );
+        } else if (state.status.isSubmissionInProgress) {
+          EasyLoading.show(
+              status: 'loading...', maskType: EasyLoadingMaskType.clear);
+        } else if (state.status.isSubmissionSuccess) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            UserPage.routeName,
+            ModalRoute.withName(UserPage.routeName),
+          );
         }
       },
-      child: Align(
-        alignment: const Alignment(0, -1 / 3),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _UsernameInput(),
-            const Padding(padding: EdgeInsets.all(12)),
-            _PasswordInput(),
-            const Padding(padding: EdgeInsets.all(12)),
-            _LoginButton(),
-          ],
-        ),
+      child: Column(
+        children: [
+          _UsernameInput(),
+          _PasswordInput(),
+          _LoginButton(),
+        ],
       ),
     );
   }
@@ -44,7 +50,6 @@ class _UsernameInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.username != current.username,
       builder: (context, state) {
         return TextField(
-          key: const Key('loginForm_usernameInput_textField'),
           onChanged: (username) => BlocProvider.of<LoginBloc>(context)
               .add(LoginUsernameChanged(username)),
           decoration: InputDecoration(
@@ -64,7 +69,6 @@ class _PasswordInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
         return TextField(
-          key: const Key('loginForm_passwordInput_textField'),
           onChanged: (password) => BlocProvider.of<LoginBloc>(context)
               .add(LoginPasswordChanged(password)),
           obscureText: true,
@@ -84,17 +88,16 @@ class _LoginButton extends StatelessWidget {
     return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
-        return state.status.isSubmissionInProgress
-            ? const CircularProgressIndicator()
-            : ElevatedButton(
-                child: const Text('Login'),
-                onPressed: state.status.isValidated
-                    ? () {
-                        BlocProvider.of<LoginBloc>(context)
-                            .add(const LoginSubmitted());
-                      }
-                    : null,
-              );
+        return ElevatedButton(
+          child: const Text('Login'),
+          onPressed:
+              state.status.isValidated && !state.status.isSubmissionInProgress
+                  ? () {
+                      BlocProvider.of<LoginBloc>(context)
+                          .add(const LoginSubmitted());
+                    }
+                  : null,
+        );
       },
     );
   }

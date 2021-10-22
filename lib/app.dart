@@ -9,6 +9,7 @@ import 'package:my_flutter_bloc_starter_project/home/home.dart';
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
 import 'package:my_flutter_bloc_starter_project/splash/splash.dart';
 import 'package:my_flutter_bloc_starter_project/user/user.dart';
+import 'package:my_flutter_bloc_starter_project/user/views/user_page.dart';
 
 class MyStarterProjectApp extends StatelessWidget {
   const MyStarterProjectApp({
@@ -45,7 +46,11 @@ class MyStarterProjectApp extends StatelessWidget {
               authenticationRepository: authenticationRepository,
               userRepository: userRepository,
             ),
-          )
+          ),
+          BlocProvider(
+            create: (context) =>
+                LoginBloc(authenticationRepository: authenticationRepository),
+          ),
         ],
         child: const AppView(),
       ),
@@ -64,12 +69,30 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      builder: EasyLoading.init(),
       routes: {
         HomePage.routeName: (context) => const HomePage(),
         AppSettingsPage.routeName: (context) => const AppSettingsPage(),
         LoginPage.routeName: (context) => const LoginPage(),
         SplashPage.routeName: (context) => const SplashPage(),
+        UserPage.routeName: (context) => const UserPage(),
+      },
+      builder: (context, child) {
+        EasyLoading.init();
+        return BlocListener<AuthenticationBloc, AuthenticationState>(
+          listener: (context, state) {
+            switch (state.status) {
+              case AuthenticationStatus.authenticated:
+                Navigator.of(context).pushNamed(UserPage.routeName);
+                break;
+              case AuthenticationStatus.unauthenticated:
+                Navigator.of(context).pushNamed(HomePage.routeName);
+                break;
+              default:
+                break;
+            }
+          },
+          child: child,
+        );
       },
     );
   }

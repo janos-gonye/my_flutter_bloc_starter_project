@@ -8,14 +8,16 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          CircularProgressIndicator(),
-          SizedBox(height: 10),
-          Text('Loading...'),
-        ],
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            CircularProgressIndicator(),
+            SizedBox(height: 10),
+            Text('Loading...'),
+          ],
+        ),
       ),
     );
   }

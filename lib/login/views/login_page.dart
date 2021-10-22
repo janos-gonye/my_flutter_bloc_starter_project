@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import 'package:my_flutter_bloc_starter_project/login/views/login_form.dart';
+
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -13,7 +15,10 @@ class LoginPage extends StatelessWidget {
         title: const Text('Login'),
       ),
       body: const Center(
-        child: Text('To be continued'),
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: LoginForm(),
+        ),
       ),
     );
   }
