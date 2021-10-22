@@ -44,4 +44,18 @@ class AppSettingsRepository {
     await secureStorage.write(key: 'hostname', value: hostname.value);
     await secureStorage.write(key: 'port', value: port.value);
   }
+
+  Future<Uri?> get serverUri async {
+    final _protocol = await protocol;
+    final _hostname = await hostname;
+    final _port = await port;
+    if (_protocol.invalid || _hostname.invalid || _port.invalid) {
+      return null;
+    }
+    return Uri(
+      scheme: _protocol.value,
+      host: _hostname.value,
+      port: int.parse(_port.value),
+    );
+  }
 }
