@@ -25,11 +25,6 @@ class LoginForm extends StatelessWidget {
         } else if (state.status.isSubmissionInProgress) {
           EasyLoading.show(
               status: 'loading...', maskType: EasyLoadingMaskType.clear);
-        } else if (state.status.isSubmissionSuccess) {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            UserPage.routeName,
-            ModalRoute.withName(UserPage.routeName),
-          );
         }
       },
       child: Column(

@@ -7,6 +7,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:formz/formz.dart';
 
 import 'package:my_flutter_bloc_starter_project/app_settings/bloc/app_settings_bloc.dart';
+import 'package:my_flutter_bloc_starter_project/home/views/home_page.dart';
 
 class AppSettingsForm extends StatefulWidget {
   const AppSettingsForm({Key? key}) : super(key: key);
@@ -37,6 +38,10 @@ class _AppSettingsFormState extends State<AppSettingsForm> {
         }
         if (state.formStatus.isSubmissionSuccess) {
           EasyLoading.showSuccess('Settings saved');
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            HomePage.routeName,
+            ModalRoute.withName(HomePage.routeName),
+          );
         } else if (state.formStatus.isSubmissionFailure) {
           EasyLoading.showError('Saving settings failed');
         }

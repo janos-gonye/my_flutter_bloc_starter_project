@@ -66,9 +66,15 @@ class AppView extends StatefulWidget {
 }
 
 class _AppViewState extends State<AppView> {
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
+  NavigatorState get _navigator => _navigatorKey.currentState!;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: _navigatorKey,
+      initialRoute: SplashPage.routeName,
       routes: {
         HomePage.routeName: (context) => const HomePage(),
         AppSettingsPage.routeName: (context) => const AppSettingsPage(),
@@ -77,15 +83,20 @@ class _AppViewState extends State<AppView> {
         UserPage.routeName: (context) => const UserPage(),
       },
       builder: (context, child) {
-        EasyLoading.init();
         return BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             switch (state.status) {
               case AuthenticationStatus.authenticated:
-                Navigator.of(context).pushNamed(UserPage.routeName);
+                _navigator.pushNamedAndRemoveUntil(
+                  UserPage.routeName,
+                  (route) => false,
+                );
                 break;
               case AuthenticationStatus.unauthenticated:
-                Navigator.of(context).pushNamed(HomePage.routeName);
+                _navigator.pushNamedAndRemoveUntil(
+                  HomePage.routeName,
+                  (route) => false,
+                );
                 break;
               default:
                 break;
