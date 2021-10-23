@@ -10,8 +10,9 @@ import 'package:my_flutter_bloc_starter_project/user/user.dart';
 void main() {
   runApp(
     MyStarterProjectApp(
-      appSettingsRepository:
-          const AppSettingsRepository(secureStorage: FlutterSecureStorage()),
+      appSettingsRepository: const AppSettingsRepository(
+        secureStorage: FlutterSecureStorage(),
+      ),
       authenticationRepository: AuthenticationRepository(),
       userRepository: UserRepository(),
     ),

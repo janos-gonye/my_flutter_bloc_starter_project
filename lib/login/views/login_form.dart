@@ -5,7 +5,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:formz/formz.dart';
 
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
-import 'package:my_flutter_bloc_starter_project/user/views/user_page.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({Key? key}) : super(key: key);

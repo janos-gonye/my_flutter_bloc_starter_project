@@ -82,29 +82,32 @@ class _AppViewState extends State<AppView> {
         SplashPage.routeName: (context) => const SplashPage(),
         UserPage.routeName: (context) => const UserPage(),
       },
-      builder: (context, child) {
-        return BlocListener<AuthenticationBloc, AuthenticationState>(
-          listener: (context, state) {
-            switch (state.status) {
-              case AuthenticationStatus.authenticated:
-                _navigator.pushNamedAndRemoveUntil(
-                  UserPage.routeName,
-                  (route) => false,
-                );
-                break;
-              case AuthenticationStatus.unauthenticated:
-                _navigator.pushNamedAndRemoveUntil(
-                  HomePage.routeName,
-                  (route) => false,
-                );
-                break;
-              default:
-                break;
-            }
-          },
-          child: child,
-        );
-      },
+      builder: EasyLoading.init(
+        builder: (context, child) {
+          return BlocListener<AuthenticationBloc, AuthenticationState>(
+            listener: (context, state) {
+              EasyLoading.dismiss();
+              switch (state.status) {
+                case AuthenticationStatus.authenticated:
+                  _navigator.pushNamedAndRemoveUntil(
+                    UserPage.routeName,
+                    (route) => false,
+                  );
+                  break;
+                case AuthenticationStatus.unauthenticated:
+                  _navigator.pushNamedAndRemoveUntil(
+                    HomePage.routeName,
+                    (route) => false,
+                  );
+                  break;
+                default:
+                  break;
+              }
+            },
+            child: child,
+          );
+        },
+      ),
     );
   }
 }
