@@ -1,6 +1,11 @@
 import 'package:formz/formz.dart';
 
-enum UsernameValidationError { empty, invalidTooLong, invalidChars }
+enum UsernameValidationError {
+  empty,
+  invalidTooShort,
+  invalidTooLong,
+  invalidChars
+}
 
 class Username extends FormzInput<String, UsernameValidationError> {
   const Username.pure() : super.pure('');
@@ -14,6 +19,7 @@ class Username extends FormzInput<String, UsernameValidationError> {
     if (value.length >= 150) {
       return UsernameValidationError.invalidTooLong;
     }
+    if (value.length <= 8) return UsernameValidationError.invalidTooShort;
     if (RegExp(r'^[A-Za-z0-9@.+-_]+$').hasMatch(value) == false) {
       return UsernameValidationError.invalidChars;
     }
@@ -21,8 +27,11 @@ class Username extends FormzInput<String, UsernameValidationError> {
 
   String? get errorMessage {
     if (error == UsernameValidationError.empty) return 'Empty username';
+    if (error == UsernameValidationError.invalidTooShort) {
+      return '8 characters or more';
+    }
     if (error == UsernameValidationError.invalidTooLong) {
-      return 'Max 150 characters of fewer';
+      return '150 characters or fewer';
     }
     if (error == UsernameValidationError.invalidChars) {
       return 'Letters, digits and @.+-_ only';
