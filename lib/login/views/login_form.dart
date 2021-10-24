@@ -48,7 +48,7 @@ class _UsernameInput extends StatelessWidget {
               .add(LoginUsernameChanged(username)),
           decoration: InputDecoration(
             labelText: 'username',
-            errorText: state.username.invalid ? 'invalid username' : null,
+            errorText: state.username.errorMessage,
           ),
         );
       },
@@ -68,7 +68,7 @@ class _PasswordInput extends StatelessWidget {
           obscureText: true,
           decoration: InputDecoration(
             labelText: 'password',
-            errorText: state.password.invalid ? 'invalid password' : null,
+            errorText: state.password.errorMessage,
           ),
         );
       },
