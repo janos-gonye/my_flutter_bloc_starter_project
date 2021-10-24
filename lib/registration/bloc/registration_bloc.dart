@@ -66,11 +66,6 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
           email: state.email,
         );
         emit(state.copyWith(status: FormzStatus.submissionSuccess));
-        // Clear the form
-        await Future.delayed(
-          const Duration(seconds: 1),
-          () => emit(const RegistrationState()),
-        );
       } catch (_) {
         emit(state.copyWith(status: FormzStatus.submissionFailure));
       }
