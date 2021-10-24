@@ -17,11 +17,13 @@ class MyStarterProjectApp extends StatelessWidget {
     required this.appSettingsRepository,
     required this.authenticationRepository,
     required this.userRepository,
+    required this.registrationRepository,
   }) : super(key: key);
 
   final AppSettingsRepository appSettingsRepository;
   final AuthenticationRepository authenticationRepository;
   final UserRepository userRepository;
+  final RegistrationRepository registrationRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,9 @@ class MyStarterProjectApp extends StatelessWidget {
         ),
         RepositoryProvider(
           create: (context) => authenticationRepository,
+        ),
+        RepositoryProvider(
+          create: (context) => registrationRepository,
         ),
       ],
       child: MultiBlocProvider(
