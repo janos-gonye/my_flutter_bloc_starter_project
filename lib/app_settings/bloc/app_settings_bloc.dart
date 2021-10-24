@@ -87,6 +87,11 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
       emit(state.copyWith(formStatus: FormzStatus.submissionSuccess));
     } catch (_) {
       emit(state.copyWith(formStatus: FormzStatus.submissionFailure));
+    } finally {
+      await Future.delayed(
+        const Duration(seconds: 1),
+        () => emit(const AppSettingsState()),
+      );
     }
   }
 }
