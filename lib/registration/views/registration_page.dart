@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
+
 class RegistrationPage extends StatelessWidget {
   const RegistrationPage({Key? key}) : super(key: key);
 
@@ -14,7 +16,7 @@ class RegistrationPage extends StatelessWidget {
       ),
       body: const Padding(
         padding: EdgeInsets.all(8.0),
-        child: Text('Registration Page'),
+        child: RegistrationForm(),
       ),
     );
   }

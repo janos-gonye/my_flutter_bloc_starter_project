@@ -19,7 +19,7 @@ class Username extends FormzInput<String, UsernameValidationError> {
     if (value.length >= 150) {
       return UsernameValidationError.invalidTooLong;
     }
-    if (value.length <= 8) return UsernameValidationError.invalidTooShort;
+    if (value.length <= 3) return UsernameValidationError.invalidTooShort;
     if (RegExp(r'^[A-Za-z0-9@.+-_]+$').hasMatch(value) == false) {
       return UsernameValidationError.invalidChars;
     }

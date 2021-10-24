@@ -7,7 +7,6 @@ import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
 import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
 import 'package:my_flutter_bloc_starter_project/home/home.dart';
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
-import 'package:my_flutter_bloc_starter_project/registration/bloc/registration_bloc.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
 import 'package:my_flutter_bloc_starter_project/splash/splash.dart';
 import 'package:my_flutter_bloc_starter_project/user/user.dart';
