@@ -14,16 +14,12 @@ class LoginForm extends StatelessWidget {
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              const SnackBar(
-                content: Text('Login Failure'),
-              ),
-            );
+          EasyLoading.showError('Login Failure');
         } else if (state.status.isSubmissionInProgress) {
           EasyLoading.show(
               status: 'loading...', maskType: EasyLoadingMaskType.clear);
+        } else {
+          EasyLoading.dismiss();
         }
       },
       child: Column(

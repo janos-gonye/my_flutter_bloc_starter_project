@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
-import '';
 
 part 'registration_event.dart';
 part 'registration_state.dart';

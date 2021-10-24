@@ -14,19 +14,14 @@ class RegistrationForm extends StatelessWidget {
     return BlocListener<RegistrationBloc, RegistrationState>(
       listener: (context, state) {
         if (state.status.isSubmissionFailure) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              const SnackBar(
-                content: Text('Registration Failure'),
-              ),
-            );
-        }
-        if (state.status.isSubmissionInProgress) {
+          EasyLoading.showError('Registration Failure');
+        } else if (state.status.isSubmissionInProgress) {
           EasyLoading.show(
             status: 'loading...',
             maskType: EasyLoadingMaskType.clear,
           );
+        } else if (state.status.isSubmissionSuccess) {
+          // TODO:
         } else {
           EasyLoading.dismiss();
         }
