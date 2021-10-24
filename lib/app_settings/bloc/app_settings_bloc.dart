@@ -23,7 +23,8 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     AppSettingsInitialized event,
     Emitter<AppSettingsState> emit,
   ) async {
-    emit(state.copyWith(fetching: true));
+    print(state);
+    emit(const AppSettingsState(fetching: true));
     final protocol = await appSettingsRepository.protocol;
     final hostname = await appSettingsRepository.hostname;
     final port = await appSettingsRepository.port;
@@ -51,13 +52,11 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     AppSettingsProtocolUpdated event,
     Emitter<AppSettingsState> emit,
   ) {
-    if (state is AppSettingsState) {
-      final protocol = Protocol.dirty(event.protocol);
-      emit(state.copyWith(
-        protocol: protocol,
-        formStatus: Formz.validate([protocol, state.hostname, state.port]),
-      ));
-    }
+    final protocol = Protocol.dirty(event.protocol);
+    emit(state.copyWith(
+      protocol: protocol,
+      formStatus: Formz.validate([protocol, state.hostname, state.port]),
+    ));
   }
 
   _onPortChanged(
@@ -85,13 +84,13 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
         port: state.port,
       );
       emit(state.copyWith(formStatus: FormzStatus.submissionSuccess));
-    } catch (_) {
-      emit(state.copyWith(formStatus: FormzStatus.submissionFailure));
-    } finally {
+      // Clear the form
       await Future.delayed(
         const Duration(seconds: 1),
         () => emit(const AppSettingsState()),
       );
+    } catch (_) {
+      emit(state.copyWith(formStatus: FormzStatus.submissionFailure));
     }
   }
 }

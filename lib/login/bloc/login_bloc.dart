@@ -54,13 +54,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           password: state.password,
         );
         emit(state.copyWith(status: FormzStatus.submissionSuccess));
-      } catch (_) {
-        emit(state.copyWith(status: FormzStatus.submissionFailure));
-      } finally {
+        // Clear the form
         await Future.delayed(
           const Duration(seconds: 1),
           () => emit(const LoginState()),
         );
+      } catch (_) {
+        emit(state.copyWith(status: FormzStatus.submissionFailure));
       }
     }
   }
