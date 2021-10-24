@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:my_flutter_bloc_starter_project/login/models/models.dart';
+
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
 class AuthenticationRepository {
@@ -12,8 +14,8 @@ class AuthenticationRepository {
   }
 
   Future<void> logIn({
-    required String username,
-    required String password,
+    required Username username,
+    required Password password,
   }) async {
     await Future.delayed(
       const Duration(milliseconds: 300),

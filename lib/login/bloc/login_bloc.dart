@@ -50,8 +50,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       emit(state.copyWith(status: FormzStatus.submissionInProgress));
       try {
         await _authenticationRepository.logIn(
-          username: state.username.value,
-          password: state.password.value,
+          username: state.username,
+          password: state.password,
         );
         emit(state.copyWith(status: FormzStatus.submissionSuccess));
       } catch (_) {
