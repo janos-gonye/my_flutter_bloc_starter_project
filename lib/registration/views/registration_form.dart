@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:formz/formz.dart';
 
+import 'package:my_flutter_bloc_starter_project/home/home.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
 
 class RegistrationForm extends StatelessWidget {
@@ -21,7 +22,11 @@ class RegistrationForm extends StatelessWidget {
             maskType: EasyLoadingMaskType.clear,
           );
         } else if (state.status.isSubmissionSuccess) {
-          // TODO:
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            HomePage.routeName,
+            (route) => false,
+          );
+          EasyLoading.showSuccess("Confirmation email sent");
         } else {
           EasyLoading.dismiss();
         }
