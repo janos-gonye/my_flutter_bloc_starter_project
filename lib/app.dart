@@ -7,6 +7,7 @@ import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
 import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
 import 'package:my_flutter_bloc_starter_project/home/home.dart';
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
+import 'package:my_flutter_bloc_starter_project/registration/views/views.dart';
 import 'package:my_flutter_bloc_starter_project/splash/splash.dart';
 import 'package:my_flutter_bloc_starter_project/user/user.dart';
 import 'package:my_flutter_bloc_starter_project/user/views/user_page.dart';
@@ -81,6 +82,7 @@ class _AppViewState extends State<AppView> {
         LoginPage.routeName: (context) => const LoginPage(),
         SplashPage.routeName: (context) => const SplashPage(),
         UserPage.routeName: (context) => const UserPage(),
+        RegistrationPage.routeName: (context) => const RegistrationPage(),
       },
       builder: EasyLoading.init(
         builder: (context, child) {
