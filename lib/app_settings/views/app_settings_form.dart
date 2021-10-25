@@ -4,9 +4,9 @@ import 'package:flutter/widgets.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:formz/formz.dart';
 
 import 'package:my_flutter_bloc_starter_project/app_settings/bloc/app_settings_bloc.dart';
+import 'package:my_flutter_bloc_starter_project/constants.dart';
 import 'package:my_flutter_bloc_starter_project/home/views/home_page.dart';
 
 class AppSettingsForm extends StatefulWidget {
@@ -27,29 +27,28 @@ class _AppSettingsFormState extends State<AppSettingsForm> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AppSettingsBloc, AppSettingsState>(
-      listenWhen: (previous, current) =>
-          previous.formStatus != current.formStatus,
+      listenWhen: (previous, current) => previous.type != current.type,
       listener: (context, state) {
-        if (state.formStatus == FormzStatus.submissionInProgress) {
+        if (state.isloading) {
           EasyLoading.show(
               status: 'loading...', maskType: EasyLoadingMaskType.clear);
         } else {
           EasyLoading.dismiss();
         }
-        if (state.formStatus.isSubmissionSuccess) {
+        if (state.isSavingSuccess) {
           EasyLoading.showSuccess('Settings saved');
           Navigator.of(context).pushNamedAndRemoveUntil(
             HomePage.routeName,
-            ModalRoute.withName(HomePage.routeName),
+            (route) => false,
           );
-        } else if (state.formStatus.isSubmissionFailure) {
+        } else if (state.isSavingFailure) {
           EasyLoading.showError('Saving settings failed');
         }
       },
       child: BlocBuilder<AppSettingsBloc, AppSettingsState>(
-        buildWhen: (previous, current) => previous.fetching != current.fetching,
+        // TODO: Add `buildWhen`
         builder: (context, state) {
-          if (state.fetching) {
+          if (state.isloading) {
             return const SizedBox();
           } else {
             return Column(
@@ -89,8 +88,7 @@ class _ProtocolInput extends StatelessWidget {
             }
           },
           value: state.protocol.value,
-          items: <String>['http', 'https']
-              .map<DropdownMenuItem<String>>((String value) {
+          items: protocols.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
               child: Text(value),
@@ -160,13 +158,10 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppSettingsBloc, AppSettingsState>(
-      buildWhen: (previous, current) =>
-          previous.formStatus != current.formStatus,
+      // TODO: Add `buildWhen`
       builder: (context, state) {
         return ElevatedButton(
-          onPressed: state.fetching ||
-                  state.formStatus.isSubmissionInProgress ||
-                  state.formStatus.isInvalid
+          onPressed: state.invalid || state.isInProgress
               ? null
               : () {
                   BlocProvider.of<AppSettingsBloc>(context)

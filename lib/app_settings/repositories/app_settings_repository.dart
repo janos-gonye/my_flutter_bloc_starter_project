@@ -14,25 +14,25 @@ class AppSettingsRepository {
   Future<Protocol> get protocol async {
     final protocol = await _readKey('protocol');
     if (protocol == null) {
-      return const Protocol.dirty('http');
+      return const Protocol('https');
     }
-    return Protocol.dirty(protocol);
+    return Protocol(protocol);
   }
 
   Future<Hostname> get hostname async {
     final hostname = await _readKey('hostname');
     if (hostname == null) {
-      return const Hostname.pure();
+      return const Hostname('');
     }
-    return Hostname.dirty(hostname);
+    return Hostname(hostname);
   }
 
   Future<Port> get port async {
     final port = await _readKey('port');
     if (port == null) {
-      return const Port.pure();
+      return const Port('');
     }
-    return Port.dirty(port);
+    return Port(port);
   }
 
   Future<void> write({

@@ -1,15 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:formz/formz.dart';
 
 import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
+import 'package:my_flutter_bloc_starter_project/constants.dart';
 
 part 'app_settings_event.dart';
 part 'app_settings_state.dart';
 
 class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
   AppSettingsBloc({required this.appSettingsRepository})
-      : super(const AppSettingsState(fetching: true)) {
+      : super(const AppSettingsState()) {
     on<AppSettingsInitialized>(_onInitialized);
     on<AppSettingsProtocolUpdated>(_onProtocolChanged);
     on<AppSettingsHostnameUpdated>(_onHostnameChanged);
@@ -23,27 +23,34 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     AppSettingsInitialized event,
     Emitter<AppSettingsState> emit,
   ) async {
-    emit(const AppSettingsState(fetching: true));
-    final protocol = await appSettingsRepository.protocol;
-    final hostname = await appSettingsRepository.hostname;
-    final port = await appSettingsRepository.port;
     emit(state.copyWith(
-      fetching: false,
-      protocol: protocol,
-      hostname: hostname,
-      port: port,
-      formStatus: Formz.validate([protocol, hostname, port]),
+      type: AppSettingsType.loading,
     ));
+    try {
+      final protocol = await appSettingsRepository.protocol;
+      final hostname = await appSettingsRepository.hostname;
+      final port = await appSettingsRepository.port;
+      emit(state.copyWith(type: AppSettingsType.loadingSuccess));
+      emit(state.copyWith(
+        type: AppSettingsType.data,
+        protocol: protocol,
+        hostname: hostname,
+        port: port,
+      ));
+    } catch (_) {
+      emit(state.copyWith(
+        type: AppSettingsType.loadingFailure,
+      ));
+    }
   }
 
   _onHostnameChanged(
     AppSettingsHostnameUpdated event,
     Emitter<AppSettingsState> emit,
   ) {
-    final hostname = Hostname.dirty(event.hostname);
     emit(state.copyWith(
-      hostname: hostname,
-      formStatus: Formz.validate([state.protocol, hostname, state.port]),
+      type: AppSettingsType.data,
+      hostname: Hostname(event.hostname),
     ));
   }
 
@@ -51,10 +58,9 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     AppSettingsProtocolUpdated event,
     Emitter<AppSettingsState> emit,
   ) {
-    final protocol = Protocol.dirty(event.protocol);
     emit(state.copyWith(
-      protocol: protocol,
-      formStatus: Formz.validate([protocol, state.hostname, state.port]),
+      type: AppSettingsType.data,
+      protocol: Protocol(event.protocol),
     ));
   }
 
@@ -62,10 +68,9 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     AppSettingsPortUpdated event,
     Emitter<AppSettingsState> emit,
   ) {
-    final port = Port.dirty(event.port);
     emit(state.copyWith(
-      port: port,
-      formStatus: Formz.validate([state.protocol, state.hostname, port]),
+      type: AppSettingsType.data,
+      port: Port(event.port),
     ));
   }
 
@@ -73,18 +78,16 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     AppSettingsFormSubmitted event,
     Emitter<AppSettingsState> emit,
   ) async {
-    emit(state.copyWith(
-      formStatus: FormzStatus.submissionInProgress,
-    ));
+    emit(state.copyWith(type: AppSettingsType.saving));
     try {
       await appSettingsRepository.write(
         hostname: state.hostname,
         protocol: state.protocol,
         port: state.port,
       );
-      emit(state.copyWith(formStatus: FormzStatus.submissionSuccess));
+      emit(state.copyWith(type: AppSettingsType.savingSuccess));
     } catch (_) {
-      emit(state.copyWith(formStatus: FormzStatus.submissionFailure));
+      emit(state.copyWith(type: AppSettingsType.savingFailure));
     }
   }
 }

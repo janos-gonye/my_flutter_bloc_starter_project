@@ -1,5 +1,6 @@
-import 'package:formz/formz.dart';
 import 'package:string_validator/string_validator.dart';
+
+import 'package:my_flutter_bloc_starter_project/shared/models/models.dart';
 
 enum PortValidationError {
   empty,
@@ -8,13 +9,12 @@ enum PortValidationError {
   invalidOutOfRange
 }
 
-class Port extends FormzInput<String, PortValidationError> {
-  const Port.pure() : super.pure('');
-  const Port.dirty([String value = '']) : super.dirty(value);
+class Port extends Model<String, PortValidationError> {
+  const Port(String value) : super(value);
 
   @override
-  PortValidationError? validator(String? value) {
-    if (value == null || value.isEmpty) {
+  PortValidationError? get error {
+    if (value.isEmpty) {
       return PortValidationError.empty;
     }
     if (isNumeric(value) == false) {
@@ -29,6 +29,7 @@ class Port extends FormzInput<String, PortValidationError> {
     }
   }
 
+  @override
   String? get errorMessage {
     if (error == PortValidationError.empty) {
       return 'Empty port';
