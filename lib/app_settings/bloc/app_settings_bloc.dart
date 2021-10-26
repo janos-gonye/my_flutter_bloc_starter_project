@@ -19,6 +19,12 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
 
   final AppSettingsRepository appSettingsRepository;
 
+  @override
+  void onTransition(Transition<AppSettingsEvent, AppSettingsState> transition) {
+    debugPrint(transition.toString());
+    super.onTransition(transition);
+  }
+
   _onInitialized(
     AppSettingsInitialized event,
     Emitter<AppSettingsState> emit,
