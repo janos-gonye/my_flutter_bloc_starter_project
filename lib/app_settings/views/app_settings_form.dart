@@ -30,7 +30,7 @@ class _AppSettingsFormState extends State<AppSettingsForm> {
       listenWhen: (previous, current) =>
           !current.isData && previous.type != current.type,
       listener: (context, state) {
-        print("main listener");
+        debugPrint("'AppSettingsForm' listener invoked");
         if (state.isloading) {
           EasyLoading.show(
               status: 'loading...', maskType: EasyLoadingMaskType.clear);
@@ -52,7 +52,7 @@ class _AppSettingsFormState extends State<AppSettingsForm> {
             (previous.type != current.type) &&
             (previous.isloading || current.isloading),
         builder: (context, state) {
-          print("main builder");
+          debugPrint("'AppSettingsForm' (re)built");
           if (state.isloading) {
             return const SizedBox();
           } else {
@@ -85,7 +85,7 @@ class _ProtocolInput extends StatelessWidget {
     return BlocBuilder<AppSettingsBloc, AppSettingsState>(
       buildWhen: (previous, current) => previous.protocol != current.protocol,
       builder: (context, state) {
-        print("protocol input");
+        debugPrint("'AppSettingsForm - _ProtocolInput' (re)built");
         return DropdownButton<String>(
           onChanged: (protocol) {
             if (protocol != null) {
@@ -114,7 +114,7 @@ class _HostnameInput extends StatelessWidget {
     return BlocBuilder<AppSettingsBloc, AppSettingsState>(
       buildWhen: (previous, current) => previous.hostname != current.hostname,
       builder: (context, state) {
-        print("hostname input");
+        debugPrint("'AppSettingsForm - _HostnameInput' (re)built");
         return TextFormField(
           initialValue: state.hostname.value,
           onChanged: (hostname) {
@@ -139,7 +139,7 @@ class _PortInput extends StatelessWidget {
     return BlocBuilder<AppSettingsBloc, AppSettingsState>(
       buildWhen: (previous, current) => previous.port != current.port,
       builder: (context, state) {
-        print("port input");
+        debugPrint("'AppSettingsForm - _PortInput' (re)built");
         return TextFormField(
           initialValue: state.port.value,
           onChanged: (port) {
@@ -168,9 +168,10 @@ class _SubmitButton extends StatelessWidget {
     return BlocBuilder<AppSettingsBloc, AppSettingsState>(
       buildWhen: (previous, current) =>
           (previous.invalid && current.valid) ||
+          (previous.valid && current.invalid) ||
           (previous.isInProgress && !current.isInProgress),
       builder: (context, state) {
-        print("submit button");
+        debugPrint("'AppSettingsForm - _SubmitButton' (re)built");
         return ElevatedButton(
           onPressed: state.invalid || state.isInProgress
               ? null

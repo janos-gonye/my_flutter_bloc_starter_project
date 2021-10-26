@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
