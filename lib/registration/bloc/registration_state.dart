@@ -1,32 +1,53 @@
 part of 'registration_bloc.dart';
 
+enum RegistrationStateType {
+  initial,
+  data,
+  registrating,
+  registratingSuccess,
+  registratingError,
+}
+
 class RegistrationState extends Equatable {
   const RegistrationState({
-    this.status = FormzStatus.pure,
-    this.username = const Username.pure(),
-    this.password = const Password.pure(),
-    this.email = const Email.pure(),
+    this.username = const Username(''),
+    this.password = const Password(''),
+    this.email = const Email(''),
+    this.type = RegistrationStateType.initial,
   });
 
-  final FormzStatus status;
   final Username username;
   final Password password;
   final Email email;
+  final RegistrationStateType type;
+
+  bool get valid => username.valid && password.valid;
+  bool get invalid => !invalid;
+
+  bool get isInitial => type == RegistrationStateType.initial;
+  bool get isData => type == RegistrationStateType.data;
+  bool get isRegistrating => type == RegistrationStateType.registrating;
+  bool get isRegistratingSuccess =>
+      type == RegistrationStateType.registratingSuccess;
+  bool get isRegistratingError =>
+      type == RegistrationStateType.registratingError;
+
+  bool get isInProgress => isInitial || isRegistrating;
 
   RegistrationState copyWith({
-    FormzStatus? status,
     Username? username,
     Password? password,
     Email? email,
+    RegistrationStateType? type,
   }) {
     return RegistrationState(
-      status: status ?? this.status,
       username: username ?? this.username,
       password: password ?? this.password,
       email: email ?? this.email,
+      type: type ?? this.type,
     );
   }
 
   @override
-  List<Object> get props => [status, username, password, email];
+  List<Object> get props => [username, password, email, type];
 }

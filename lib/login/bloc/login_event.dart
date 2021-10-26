@@ -29,6 +29,6 @@ class LoginPasswordChanged extends LoginEvent {
   List<Object> get props => [password];
 }
 
-class LoginSubmitted extends LoginEvent {
-  const LoginSubmitted();
+class LoginFormSubmitted extends LoginEvent {
+  const LoginFormSubmitted();
 }

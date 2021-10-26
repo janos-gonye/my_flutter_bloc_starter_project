@@ -1,6 +1,7 @@
+import 'package:flutter/widgets.dart';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:formz/formz.dart';
 
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
 
@@ -11,23 +12,39 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   RegistrationBloc({
     required RegistrationRepository registrationRepository,
   })  : _registrationRepository = registrationRepository,
-        super(const RegistrationState()) {
+        super(const RegistrationState(type: RegistrationStateType.initial)) {
+    on<RegistrationFormInitialized>(_onInitialized);
     on<RegistrationUsernameChanged>(_onUsernameChanged);
     on<RegistrationPasswordChanged>(_onPasswordChanged);
     on<RegistrationEmailChanged>(_onEmailChanged);
-    on<RegistrationSubmitted>(_onSubmitted);
+    on<RegistrationFormSubmitted>(_onSubmitted);
   }
 
   final RegistrationRepository _registrationRepository;
+
+  @override
+  void onTransition(
+      Transition<RegistrationEvent, RegistrationState> transition) {
+    debugPrint(transition.toString());
+    super.onTransition(transition);
+  }
+
+  void _onInitialized(
+    RegistrationFormInitialized event,
+    Emitter<RegistrationState> emit,
+  ) {
+    emit(state.copyWith(
+      type: RegistrationStateType.initial,
+    ));
+  }
 
   void _onUsernameChanged(
     RegistrationUsernameChanged event,
     Emitter<RegistrationState> emit,
   ) {
-    final username = Username.dirty(event.username);
     emit(state.copyWith(
-      username: username,
-      status: Formz.validate([state.password, username, state.email]),
+      type: RegistrationStateType.data,
+      username: Username(event.username),
     ));
   }
 
@@ -35,10 +52,9 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     RegistrationPasswordChanged event,
     Emitter<RegistrationState> emit,
   ) {
-    final password = Password.dirty(event.password);
     emit(state.copyWith(
-      password: password,
-      status: Formz.validate([password, state.username, state.email]),
+      password: Password(event.password),
+      type: RegistrationStateType.data,
     ));
   }
 
@@ -46,28 +62,27 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     RegistrationEmailChanged event,
     Emitter<RegistrationState> emit,
   ) {
-    final email = Email.dirty(event.email);
     emit(state.copyWith(
-      email: email,
-      status: Formz.validate([state.password, state.username, email]),
+      email: Email(event.email),
+      type: RegistrationStateType.data,
     ));
   }
 
   void _onSubmitted(
-    RegistrationSubmitted event,
+    RegistrationFormSubmitted event,
     Emitter<RegistrationState> emit,
   ) async {
-    if (state.status.isValidated) {
-      emit(state.copyWith(status: FormzStatus.submissionInProgress));
+    if (state.valid) {
+      emit(state.copyWith(type: RegistrationStateType.registrating));
       try {
         await _registrationRepository.registrate(
           username: state.username,
           password: state.password,
           email: state.email,
         );
-        emit(state.copyWith(status: FormzStatus.submissionSuccess));
+        emit(state.copyWith(type: RegistrationStateType.registratingSuccess));
       } catch (_) {
-        emit(state.copyWith(status: FormzStatus.submissionFailure));
+        emit(state.copyWith(type: RegistrationStateType.registratingError));
       }
     }
   }

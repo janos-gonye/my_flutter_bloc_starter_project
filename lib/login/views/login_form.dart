@@ -104,7 +104,7 @@ class _SubmitButton extends StatelessWidget {
               ? null
               : () {
                   BlocProvider.of<LoginBloc>(context)
-                      .add(const LoginSubmitted());
+                      .add(const LoginFormSubmitted());
                 },
         );
       },

@@ -17,7 +17,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginFormInitialized>(_onInitialized);
     on<LoginUsernameChanged>(_onUsernameChanged);
     on<LoginPasswordChanged>(_onPasswordChanged);
-    on<LoginSubmitted>(_onSubmitted);
+    on<LoginFormSubmitted>(_onSubmitted);
   }
 
   final AuthenticationRepository _authenticationRepository;
@@ -58,7 +58,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   void _onSubmitted(
-    LoginSubmitted event,
+    LoginFormSubmitted event,
     Emitter<LoginState> emit,
   ) async {
     if (state.valid) {

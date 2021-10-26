@@ -2,26 +2,40 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:formz/formz.dart';
 
 import 'package:my_flutter_bloc_starter_project/home/home.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
 
-class RegistrationForm extends StatelessWidget {
+class RegistrationForm extends StatefulWidget {
   const RegistrationForm({Key? key}) : super(key: key);
+
+  @override
+  State<RegistrationForm> createState() => _RegistrationFormState();
+}
+
+class _RegistrationFormState extends State<RegistrationForm> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<RegistrationBloc>(context)
+        .add(const RegistrationFormInitialized());
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<RegistrationBloc, RegistrationState>(
+      listenWhen: (previous, current) =>
+          !current.isData && previous.type != current.type,
       listener: (context, state) {
-        if (state.status.isSubmissionFailure) {
+        debugPrint("'RegistrationForm' listener invoked");
+        if (state.isRegistratingError) {
           EasyLoading.showError('Registration Failure');
-        } else if (state.status.isSubmissionInProgress) {
+        } else if (state.isInProgress) {
           EasyLoading.show(
             status: 'loading...',
             maskType: EasyLoadingMaskType.clear,
           );
-        } else if (state.status.isSubmissionSuccess) {
+        } else if (state.isRegistratingSuccess) {
           Navigator.of(context).pushNamedAndRemoveUntil(
             HomePage.routeName,
             (route) => false,
@@ -49,6 +63,7 @@ class _UsernameInput extends StatelessWidget {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
       buildWhen: (previous, current) => previous.username != current.username,
       builder: (context, state) {
+        debugPrint("'RegistrationForm - _UsernameInput' listener invoked");
         return TextField(
           onChanged: (username) => BlocProvider.of<RegistrationBloc>(context)
               .add(RegistrationUsernameChanged(username)),
@@ -68,6 +83,7 @@ class _EmailInput extends StatelessWidget {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
+        debugPrint("'RegistrationForm - _EmailInput' listener invoked");
         return TextField(
           onChanged: (email) => BlocProvider.of<RegistrationBloc>(context)
               .add(RegistrationEmailChanged(email)),
@@ -87,13 +103,14 @@ class _PasswordInput extends StatelessWidget {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
+        debugPrint("'RegistrationForm - _PasswordInput' listener invoked");
         return TextField(
           onChanged: (password) => BlocProvider.of<RegistrationBloc>(context)
               .add(RegistrationPasswordChanged(password)),
           obscureText: true,
           decoration: InputDecoration(
             labelText: 'password',
-            errorText: state.password.errorMessage, // suffixIcon: IconButton()
+            errorText: state.password.errorMessage,
           ),
         );
       },
@@ -105,17 +122,21 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
-      buildWhen: (previous, current) => previous.status != current.status,
+      buildWhen: (previous, current) =>
+          (previous.valid && current.invalid) ||
+          (previous.invalid && current.valid) ||
+          (previous.isInProgress && !current.isInProgress) ||
+          (!previous.isInProgress && current.isInProgress),
       builder: (context, state) {
+        debugPrint("'RegistrationForm - _SubmitButton' listener invoked");
         return ElevatedButton(
           child: const Text('Registrate'),
-          onPressed:
-              state.status.isValidated && !state.status.isSubmissionInProgress
-                  ? () {
-                      BlocProvider.of<RegistrationBloc>(context)
-                          .add(const RegistrationSubmitted());
-                    }
-                  : null,
+          onPressed: state.invalid || state.isInProgress
+              ? null
+              : () {
+                  BlocProvider.of<RegistrationBloc>(context)
+                      .add(const RegistrationFormSubmitted());
+                },
         );
       },
     );
