@@ -1,4 +1,4 @@
-import 'package:formz/formz.dart';
+import 'package:my_flutter_bloc_starter_project/shared/models/models.dart';
 
 enum UsernameValidationError {
   empty,
@@ -7,13 +7,12 @@ enum UsernameValidationError {
   invalidChars
 }
 
-class Username extends FormzInput<String, UsernameValidationError> {
-  const Username.pure() : super.pure('');
-  const Username.dirty([String value = '']) : super.dirty(value);
+class Username extends Model<String, UsernameValidationError> {
+  const Username(String value) : super(value);
 
   @override
-  UsernameValidationError? validator(String? value) {
-    if (value == null || value.isEmpty == true) {
+  UsernameValidationError? get error {
+    if (value.isEmpty == true) {
       return UsernameValidationError.empty;
     }
     if (value.length >= 150) {
@@ -25,6 +24,7 @@ class Username extends FormzInput<String, UsernameValidationError> {
     }
   }
 
+  @override
   String? get errorMessage {
     if (error == UsernameValidationError.empty) return 'Empty username';
     if (error == UsernameValidationError.invalidTooShort) {

@@ -1,20 +1,22 @@
 import 'package:formz/formz.dart';
 
+import 'package:my_flutter_bloc_starter_project/shared/models/models.dart';
+
 enum PasswordValidationError { empty, invalidTooShort, invalidMissingRequired }
 
-class Password extends FormzInput<String, PasswordValidationError> {
-  const Password.pure() : super.pure('');
-  const Password.dirty([String value = '']) : super.dirty(value);
+class Password extends Model<String, PasswordValidationError> {
+  const Password(String value) : super(value);
 
   @override
-  PasswordValidationError? validator(String? value) {
-    if (value == null || value.isEmpty) return PasswordValidationError.empty;
+  PasswordValidationError? get error {
+    if (value.isEmpty) return PasswordValidationError.empty;
     if (value.length <= 8) return PasswordValidationError.invalidTooShort;
     if (RegExp(r'(?=.*\d)(?=.*[a-z])(?=.*[A-Z])').hasMatch(value) == false) {
       return PasswordValidationError.invalidMissingRequired;
     }
   }
 
+  @override
   String? get errorMessage {
     if (error == PasswordValidationError.empty) return 'Empty password';
     if (error == PasswordValidationError.invalidTooShort) {
