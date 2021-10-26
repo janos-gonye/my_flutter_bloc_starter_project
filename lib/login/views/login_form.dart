@@ -2,20 +2,33 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:formz/formz.dart';
 
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
 
-class LoginForm extends StatelessWidget {
+class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
+
+  @override
+  State<LoginForm> createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<LoginBloc>(context).add(const LoginFormInitialized());
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
+      listenWhen: (previous, current) =>
+          !current.isData && previous.type != current.type,
       listener: (context, state) {
-        if (state.status.isSubmissionFailure) {
+        debugPrint("'LoginForm' listener invoked");
+        if (state.isLoggingInError) {
           EasyLoading.showError('Login Failure');
-        } else if (state.status.isSubmissionInProgress) {
+        } else if (state.isLoggingInSuccess) {
           EasyLoading.show(
               status: 'loading...', maskType: EasyLoadingMaskType.clear);
         } else {
@@ -26,7 +39,7 @@ class LoginForm extends StatelessWidget {
         children: [
           _UsernameInput(),
           _PasswordInput(),
-          _LoginButton(),
+          _SubmitButton(),
         ],
       ),
     );
@@ -39,6 +52,7 @@ class _UsernameInput extends StatelessWidget {
     return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) => previous.username != current.username,
       builder: (context, state) {
+        debugPrint("'LoginForm - _UsernameInput' (re)built");
         return TextField(
           onChanged: (username) => BlocProvider.of<LoginBloc>(context)
               .add(LoginUsernameChanged(username)),
@@ -58,6 +72,7 @@ class _PasswordInput extends StatelessWidget {
     return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
+        debugPrint("'LoginForm - _PasswordInput' (re)built");
         return TextField(
           onChanged: (password) => BlocProvider.of<LoginBloc>(context)
               .add(LoginPasswordChanged(password)),
@@ -72,21 +87,25 @@ class _PasswordInput extends StatelessWidget {
   }
 }
 
-class _LoginButton extends StatelessWidget {
+class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
-      buildWhen: (previous, current) => previous.status != current.status,
+      buildWhen: (previous, current) =>
+          (previous.valid && current.invalid) ||
+          (previous.invalid && current.valid) ||
+          (previous.isInProgress && !current.isInProgress) ||
+          (!previous.isInProgress && current.isInProgress),
       builder: (context, state) {
+        debugPrint("'LoginForm - _SubmitButton' (re)built");
         return ElevatedButton(
           child: const Text('Login'),
-          onPressed:
-              state.status.isValidated && !state.status.isSubmissionInProgress
-                  ? () {
-                      BlocProvider.of<LoginBloc>(context)
-                          .add(const LoginSubmitted());
-                    }
-                  : null,
+          onPressed: state.invalid || state.isInProgress
+              ? null
+              : () {
+                  BlocProvider.of<LoginBloc>(context)
+                      .add(const LoginSubmitted());
+                },
         );
       },
     );

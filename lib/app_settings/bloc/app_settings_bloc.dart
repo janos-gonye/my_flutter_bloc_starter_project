@@ -12,7 +12,7 @@ part 'app_settings_state.dart';
 class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
   AppSettingsBloc({required this.appSettingsRepository})
       : super(const AppSettingsState()) {
-    on<AppSettingsInitialized>(_onInitialized);
+    on<AppSettingsFormInitialized>(_onInitialized);
     on<AppSettingsProtocolUpdated>(_onProtocolChanged);
     on<AppSettingsHostnameUpdated>(_onHostnameChanged);
     on<AppSettingsPortUpdated>(_onPortChanged);
@@ -28,7 +28,7 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
   }
 
   _onInitialized(
-    AppSettingsInitialized event,
+    AppSettingsFormInitialized event,
     Emitter<AppSettingsState> emit,
   ) async {
     emit(state.copyWith(
@@ -86,16 +86,18 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     AppSettingsFormSubmitted event,
     Emitter<AppSettingsState> emit,
   ) async {
-    emit(state.copyWith(type: AppSettingsStateType.saving));
-    try {
-      await appSettingsRepository.write(
-        hostname: state.hostname,
-        protocol: state.protocol,
-        port: state.port,
-      );
-      emit(state.copyWith(type: AppSettingsStateType.savingSuccess));
-    } catch (_) {
-      emit(state.copyWith(type: AppSettingsStateType.savingError));
+    if (state.valid) {
+      emit(state.copyWith(type: AppSettingsStateType.saving));
+      try {
+        await appSettingsRepository.write(
+          hostname: state.hostname,
+          protocol: state.protocol,
+          port: state.port,
+        );
+        emit(state.copyWith(type: AppSettingsStateType.savingSuccess));
+      } catch (_) {
+        emit(state.copyWith(type: AppSettingsStateType.savingError));
+      }
     }
   }
 }

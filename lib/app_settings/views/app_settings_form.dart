@@ -21,7 +21,7 @@ class _AppSettingsFormState extends State<AppSettingsForm> {
   void initState() {
     super.initState();
     BlocProvider.of<AppSettingsBloc>(context)
-        .add(const AppSettingsInitialized());
+        .add(const AppSettingsFormInitialized());
   }
 
   @override
@@ -169,7 +169,8 @@ class _SubmitButton extends StatelessWidget {
       buildWhen: (previous, current) =>
           (previous.invalid && current.valid) ||
           (previous.valid && current.invalid) ||
-          (previous.isInProgress && !current.isInProgress),
+          (previous.isInProgress && !current.isInProgress) ||
+          (!previous.isInProgress && current.isInProgress),
       builder: (context, state) {
         debugPrint("'AppSettingsForm - _SubmitButton' (re)built");
         return ElevatedButton(

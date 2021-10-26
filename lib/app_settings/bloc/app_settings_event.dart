@@ -7,8 +7,8 @@ abstract class AppSettingsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AppSettingsInitialized extends AppSettingsEvent {
-  const AppSettingsInitialized();
+class AppSettingsFormInitialized extends AppSettingsEvent {
+  const AppSettingsFormInitialized();
 
   @override
   List<Object> get props => [];

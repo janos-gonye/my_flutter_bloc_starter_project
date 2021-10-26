@@ -1,6 +1,7 @@
+import 'package:flutter/widgets.dart';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:formz/formz.dart';
 
 import 'package:my_flutter_bloc_starter_project/authentication/repositories/authentication_repository.dart';
 import 'package:my_flutter_bloc_starter_project/login/models/models.dart';
@@ -12,7 +13,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc({
     required AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
-        super(const LoginState()) {
+        super(const LoginState(type: LoginStateType.initial)) {
+    on<LoginFormInitialized>(_onInitialized);
     on<LoginUsernameChanged>(_onUsernameChanged);
     on<LoginPasswordChanged>(_onPasswordChanged);
     on<LoginSubmitted>(_onSubmitted);
@@ -20,14 +22,28 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   final AuthenticationRepository _authenticationRepository;
 
+  @override
+  void onTransition(Transition<LoginEvent, LoginState> transition) {
+    debugPrint(transition.toString());
+    super.onTransition(transition);
+  }
+
+  void _onInitialized(
+    LoginFormInitialized event,
+    Emitter<LoginState> emit,
+  ) {
+    emit(state.copyWith(
+      type: LoginStateType.data,
+    ));
+  }
+
   void _onUsernameChanged(
     LoginUsernameChanged event,
     Emitter<LoginState> emit,
   ) {
-    final username = Username.dirty(event.username);
     emit(state.copyWith(
-      username: username,
-      status: Formz.validate([state.password, username]),
+      username: Username(event.username),
+      type: LoginStateType.data,
     ));
   }
 
@@ -35,10 +51,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     LoginPasswordChanged event,
     Emitter<LoginState> emit,
   ) {
-    final password = Password.dirty(event.password);
     emit(state.copyWith(
-      password: password,
-      status: Formz.validate([password, state.username]),
+      password: Password(event.password),
+      type: LoginStateType.data,
     ));
   }
 
@@ -46,16 +61,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     LoginSubmitted event,
     Emitter<LoginState> emit,
   ) async {
-    if (state.status.isValidated) {
-      emit(state.copyWith(status: FormzStatus.submissionInProgress));
+    if (state.valid) {
+      emit(state.copyWith(type: LoginStateType.loggingIn));
       try {
         await _authenticationRepository.logIn(
           username: state.username,
           password: state.password,
         );
-        emit(state.copyWith(status: FormzStatus.submissionSuccess));
+        emit(state.copyWith(type: LoginStateType.loggingInSuccess));
       } catch (_) {
-        emit(state.copyWith(status: FormzStatus.submissionFailure));
+        emit(state.copyWith(type: LoginStateType.loggingInError));
       }
     }
   }
