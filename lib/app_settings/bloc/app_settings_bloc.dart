@@ -47,7 +47,7 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
       ));
     } catch (_) {
       emit(state.copyWith(
-        type: AppSettingsStateType.loadingFailure,
+        type: AppSettingsStateType.loadingError,
       ));
     }
   }
@@ -95,7 +95,7 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
       );
       emit(state.copyWith(type: AppSettingsStateType.savingSuccess));
     } catch (_) {
-      emit(state.copyWith(type: AppSettingsStateType.savingFailure));
+      emit(state.copyWith(type: AppSettingsStateType.savingError));
     }
   }
 }

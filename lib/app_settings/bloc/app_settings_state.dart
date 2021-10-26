@@ -4,11 +4,11 @@ enum AppSettingsStateType {
   initial,
   loading,
   loadingSuccess,
-  loadingFailure,
+  loadingError,
   data,
   saving,
   savingSuccess,
-  savingFailure,
+  savingError,
 }
 
 class AppSettingsState extends Equatable {
@@ -25,15 +25,15 @@ class AppSettingsState extends Equatable {
   bool get isInitial => type == AppSettingsStateType.initial;
   bool get isloading => type == AppSettingsStateType.loading;
   bool get isLoadingSuccess => type == AppSettingsStateType.loadingSuccess;
-  bool get isLoadingFailure => type == AppSettingsStateType.loadingFailure;
+  bool get isLoadingError => type == AppSettingsStateType.loadingError;
   bool get isData => type == AppSettingsStateType.data;
   bool get isSaving => type == AppSettingsStateType.saving;
   bool get isSavingSuccess => type == AppSettingsStateType.savingSuccess;
-  bool get isSavingFailure => type == AppSettingsStateType.savingFailure;
+  bool get isSavingError => type == AppSettingsStateType.savingError;
 
   bool get isInProgress => isInitial || isloading || isSaving;
   bool get isSuccess => isLoadingSuccess || isSavingSuccess;
-  bool get isError => isLoadingFailure || isSavingFailure;
+  bool get isError => isLoadingError || isSavingError;
 
   final Protocol protocol;
   final Hostname hostname;

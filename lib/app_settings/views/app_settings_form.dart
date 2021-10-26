@@ -43,7 +43,7 @@ class _AppSettingsFormState extends State<AppSettingsForm> {
             HomePage.routeName,
             (route) => false,
           );
-        } else if (state.isSavingFailure) {
+        } else if (state.isSavingError) {
           EasyLoading.showError('Saving settings failed');
         }
       },
