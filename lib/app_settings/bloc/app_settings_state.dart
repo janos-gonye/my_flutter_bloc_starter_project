@@ -1,6 +1,6 @@
 part of 'app_settings_bloc.dart';
 
-enum AppSettingsType {
+enum AppSettingsStateType {
   initial,
   loading,
   loadingSuccess,
@@ -16,20 +16,20 @@ class AppSettingsState extends Equatable {
     this.protocol = const Protocol(http),
     this.hostname = const Hostname(''),
     this.port = const Port(''),
-    this.type = AppSettingsType.initial,
+    this.type = AppSettingsStateType.initial,
   });
 
   bool get valid => protocol.valid && hostname.valid && port.valid;
   bool get invalid => !valid;
 
-  bool get isInitial => type == AppSettingsType.initial;
-  bool get isloading => type == AppSettingsType.loading;
-  bool get isLoadingSuccess => type == AppSettingsType.loadingSuccess;
-  bool get isLoadingFailure => type == AppSettingsType.loadingFailure;
-  bool get isData => type == AppSettingsType.data;
-  bool get isSaving => type == AppSettingsType.saving;
-  bool get isSavingSuccess => type == AppSettingsType.savingSuccess;
-  bool get isSavingFailure => type == AppSettingsType.savingFailure;
+  bool get isInitial => type == AppSettingsStateType.initial;
+  bool get isloading => type == AppSettingsStateType.loading;
+  bool get isLoadingSuccess => type == AppSettingsStateType.loadingSuccess;
+  bool get isLoadingFailure => type == AppSettingsStateType.loadingFailure;
+  bool get isData => type == AppSettingsStateType.data;
+  bool get isSaving => type == AppSettingsStateType.saving;
+  bool get isSavingSuccess => type == AppSettingsStateType.savingSuccess;
+  bool get isSavingFailure => type == AppSettingsStateType.savingFailure;
 
   bool get isInProgress => isInitial || isloading || isSaving;
   bool get isSuccess => isLoadingSuccess || isSavingSuccess;
@@ -38,13 +38,13 @@ class AppSettingsState extends Equatable {
   final Protocol protocol;
   final Hostname hostname;
   final Port port;
-  final AppSettingsType type;
+  final AppSettingsStateType type;
 
   AppSettingsState copyWith({
     Protocol? protocol,
     Hostname? hostname,
     Port? port,
-    AppSettingsType? type,
+    AppSettingsStateType? type,
   }) {
     return AppSettingsState(
       protocol: protocol ?? this.protocol,

@@ -32,22 +32,22 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     Emitter<AppSettingsState> emit,
   ) async {
     emit(state.copyWith(
-      type: AppSettingsType.loading,
+      type: AppSettingsStateType.loading,
     ));
     try {
       final protocol = await appSettingsRepository.protocol;
       final hostname = await appSettingsRepository.hostname;
       final port = await appSettingsRepository.port;
-      emit(state.copyWith(type: AppSettingsType.loadingSuccess));
+      emit(state.copyWith(type: AppSettingsStateType.loadingSuccess));
       emit(state.copyWith(
-        type: AppSettingsType.data,
+        type: AppSettingsStateType.data,
         protocol: protocol,
         hostname: hostname,
         port: port,
       ));
     } catch (_) {
       emit(state.copyWith(
-        type: AppSettingsType.loadingFailure,
+        type: AppSettingsStateType.loadingFailure,
       ));
     }
   }
@@ -57,7 +57,7 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     Emitter<AppSettingsState> emit,
   ) {
     emit(state.copyWith(
-      type: AppSettingsType.data,
+      type: AppSettingsStateType.data,
       hostname: Hostname(event.hostname),
     ));
   }
@@ -67,7 +67,7 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     Emitter<AppSettingsState> emit,
   ) {
     emit(state.copyWith(
-      type: AppSettingsType.data,
+      type: AppSettingsStateType.data,
       protocol: Protocol(event.protocol),
     ));
   }
@@ -77,7 +77,7 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     Emitter<AppSettingsState> emit,
   ) {
     emit(state.copyWith(
-      type: AppSettingsType.data,
+      type: AppSettingsStateType.data,
       port: Port(event.port),
     ));
   }
@@ -86,16 +86,16 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     AppSettingsFormSubmitted event,
     Emitter<AppSettingsState> emit,
   ) async {
-    emit(state.copyWith(type: AppSettingsType.saving));
+    emit(state.copyWith(type: AppSettingsStateType.saving));
     try {
       await appSettingsRepository.write(
         hostname: state.hostname,
         protocol: state.protocol,
         port: state.port,
       );
-      emit(state.copyWith(type: AppSettingsType.savingSuccess));
+      emit(state.copyWith(type: AppSettingsStateType.savingSuccess));
     } catch (_) {
-      emit(state.copyWith(type: AppSettingsType.savingFailure));
+      emit(state.copyWith(type: AppSettingsStateType.savingFailure));
     }
   }
 }
