@@ -16,4 +16,9 @@ abstract class Model<T, E> {
   E? get error;
 
   String? get errorMessage;
+
+  @override
+  String toString() {
+    return "${runtimeType.toString()}(value: ${value.toString()})";
+  }
 }
