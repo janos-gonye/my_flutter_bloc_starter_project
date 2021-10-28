@@ -86,8 +86,8 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: FlexColorScheme.light(scheme: FlexScheme.hippieBlue).toTheme,
-      darkTheme: FlexColorScheme.dark(scheme: FlexScheme.hippieBlue).toTheme,
+      theme: FlexColorScheme.light(scheme: FlexScheme.damask).toTheme,
+      darkTheme: FlexColorScheme.dark(scheme: FlexScheme.damask).toTheme,
       themeMode: ThemeMode.dark,
       navigatorKey: _navigatorKey,
       initialRoute: SplashPage.routeName,
