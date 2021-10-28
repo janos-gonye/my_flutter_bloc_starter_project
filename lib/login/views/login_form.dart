@@ -28,7 +28,7 @@ class _LoginFormState extends State<LoginForm> {
         debugPrint("'LoginForm' listener invoked");
         if (state.isLoggingInError) {
           EasyLoading.showError('Login Failure');
-        } else if (state.isLoggingInSuccess) {
+        } else if (state.isInProgress) {
           EasyLoading.show(
               status: 'loading...', maskType: EasyLoadingMaskType.clear);
         } else {
