@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
+import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
 
 part 'registration_event.dart';
@@ -10,8 +11,8 @@ part 'registration_state.dart';
 
 class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   RegistrationBloc({
-    required RegistrationRepository registrationRepository,
-  })  : _registrationRepository = registrationRepository,
+    required AuthenticationRepository authenticationRepository,
+  })  : _authenticationRepository = authenticationRepository,
         super(const RegistrationState(type: RegistrationStateType.data)) {
     on<RegistrationFormInitialized>(_onInitialized);
     on<RegistrationUsernameChanged>(_onUsernameChanged);
@@ -21,7 +22,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     on<RegistrationFormSubmitted>(_onSubmitted);
   }
 
-  final RegistrationRepository _registrationRepository;
+  final AuthenticationRepository _authenticationRepository;
 
   @override
   void onTransition(
@@ -84,7 +85,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     if (state.valid) {
       emit(state.copyWith(type: RegistrationStateType.registrating));
       try {
-        await _registrationRepository.registrate(
+        await _authenticationRepository.registrate(
           username: state.username,
           password: state.password,
           email: state.email,

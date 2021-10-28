@@ -14,6 +14,14 @@ class AuthenticationRepository {
     yield* _controller.stream;
   }
 
+  Future<void> registrate({
+    required Username username,
+    required Password password,
+    required Email email,
+  }) async {
+    return Future.delayed(const Duration(milliseconds: 300));
+  }
+
   Future<void> logIn({
     required Username username,
     required Password password,
