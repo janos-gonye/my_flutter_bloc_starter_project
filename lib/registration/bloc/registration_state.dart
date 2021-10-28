@@ -21,7 +21,7 @@ class RegistrationState extends Equatable {
   final Email email;
   final RegistrationStateType type;
 
-  bool get valid => username.valid && password.valid;
+  bool get valid => username.valid && password.valid && email.valid;
   bool get invalid => !valid;
 
   bool get isInitial => type == RegistrationStateType.initial;
