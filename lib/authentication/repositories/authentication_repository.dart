@@ -1,11 +1,17 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
+
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
 
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
 class AuthenticationRepository {
+  AuthenticationRepository({required this.dio});
+
+  final Dio dio;
+
   final _controller = StreamController<AuthenticationStatus>();
 
   Stream<AuthenticationStatus> get status async* {
