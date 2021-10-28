@@ -20,7 +20,7 @@ class LoginState extends Equatable {
   final LoginStateType type;
 
   bool get valid => username.valid && password.valid;
-  bool get invalid => !invalid;
+  bool get invalid => !valid;
 
   bool get isInitial => type == LoginStateType.initial;
   bool get isData => type == LoginStateType.data;

@@ -22,7 +22,7 @@ class RegistrationState extends Equatable {
   final RegistrationStateType type;
 
   bool get valid => username.valid && password.valid;
-  bool get invalid => !invalid;
+  bool get invalid => !valid;
 
   bool get isInitial => type == RegistrationStateType.initial;
   bool get isData => type == RegistrationStateType.data;
