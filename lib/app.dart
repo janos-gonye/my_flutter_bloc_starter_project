@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -85,6 +86,9 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: FlexColorScheme.light(scheme: FlexScheme.hippieBlue).toTheme,
+      darkTheme: FlexColorScheme.dark(scheme: FlexScheme.hippieBlue).toTheme,
+      themeMode: ThemeMode.dark,
       navigatorKey: _navigatorKey,
       initialRoute: SplashPage.routeName,
       routes: {
