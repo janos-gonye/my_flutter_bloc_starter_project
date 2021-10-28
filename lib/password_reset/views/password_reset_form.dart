@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:my_flutter_bloc_starter_project/home/views/home_page.dart';
 import 'package:my_flutter_bloc_starter_project/password_reset/password_reset.dart';
+import 'package:my_flutter_bloc_starter_project/shared/helpers.dart' as helpers;
 
 class PasswordResetForm extends StatefulWidget {
   const PasswordResetForm({Key? key}) : super(key: key);
@@ -32,9 +33,11 @@ class _PasswordResetFormState extends State<PasswordResetForm> {
           EasyLoading.show(
               status: 'loading...', maskType: EasyLoadingMaskType.clear);
         } else if (state.isPasswordResettingError) {
-          EasyLoading.showError('Sending email failed');
+          EasyLoading.dismiss();
+          helpers.showSnackbar(context, 'Sending email failed');
         } else if (state.isPasswordResettingSuccess) {
-          EasyLoading.showSuccess('Confirmation email sent');
+          EasyLoading.dismiss();
+          helpers.showSnackbar(context, 'Confirmation email sent');
           Navigator.of(context).pushNamedAndRemoveUntil(
             HomePage.routeName,
             (route) => false,

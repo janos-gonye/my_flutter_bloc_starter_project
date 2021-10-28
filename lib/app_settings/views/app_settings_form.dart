@@ -8,6 +8,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:my_flutter_bloc_starter_project/app_settings/bloc/app_settings_bloc.dart';
 import 'package:my_flutter_bloc_starter_project/constants.dart';
 import 'package:my_flutter_bloc_starter_project/home/views/home_page.dart';
+import 'package:my_flutter_bloc_starter_project/shared/helpers.dart' as helpers;
 
 class AppSettingsForm extends StatefulWidget {
   const AppSettingsForm({Key? key}) : super(key: key);
@@ -38,13 +39,15 @@ class _AppSettingsFormState extends State<AppSettingsForm> {
           EasyLoading.dismiss();
         }
         if (state.isSavingSuccess) {
-          EasyLoading.showSuccess('Settings saved');
+          EasyLoading.dismiss();
+          helpers.showSnackbar(context, 'Settings saved');
           Navigator.of(context).pushNamedAndRemoveUntil(
             HomePage.routeName,
             (route) => false,
           );
         } else if (state.isSavingError) {
-          EasyLoading.showError('Saving settings failed');
+          EasyLoading.dismiss();
+          helpers.showSnackbar(context, 'Saving settings failed');
         }
       },
       child: BlocBuilder<AppSettingsBloc, AppSettingsState>(

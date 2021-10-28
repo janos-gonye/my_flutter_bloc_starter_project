@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
+import 'package:my_flutter_bloc_starter_project/shared/helpers.dart' as helpers;
 
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -27,7 +28,8 @@ class _LoginFormState extends State<LoginForm> {
       listener: (context, state) {
         debugPrint("'LoginForm' listener invoked");
         if (state.isLoggingInError) {
-          EasyLoading.showError('Login Failure');
+          EasyLoading.dismiss();
+          helpers.showSnackbar(context, 'Login Failure');
         } else if (state.isInProgress) {
           EasyLoading.show(
               status: 'loading...', maskType: EasyLoadingMaskType.clear);

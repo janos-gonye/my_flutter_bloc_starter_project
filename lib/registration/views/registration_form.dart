@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:my_flutter_bloc_starter_project/home/home.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
+import 'package:my_flutter_bloc_starter_project/shared/helpers.dart' as helpers;
 
 class RegistrationForm extends StatefulWidget {
   const RegistrationForm({Key? key}) : super(key: key);
@@ -29,7 +30,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
       listener: (context, state) {
         debugPrint("'RegistrationForm' listener invoked");
         if (state.isRegistratingError) {
-          EasyLoading.showError('Registration Failure');
+          EasyLoading.dismiss();
+          helpers.showSnackbar(context, 'Registration failure');
         } else if (state.isInProgress) {
           EasyLoading.show(
             status: 'loading...',
@@ -40,7 +42,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
             HomePage.routeName,
             (route) => false,
           );
-          EasyLoading.showSuccess("Confirmation email sent");
+          EasyLoading.dismiss();
+          helpers.showSnackbar(context, 'Confirmation email sent');
         } else {
           EasyLoading.dismiss();
         }
