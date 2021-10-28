@@ -16,6 +16,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     on<RegistrationFormInitialized>(_onInitialized);
     on<RegistrationUsernameChanged>(_onUsernameChanged);
     on<RegistrationPasswordChanged>(_onPasswordChanged);
+    on<RegistrationPasswordConfirmChanged>(_onPasswordConfirmChanged);
     on<RegistrationEmailChanged>(_onEmailChanged);
     on<RegistrationFormSubmitted>(_onSubmitted);
   }
@@ -54,6 +55,16 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   ) {
     emit(state.copyWith(
       password: Password(event.password),
+      type: RegistrationStateType.data,
+    ));
+  }
+
+  void _onPasswordConfirmChanged(
+    RegistrationPasswordConfirmChanged event,
+    Emitter<RegistrationState> emit,
+  ) {
+    emit(state.copyWith(
+      passwordConfirm: Password(event.passwordConfirm),
       type: RegistrationStateType.data,
     ));
   }

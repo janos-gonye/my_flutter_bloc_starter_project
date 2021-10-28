@@ -12,16 +12,23 @@ class RegistrationState extends Equatable {
   const RegistrationState({
     this.username = const Username(''),
     this.password = const Password(''),
+    this.passwordConfirm = const Password(''),
     this.email = const Email(''),
     this.type = RegistrationStateType.initial,
   });
 
   final Username username;
   final Password password;
+  final Password passwordConfirm;
   final Email email;
   final RegistrationStateType type;
 
-  bool get valid => username.valid && password.valid && email.valid;
+  bool get valid =>
+      username.valid &&
+      password.valid &&
+      passwordConfirm.valid &&
+      email.valid &&
+      password.value == passwordConfirm.value;
   bool get invalid => !valid;
 
   bool get isInitial => type == RegistrationStateType.initial;
@@ -37,17 +44,19 @@ class RegistrationState extends Equatable {
   RegistrationState copyWith({
     Username? username,
     Password? password,
+    Password? passwordConfirm,
     Email? email,
     RegistrationStateType? type,
   }) {
     return RegistrationState(
       username: username ?? this.username,
       password: password ?? this.password,
+      passwordConfirm: passwordConfirm ?? this.passwordConfirm,
       email: email ?? this.email,
       type: type ?? this.type,
     );
   }
 
   @override
-  List<Object> get props => [username, password, email, type];
+  List<Object> get props => [username, password, passwordConfirm, email, type];
 }

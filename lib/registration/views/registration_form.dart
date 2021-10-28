@@ -50,6 +50,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           _UsernameInput(),
           _EmailInput(),
           _PasswordInput(),
+          _PasswordConfirmInput(),
           _SubmitButton(),
         ],
       ),
@@ -101,7 +102,9 @@ class _PasswordInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
-      buildWhen: (previous, current) => previous.password != current.password,
+      buildWhen: (previous, current) =>
+          previous.password != current.password ||
+          previous.passwordConfirm != current.passwordConfirm,
       builder: (context, state) {
         debugPrint("'RegistrationForm - _PasswordInput' (re)built");
         return TextField(
@@ -111,6 +114,32 @@ class _PasswordInput extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'password',
             errorText: state.password.errorMessage,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _PasswordConfirmInput extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<RegistrationBloc, RegistrationState>(
+      buildWhen: (previous, current) =>
+          previous.password != current.password ||
+          previous.passwordConfirm != current.passwordConfirm,
+      builder: (context, state) {
+        debugPrint("'RegistrationForm - _PasswordConfirmInput' (re)built");
+        return TextField(
+          onChanged: (passwordConfirm) =>
+              BlocProvider.of<RegistrationBloc>(context)
+                  .add(RegistrationPasswordConfirmChanged(passwordConfirm)),
+          obscureText: true,
+          decoration: InputDecoration(
+            labelText: 'password',
+            errorText: state.password.value != state.passwordConfirm.value
+                ? "passwords don't match"
+                : null,
           ),
         );
       },
