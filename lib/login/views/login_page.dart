@@ -16,17 +16,19 @@ class LoginPage extends StatelessWidget {
         title: const Text('Login'),
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              const LoginForm(),
-              ElevatedButton(
-                onPressed: () => Navigator.of(context)
-                    .pushNamed(PasswordResetPage.routeName),
-                child: const Text('Password forgotten?'),
-              ),
-            ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                const LoginForm(),
+                ElevatedButton(
+                  onPressed: () => Navigator.of(context)
+                      .pushNamed(PasswordResetPage.routeName),
+                  child: const Text('Password forgotten?'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

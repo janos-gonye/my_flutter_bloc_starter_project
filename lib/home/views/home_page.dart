@@ -16,28 +16,30 @@ class HomePage extends StatelessWidget {
         title: const Text('Home'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(AppSettingsPage.routeName);
-              },
-              child: const Text('Navigate to App Settings'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(LoginPage.routeName);
-              },
-              child: const Text('Navigate to Login Page'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(RegistrationPage.routeName);
-              },
-              child: const Text('Navigate to Registration Page'),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppSettingsPage.routeName);
+                },
+                child: const Text('Navigate to App Settings'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(LoginPage.routeName);
+                },
+                child: const Text('Navigate to Login Page'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(RegistrationPage.routeName);
+                },
+                child: const Text('Navigate to Registration Page'),
+              ),
+            ],
+          ),
         ),
       ),
     );

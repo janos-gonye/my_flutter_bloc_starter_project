@@ -13,7 +13,9 @@ class UserPage extends StatelessWidget {
         title: const Text('User Page'),
       ),
       body: const Center(
-        child: Text('User Page'),
+        child: SingleChildScrollView(
+          child: Text('User Page'),
+        ),
       ),
     );
   }

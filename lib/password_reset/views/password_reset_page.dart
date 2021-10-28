@@ -14,10 +14,16 @@ class PasswordResetPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Reset Password'),
       ),
-      body: const Center(
-        child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: PasswordResetForm(),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: const [
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: PasswordResetForm(),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -14,9 +14,13 @@ class RegistrationPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Registration Page'),
       ),
-      body: const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: RegistrationForm(),
+      body: const Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: RegistrationForm(),
+          ),
+        ),
       ),
     );
   }

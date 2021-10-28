@@ -96,6 +96,8 @@ class _AppViewState extends State<AppView> {
         RegistrationPage.routeName: (context) => const RegistrationPage(),
         PasswordResetPage.routeName: (context) => const PasswordResetPage(),
       },
+      // TODO: Add 'onUnknownRoute' event
+
       builder: EasyLoading.init(
         builder: (context, child) {
           return BlocListener<AuthenticationBloc, AuthenticationState>(
