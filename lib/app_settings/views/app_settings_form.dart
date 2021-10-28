@@ -28,10 +28,10 @@ class _AppSettingsFormState extends State<AppSettingsForm> {
   Widget build(BuildContext context) {
     return BlocListener<AppSettingsBloc, AppSettingsState>(
       listenWhen: (previous, current) =>
-          !current.isData && previous.type != current.type,
+          !current.isData || previous.type != current.type,
       listener: (context, state) {
         debugPrint("'AppSettingsForm' listener invoked");
-        if (state.isloading) {
+        if (state.isInProgress) {
           EasyLoading.show(
               status: 'loading...', maskType: EasyLoadingMaskType.clear);
         } else {

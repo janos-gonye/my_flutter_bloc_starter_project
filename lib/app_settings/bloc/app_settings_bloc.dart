@@ -31,24 +31,19 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     AppSettingsFormInitialized event,
     Emitter<AppSettingsState> emit,
   ) async {
-    emit(state.copyWith(
-      type: AppSettingsStateType.loading,
-    ));
+    emit(state.copyWith(type: AppSettingsStateType.loading));
     try {
       final protocol = await appSettingsRepository.protocol;
       final hostname = await appSettingsRepository.hostname;
       final port = await appSettingsRepository.port;
-      emit(state.copyWith(type: AppSettingsStateType.loadingSuccess));
       emit(state.copyWith(
-        type: AppSettingsStateType.data,
+        type: AppSettingsStateType.loadingSuccess,
         protocol: protocol,
         hostname: hostname,
         port: port,
       ));
     } catch (_) {
-      emit(state.copyWith(
-        type: AppSettingsStateType.loadingError,
-      ));
+      emit(state.copyWith(type: AppSettingsStateType.loadingError));
     }
   }
 
