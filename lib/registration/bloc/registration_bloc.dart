@@ -12,7 +12,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
   RegistrationBloc({
     required RegistrationRepository registrationRepository,
   })  : _registrationRepository = registrationRepository,
-        super(const RegistrationState(type: RegistrationStateType.initial)) {
+        super(const RegistrationState(type: RegistrationStateType.data)) {
     on<RegistrationFormInitialized>(_onInitialized);
     on<RegistrationUsernameChanged>(_onUsernameChanged);
     on<RegistrationPasswordChanged>(_onPasswordChanged);
@@ -34,9 +34,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     RegistrationFormInitialized event,
     Emitter<RegistrationState> emit,
   ) {
-    emit(state.copyWith(
-      type: RegistrationStateType.initial,
-    ));
+    emit(state.clear(type: RegistrationStateType.data));
   }
 
   void _onUsernameChanged(

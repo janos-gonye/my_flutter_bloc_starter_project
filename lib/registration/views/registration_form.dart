@@ -24,8 +24,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<RegistrationBloc, RegistrationState>(
-      listenWhen: (previous, current) =>
-          !current.isData && previous.type != current.type,
+      listenWhen: (previous, current) => previous.type != current.type,
       listener: (context, state) {
         debugPrint("'RegistrationForm' listener invoked");
         if (state.isRegistratingError) {
