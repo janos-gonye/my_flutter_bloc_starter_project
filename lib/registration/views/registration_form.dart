@@ -63,7 +63,7 @@ class _UsernameInput extends StatelessWidget {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
       buildWhen: (previous, current) => previous.username != current.username,
       builder: (context, state) {
-        debugPrint("'RegistrationForm - _UsernameInput' listener invoked");
+        debugPrint("'RegistrationForm - _UsernameInput' (re)built");
         return TextField(
           onChanged: (username) => BlocProvider.of<RegistrationBloc>(context)
               .add(RegistrationUsernameChanged(username)),
@@ -83,7 +83,7 @@ class _EmailInput extends StatelessWidget {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
       buildWhen: (previous, current) => previous.email != current.email,
       builder: (context, state) {
-        debugPrint("'RegistrationForm - _EmailInput' listener invoked");
+        debugPrint("'RegistrationForm - _EmailInput' (re)built");
         return TextField(
           onChanged: (email) => BlocProvider.of<RegistrationBloc>(context)
               .add(RegistrationEmailChanged(email)),
@@ -103,7 +103,7 @@ class _PasswordInput extends StatelessWidget {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
       buildWhen: (previous, current) => previous.password != current.password,
       builder: (context, state) {
-        debugPrint("'RegistrationForm - _PasswordInput' listener invoked");
+        debugPrint("'RegistrationForm - _PasswordInput' (re)built");
         return TextField(
           onChanged: (password) => BlocProvider.of<RegistrationBloc>(context)
               .add(RegistrationPasswordChanged(password)),
@@ -128,7 +128,7 @@ class _SubmitButton extends StatelessWidget {
           (previous.isInProgress && !current.isInProgress) ||
           (!previous.isInProgress && current.isInProgress),
       builder: (context, state) {
-        debugPrint("'RegistrationForm - _SubmitButton' listener invoked");
+        debugPrint("'RegistrationForm - _SubmitButton' (re)built");
         return ElevatedButton(
           child: const Text('Registrate'),
           onPressed: state.invalid || state.isInProgress
