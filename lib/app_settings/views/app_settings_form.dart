@@ -32,7 +32,7 @@ class _AppSettingsFormState extends State<AppSettingsForm> {
           !current.isData || previous.type != current.type,
       listener: (context, state) {
         debugPrint("'AppSettingsForm' listener invoked");
-        if (state.isInProgress) {
+        if (state.isSaving) {
           EasyLoading.show(
               status: 'loading...', maskType: EasyLoadingMaskType.clear);
         } else {
@@ -57,7 +57,7 @@ class _AppSettingsFormState extends State<AppSettingsForm> {
         builder: (context, state) {
           debugPrint("'AppSettingsForm' (re)built");
           if (state.isloading) {
-            return const SizedBox();
+            return const CircularProgressIndicator();
           } else {
             return Column(
               children: [
