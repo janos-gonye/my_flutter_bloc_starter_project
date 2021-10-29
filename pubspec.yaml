@@ -8,13 +8,14 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  dio: ^4.0.0
   equatable: ^2.0.3
+  flex_color_scheme: ^3.0.1
   flutter:
     sdk: flutter
   flutter_bloc: ^7.3.1
   flutter_easyloading: ^3.0.3
   flutter_secure_storage: ^4.2.1
-  formz: ^0.4.1
   string_validator: ^0.3.0
 
 dev_dependencies:

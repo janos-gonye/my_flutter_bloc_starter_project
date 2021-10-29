@@ -1,15 +1,15 @@
-import 'package:formz/formz.dart';
 import 'package:string_validator/string_validator.dart';
+
+import 'package:my_flutter_bloc_starter_project/shared/models/models.dart';
 
 enum HostnameValidationError { empty, invalid }
 
-class Hostname extends FormzInput<String, HostnameValidationError> {
-  const Hostname.pure() : super.pure('');
-  const Hostname.dirty([String value = '']) : super.dirty(value);
+class Hostname extends Model<String, HostnameValidationError> {
+  const Hostname(String value) : super(value);
 
   @override
-  HostnameValidationError? validator(String? value) {
-    if (value == null || value.isEmpty) {
+  HostnameValidationError? get error {
+    if (value.isEmpty) {
       return HostnameValidationError.empty;
     }
     if (isFQDN(value, {'require_tld': false}) == false) {
@@ -17,6 +17,7 @@ class Hostname extends FormzInput<String, HostnameValidationError> {
     }
   }
 
+  @override
   String? get errorMessage {
     if (error == HostnameValidationError.empty) return 'Empty hostname';
     if (error == HostnameValidationError.invalid) return 'Invalid hostname';

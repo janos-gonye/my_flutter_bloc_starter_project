@@ -4,9 +4,11 @@ import 'package:flutter/widgets.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:formz/formz.dart';
 
 import 'package:my_flutter_bloc_starter_project/app_settings/bloc/app_settings_bloc.dart';
+import 'package:my_flutter_bloc_starter_project/constants.dart';
+import 'package:my_flutter_bloc_starter_project/home/views/home_page.dart';
+import 'package:my_flutter_bloc_starter_project/shared/helpers.dart' as helpers;
 
 class AppSettingsForm extends StatefulWidget {
   const AppSettingsForm({Key? key}) : super(key: key);
@@ -18,44 +20,61 @@ class AppSettingsForm extends StatefulWidget {
 class _AppSettingsFormState extends State<AppSettingsForm> {
   @override
   void initState() {
-    BlocProvider.of<AppSettingsBloc>(context)
-        .add(const AppSettingsInitialized());
     super.initState();
+    BlocProvider.of<AppSettingsBloc>(context)
+        .add(const AppSettingsFormInitialized());
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<AppSettingsBloc, AppSettingsState>(
       listenWhen: (previous, current) =>
-          previous.formStatus != current.formStatus ||
-          previous.fetching != current.fetching,
+          !current.isData || previous.type != current.type,
       listener: (context, state) {
-        if (state.fetching ||
-            state.formStatus == FormzStatus.submissionInProgress) {
+        debugPrint("'AppSettingsForm' listener invoked");
+        if (state.isSaving) {
           EasyLoading.show(
               status: 'loading...', maskType: EasyLoadingMaskType.clear);
         } else {
           EasyLoading.dismiss();
         }
-        if (state.formStatus.isSubmissionSuccess) {
-          EasyLoading.showSuccess('Settings saved');
-        } else if (state.formStatus.isSubmissionFailure) {
-          EasyLoading.showError('Saving settings failed');
+        if (state.isSavingSuccess) {
+          EasyLoading.dismiss();
+          helpers.showSnackbar(context, 'Settings saved');
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            HomePage.routeName,
+            (route) => false,
+          );
+        } else if (state.isSavingError) {
+          EasyLoading.dismiss();
+          helpers.showSnackbar(context, 'Saving settings failed');
         }
       },
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text('Protocol: '),
-              _ProtocolInput(),
-            ],
-          ),
-          const _HostnameInput(),
-          const _PortInput(),
-          const _SubmitButton(),
-        ],
+      child: BlocBuilder<AppSettingsBloc, AppSettingsState>(
+        buildWhen: (previous, current) =>
+            (previous.type != current.type) &&
+            (previous.isloading || current.isloading),
+        builder: (context, state) {
+          debugPrint("'AppSettingsForm' (re)built");
+          if (state.isloading) {
+            return const CircularProgressIndicator();
+          } else {
+            return Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text('Protocol: '),
+                    _ProtocolInput(),
+                  ],
+                ),
+                const _HostnameInput(),
+                const _PortInput(),
+                const _SubmitButton(),
+              ],
+            );
+          }
+        },
       ),
     );
   }
@@ -69,6 +88,7 @@ class _ProtocolInput extends StatelessWidget {
     return BlocBuilder<AppSettingsBloc, AppSettingsState>(
       buildWhen: (previous, current) => previous.protocol != current.protocol,
       builder: (context, state) {
+        debugPrint("'AppSettingsForm - _ProtocolInput' (re)built");
         return DropdownButton<String>(
           onChanged: (protocol) {
             if (protocol != null) {
@@ -77,8 +97,7 @@ class _ProtocolInput extends StatelessWidget {
             }
           },
           value: state.protocol.value,
-          items: <String>['http', 'https']
-              .map<DropdownMenuItem<String>>((String value) {
+          items: protocols.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,
               child: Text(value),
@@ -98,6 +117,7 @@ class _HostnameInput extends StatelessWidget {
     return BlocBuilder<AppSettingsBloc, AppSettingsState>(
       buildWhen: (previous, current) => previous.hostname != current.hostname,
       builder: (context, state) {
+        debugPrint("'AppSettingsForm - _HostnameInput' (re)built");
         return TextFormField(
           initialValue: state.hostname.value,
           onChanged: (hostname) {
@@ -122,6 +142,7 @@ class _PortInput extends StatelessWidget {
     return BlocBuilder<AppSettingsBloc, AppSettingsState>(
       buildWhen: (previous, current) => previous.port != current.port,
       builder: (context, state) {
+        debugPrint("'AppSettingsForm - _PortInput' (re)built");
         return TextFormField(
           initialValue: state.port.value,
           onChanged: (port) {
@@ -149,12 +170,14 @@ class _SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AppSettingsBloc, AppSettingsState>(
       buildWhen: (previous, current) =>
-          previous.formStatus != current.formStatus,
+          (previous.invalid && current.valid) ||
+          (previous.valid && current.invalid) ||
+          (previous.isInProgress && !current.isInProgress) ||
+          (!previous.isInProgress && current.isInProgress),
       builder: (context, state) {
+        debugPrint("'AppSettingsForm - _SubmitButton' (re)built");
         return ElevatedButton(
-          onPressed: state.fetching ||
-                  state.formStatus.isSubmissionInProgress ||
-                  state.formStatus.isInvalid
+          onPressed: state.invalid || state.isInProgress
               ? null
               : () {
                   BlocProvider.of<AppSettingsBloc>(context)

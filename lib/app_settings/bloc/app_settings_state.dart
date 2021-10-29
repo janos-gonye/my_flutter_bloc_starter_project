@@ -1,36 +1,59 @@
 part of 'app_settings_bloc.dart';
 
+enum AppSettingsStateType {
+  initial,
+  loading,
+  loadingSuccess,
+  loadingError,
+  data,
+  saving,
+  savingSuccess,
+  savingError,
+}
+
 class AppSettingsState extends Equatable {
   const AppSettingsState({
-    this.formStatus = FormzStatus.pure,
-    this.protocol = const Protocol.pure(),
-    this.hostname = const Hostname.pure(),
-    this.port = const Port.pure(),
-    this.fetching = false,
-  }) : super();
+    this.protocol = const Protocol(http),
+    this.hostname = const Hostname(''),
+    this.port = const Port(''),
+    this.type = AppSettingsStateType.initial,
+  });
 
-  final FormzStatus formStatus;
+  bool get valid => protocol.valid && hostname.valid && port.valid;
+  bool get invalid => !valid;
+
+  bool get isInitial => type == AppSettingsStateType.initial;
+  bool get isloading => type == AppSettingsStateType.loading;
+  bool get isLoadingSuccess => type == AppSettingsStateType.loadingSuccess;
+  bool get isLoadingError => type == AppSettingsStateType.loadingError;
+  bool get isData => type == AppSettingsStateType.data;
+  bool get isSaving => type == AppSettingsStateType.saving;
+  bool get isSavingSuccess => type == AppSettingsStateType.savingSuccess;
+  bool get isSavingError => type == AppSettingsStateType.savingError;
+
+  bool get isInProgress => isInitial || isloading || isSaving;
+  bool get isSuccess => isLoadingSuccess || isSavingSuccess;
+  bool get isError => isLoadingError || isSavingError;
+
   final Protocol protocol;
   final Hostname hostname;
   final Port port;
-  final bool fetching;
+  final AppSettingsStateType type;
 
   AppSettingsState copyWith({
-    FormzStatus? formStatus,
     Protocol? protocol,
     Hostname? hostname,
     Port? port,
-    bool? fetching,
+    AppSettingsStateType? type,
   }) {
     return AppSettingsState(
-      formStatus: formStatus ?? this.formStatus,
       protocol: protocol ?? this.protocol,
       hostname: hostname ?? this.hostname,
       port: port ?? this.port,
-      fetching: fetching ?? this.fetching,
+      type: type ?? this.type,
     );
   }
 
   @override
-  List<Object> get props => [fetching, formStatus, port, hostname, protocol];
+  List<Object> get props => [port, hostname, protocol, type];
 }
