@@ -14,6 +14,7 @@ class RegistrationState extends Equatable {
     this.passwordConfirm = const Password(''),
     this.email = const Email(''),
     this.type = RegistrationStateType.data,
+    this.message = '',
   });
 
   final Username username;
@@ -21,6 +22,7 @@ class RegistrationState extends Equatable {
   final Password passwordConfirm;
   final Email email;
   final RegistrationStateType type;
+  final String message;
 
   bool get valid =>
       username.valid &&
@@ -51,6 +53,7 @@ class RegistrationState extends Equatable {
     Password? passwordConfirm,
     Email? email,
     RegistrationStateType? type,
+    String? message,
   }) {
     return RegistrationState(
       username: username ?? this.username,
@@ -58,9 +61,11 @@ class RegistrationState extends Equatable {
       passwordConfirm: passwordConfirm ?? this.passwordConfirm,
       email: email ?? this.email,
       type: type ?? this.type,
+      message: message ?? this.message,
     );
   }
 
   @override
-  List<Object> get props => [username, password, passwordConfirm, email, type];
+  List<Object> get props =>
+      [username, password, passwordConfirm, email, type, message];
 }
