@@ -4,7 +4,7 @@ import 'package:my_flutter_bloc_starter_project/shared/models/base.dart';
 
 enum HostnameValidationError { empty, invalid }
 
-class Hostname extends Model<String, HostnameValidationError> {
+class Hostname extends FormModel<String, HostnameValidationError> {
   const Hostname(String value) : super(value);
 
   @override

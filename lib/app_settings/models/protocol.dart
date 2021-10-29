@@ -2,7 +2,7 @@ import 'package:my_flutter_bloc_starter_project/shared/models/base.dart';
 
 enum ProtocolValidationError { empty, invalid }
 
-class Protocol extends Model<String, ProtocolValidationError> {
+class Protocol extends FormModel<String, ProtocolValidationError> {
   const Protocol(String value) : super(value);
 
   @override

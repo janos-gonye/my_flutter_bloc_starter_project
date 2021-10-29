@@ -4,7 +4,7 @@ import 'package:my_flutter_bloc_starter_project/shared/models/base.dart';
 
 enum EmailValidationError { api, empty, invalid }
 
-class Email extends Model<String, EmailValidationError> {
+class Email extends FormModel<String, EmailValidationError> {
   const Email(String value, {serverError})
       : super(value, serverError: serverError);
 

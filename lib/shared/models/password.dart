@@ -7,7 +7,7 @@ enum PasswordValidationError {
   invalidMissingRequired,
 }
 
-class Password extends Model<String, PasswordValidationError> {
+class Password extends FormModel<String, PasswordValidationError> {
   const Password(String value, {serverError})
       : super(value, serverError: serverError);
 

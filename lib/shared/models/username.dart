@@ -8,7 +8,7 @@ enum UsernameValidationError {
   invalidChars
 }
 
-class Username extends Model<String, UsernameValidationError> {
+class Username extends FormModel<String, UsernameValidationError> {
   const Username(String value, {serverError})
       : super(value, serverError: serverError);
 

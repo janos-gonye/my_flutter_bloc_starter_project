@@ -9,7 +9,7 @@ enum PortValidationError {
   invalidOutOfRange
 }
 
-class Port extends Model<String, PortValidationError> {
+class Port extends FormModel<String, PortValidationError> {
   const Port(String value) : super(value);
 
   @override

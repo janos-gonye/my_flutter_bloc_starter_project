@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-abstract class Model<T, E> extends Equatable {
-  const Model(this.value, {this.serverError});
+abstract class FormModel<T, E> extends Equatable {
+  const FormModel(this.value, {this.serverError});
 
   final String? serverError;
 
