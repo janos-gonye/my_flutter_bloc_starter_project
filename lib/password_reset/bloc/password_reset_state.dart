@@ -40,10 +40,12 @@ class PasswordResetState extends MyFormState {
   @override
   bool get isSuccess => isPasswordResettingSuccess;
 
+  @override
   PasswordResetState clear() {
     return const PasswordResetState();
   }
 
+  @override
   PasswordResetState copyWith({
     Email? email,
     PasswordResetStateType? type,

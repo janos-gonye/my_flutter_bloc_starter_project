@@ -52,7 +52,9 @@ class _UsernameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
-      buildWhen: (previous, current) => previous.username != current.username,
+      buildWhen: (previous, current) =>
+          helpers.shouldRerenderFormInputField(previous, current) ||
+          previous.username != current.username,
       builder: (context, state) {
         debugPrint("'LoginForm - _UsernameInput' (re)built");
         return TextField(
@@ -72,7 +74,9 @@ class _PasswordInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
-      buildWhen: (previous, current) => previous.password != current.password,
+      buildWhen: (previous, current) =>
+          helpers.shouldRerenderFormInputField(previous, current) ||
+          previous.password != current.password,
       builder: (context, state) {
         debugPrint("'LoginForm - _PasswordInput' (re)built");
         return TextField(

@@ -19,3 +19,11 @@ bool shouldRerenderFormSubmitButton(
       (previous.isInProgress && !current.isInProgress) ||
       (!previous.isInProgress && current.isInProgress);
 }
+
+bool shouldRerenderFormInputField(
+  MyFormState previous,
+  MyFormState current,
+) {
+  return ((previous.isInitial && !current.isInitial) ||
+      (!previous.isInitial && current.isInitial));
+}

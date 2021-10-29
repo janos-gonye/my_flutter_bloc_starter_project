@@ -60,7 +60,9 @@ class _EmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PasswordResetBloc, PasswordResetState>(
-      buildWhen: (previous, current) => previous.email != current.email,
+      buildWhen: (previous, current) =>
+          helpers.shouldRerenderFormInputField(previous, current) ||
+          previous.email != current.email,
       builder: (context, state) {
         debugPrint("'PasswordResetForm - _EmailInput' (re)built");
         return TextField(

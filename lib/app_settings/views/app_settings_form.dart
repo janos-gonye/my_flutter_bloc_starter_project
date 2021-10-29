@@ -115,7 +115,9 @@ class _HostnameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppSettingsBloc, AppSettingsState>(
-      buildWhen: (previous, current) => previous.hostname != current.hostname,
+      buildWhen: (previous, current) =>
+          helpers.shouldRerenderFormInputField(previous, current) ||
+          previous.hostname != current.hostname,
       builder: (context, state) {
         debugPrint("'AppSettingsForm - _HostnameInput' (re)built");
         return TextFormField(
@@ -140,7 +142,9 @@ class _PortInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppSettingsBloc, AppSettingsState>(
-      buildWhen: (previous, current) => previous.port != current.port,
+      buildWhen: (previous, current) =>
+          helpers.shouldRerenderFormInputField(previous, current) ||
+          previous.port != current.port,
       builder: (context, state) {
         debugPrint("'AppSettingsForm - _PortInput' (re)built");
         return TextFormField(

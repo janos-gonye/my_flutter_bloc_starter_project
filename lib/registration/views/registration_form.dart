@@ -65,7 +65,9 @@ class _UsernameInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
-      buildWhen: (previous, current) => previous.username != current.username,
+      buildWhen: (previous, current) =>
+          helpers.shouldRerenderFormInputField(previous, current) ||
+          previous.username != current.username,
       builder: (context, state) {
         debugPrint("'RegistrationForm - _UsernameInput' (re)built");
         return TextField(
@@ -85,7 +87,9 @@ class _EmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
-      buildWhen: (previous, current) => previous.email != current.email,
+      buildWhen: (previous, current) =>
+          helpers.shouldRerenderFormInputField(previous, current) ||
+          previous.email != current.email,
       builder: (context, state) {
         debugPrint("'RegistrationForm - _EmailInput' (re)built");
         return TextField(
@@ -106,8 +110,8 @@ class _PasswordInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
       buildWhen: (previous, current) =>
-          previous.password != current.password ||
-          previous.passwordConfirm != current.passwordConfirm,
+          helpers.shouldRerenderFormInputField(previous, current) ||
+          previous.password != current.password,
       builder: (context, state) {
         debugPrint("'RegistrationForm - _PasswordInput' (re)built");
         return TextField(
@@ -129,6 +133,7 @@ class _PasswordConfirmInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
       buildWhen: (previous, current) =>
+          helpers.shouldRerenderFormInputField(previous, current) ||
           previous.password != current.password ||
           previous.passwordConfirm != current.passwordConfirm,
       builder: (context, state) {
