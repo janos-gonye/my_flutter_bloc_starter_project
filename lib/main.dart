@@ -11,13 +11,14 @@ import 'package:my_flutter_bloc_starter_project/user/user.dart';
 
 void main() {
   Dio dio = initDio();
+  const appSettingsRepository = AppSettingsRepository(
+    secureStorage: FlutterSecureStorage(),
+  );
+  final authenticationRepository = AuthenticationRepository(dio: dio);
   runApp(
     MyStarterProjectApp(
-      appSettingsRepository: AppSettingsRepository(
-        secureStorage: const FlutterSecureStorage(),
-        dio: dio,
-      ),
-      authenticationRepository: AuthenticationRepository(dio: dio),
+      appSettingsRepository: appSettingsRepository,
+      authenticationRepository: authenticationRepository,
       userRepository: UserRepository(dio: dio),
     ),
   );
