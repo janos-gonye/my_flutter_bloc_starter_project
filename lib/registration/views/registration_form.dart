@@ -157,10 +157,7 @@ class _SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
       buildWhen: (previous, current) =>
-          (previous.valid && current.invalid) ||
-          (previous.invalid && current.valid) ||
-          (previous.isInProgress && !current.isInProgress) ||
-          (!previous.isInProgress && current.isInProgress),
+          helpers.shouldRerenderFormSubmitButton(previous, current),
       builder: (context, state) {
         debugPrint("'RegistrationForm - _SubmitButton' (re)built");
         return ElevatedButton(

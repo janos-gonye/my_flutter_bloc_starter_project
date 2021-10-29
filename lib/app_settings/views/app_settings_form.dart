@@ -170,10 +170,7 @@ class _SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AppSettingsBloc, AppSettingsState>(
       buildWhen: (previous, current) =>
-          (previous.invalid && current.valid) ||
-          (previous.valid && current.invalid) ||
-          (previous.isInProgress && !current.isInProgress) ||
-          (!previous.isInProgress && current.isInProgress),
+          helpers.shouldRerenderFormSubmitButton(previous, current),
       builder: (context, state) {
         debugPrint("'AppSettingsForm - _SubmitButton' (re)built");
         return ElevatedButton(
