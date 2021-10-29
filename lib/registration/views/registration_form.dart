@@ -31,7 +31,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
         debugPrint("'RegistrationForm' listener invoked");
         if (state.isRegistratingError) {
           EasyLoading.dismiss();
-          helpers.showSnackbar(context, 'Registration failure');
+          helpers.showSnackbar(context, state.message);
         } else if (state.isInProgress) {
           EasyLoading.show(
             status: 'loading...',
@@ -43,7 +43,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
             (route) => false,
           );
           EasyLoading.dismiss();
-          helpers.showSnackbar(context, 'Confirmation email sent');
+          helpers.showSnackbar(context, state.message);
         } else {
           EasyLoading.dismiss();
         }

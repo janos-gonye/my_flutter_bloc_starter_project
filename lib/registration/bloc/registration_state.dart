@@ -65,6 +65,35 @@ class RegistrationState extends Equatable {
     );
   }
 
+  RegistrationState stateFormServerError({
+    RegistrationStateType? type,
+    String? message,
+    required Map<String, List<dynamic>> errors,
+  }) {
+    return copyWith(
+      type: type,
+      message: message,
+      username: errors.containsKey('username')
+          ? Username(
+              username.value,
+              serverError: errors['username']?.first.toString(),
+            )
+          : null,
+      password: errors.containsKey('password')
+          ? Password(
+              password.value,
+              serverError: errors['password']?.first.toString(),
+            )
+          : null,
+      email: errors.containsKey('email')
+          ? Email(
+              email.value,
+              serverError: errors['email']?.first.toString(),
+            )
+          : null,
+    );
+  }
+
   @override
   List<Object> get props =>
       [username, password, passwordConfirm, email, type, message];

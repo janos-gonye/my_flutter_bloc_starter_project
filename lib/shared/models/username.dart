@@ -9,13 +9,12 @@ enum UsernameValidationError {
 }
 
 class Username extends Model<String, UsernameValidationError> {
-  const Username(String value, {this.apiError}) : super(value);
-
-  final String? apiError;
+  const Username(String value, {serverError})
+      : super(value, serverError: serverError);
 
   @override
   UsernameValidationError? get error {
-    if (apiError != null) return UsernameValidationError.api;
+    if (serverError != null) return UsernameValidationError.api;
     if (value.isEmpty == true) {
       return UsernameValidationError.empty;
     }
@@ -30,7 +29,7 @@ class Username extends Model<String, UsernameValidationError> {
 
   @override
   String? get errorMessage {
-    if (error == UsernameValidationError.api) return apiError;
+    if (error == UsernameValidationError.api) return serverError;
     if (error == UsernameValidationError.empty) return 'Empty username';
     if (error == UsernameValidationError.invalidTooShort) {
       return '8 characters or more';
@@ -44,5 +43,5 @@ class Username extends Model<String, UsernameValidationError> {
   }
 
   @override
-  List<Object?> get props => super.props + [apiError];
+  List<Object?> get props => super.props + [serverError];
 }

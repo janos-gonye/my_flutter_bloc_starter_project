@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
 
 abstract class Model<T, E> extends Equatable {
-  const Model(this.value);
+  const Model(this.value, {this.serverError});
+
+  final String? serverError;
 
   final T value;
 
@@ -25,5 +27,5 @@ abstract class Model<T, E> extends Equatable {
   }
 
   @override
-  List<Object?> get props => [value, error];
+  List<Object?> get props => [value, error, serverError];
 }

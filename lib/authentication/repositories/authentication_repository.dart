@@ -2,14 +2,20 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 
+import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
+import 'package:my_flutter_bloc_starter_project/constants.dart' as constants;
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
 
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
 class AuthenticationRepository {
-  AuthenticationRepository({required this.dio});
+  AuthenticationRepository({
+    required this.dio,
+    required this.appSettingsRepository,
+  });
 
+  final AppSettingsRepository appSettingsRepository;
   final Dio dio;
 
   final _controller = StreamController<AuthenticationStatus>();
@@ -20,12 +26,22 @@ class AuthenticationRepository {
     yield* _controller.stream;
   }
 
-  Future<void> registrate({
+  Future<String> registrate({
     required Username username,
     required Password password,
     required Email email,
   }) async {
-    return Future.delayed(const Duration(milliseconds: 300));
+    Uri? serverUri = await appSettingsRepository.serverUri;
+    if (serverUri == null) {
+      throw Exception('app settings server uri not configured');
+    }
+    serverUri = serverUri.replace(path: constants.apiPathAuthRegistration);
+    final response = await dio.postUri(serverUri, data: {
+      'username': username.value,
+      'password': password.value,
+      'email': email.value,
+    });
+    return response.data['detail'];
   }
 
   Future<void> logIn({

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
@@ -85,14 +86,33 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     if (state.valid) {
       emit(state.copyWith(type: RegistrationStateType.registrating));
       try {
-        await _authenticationRepository.registrate(
+        final successMessage = await _authenticationRepository.registrate(
           username: state.username,
           password: state.password,
           email: state.email,
         );
-        emit(state.copyWith(type: RegistrationStateType.registratingSuccess));
-      } catch (_) {
-        emit(state.copyWith(type: RegistrationStateType.registratingError));
+        emit(state.copyWith(
+          type: RegistrationStateType.registratingSuccess,
+          message: successMessage,
+        ));
+      } on DioError catch (e) {
+        if (e.response != null &&
+            e.response?.statusCode == 400 &&
+            e.response?.data != null) {
+          final errors = Map<String, List<dynamic>>.from(e.response!.data);
+          emit(
+            state.stateFormServerError(
+              type: RegistrationStateType.registratingError,
+              message: 'invalid values',
+              errors: errors,
+            ),
+          );
+        } else {
+          emit(state.copyWith(
+            type: RegistrationStateType.registratingError,
+            message: e.response!.data.toString(),
+          ));
+        }
       }
     }
   }

@@ -14,7 +14,10 @@ void main() {
   const appSettingsRepository = AppSettingsRepository(
     secureStorage: FlutterSecureStorage(),
   );
-  final authenticationRepository = AuthenticationRepository(dio: dio);
+  final authenticationRepository = AuthenticationRepository(
+    dio: dio,
+    appSettingsRepository: appSettingsRepository,
+  );
   runApp(
     MyStarterProjectApp(
       appSettingsRepository: appSettingsRepository,
