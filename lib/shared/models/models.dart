@@ -1,4 +1,6 @@
-abstract class Model<T, E> {
+import 'package:equatable/equatable.dart';
+
+abstract class Model<T, E> extends Equatable {
   const Model(this.value);
 
   final T value;
@@ -21,4 +23,7 @@ abstract class Model<T, E> {
   String toString() {
     return "${runtimeType.toString()}(value: ${value.toString()})";
   }
+
+  @override
+  List<Object?> get props => [value, error];
 }
