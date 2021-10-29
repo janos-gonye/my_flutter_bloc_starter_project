@@ -126,7 +126,7 @@ class _HostnameInput extends StatelessWidget {
           },
           decoration: InputDecoration(
             labelText: 'hostname',
-            errorText: state.hostname.errorMessage,
+            errorText: state.isInitial ? null : state.hostname.errorMessage,
           ),
         );
       },
@@ -151,7 +151,7 @@ class _PortInput extends StatelessWidget {
           },
           decoration: InputDecoration(
             labelText: 'port',
-            errorText: state.port.errorMessage,
+            errorText: state.isInitial ? null : state.port.errorMessage,
           ),
           keyboardType: TextInputType.number,
           inputFormatters: [

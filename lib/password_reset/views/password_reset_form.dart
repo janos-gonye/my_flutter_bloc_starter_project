@@ -68,7 +68,7 @@ class _EmailInput extends StatelessWidget {
               .add(PasswordResetEmailChanged(email)),
           decoration: InputDecoration(
             labelText: 'email',
-            errorText: state.email.errorMessage,
+            errorText: state.isInitial ? null : state.email.errorMessage,
           ),
         );
       },

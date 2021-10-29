@@ -73,7 +73,7 @@ class _UsernameInput extends StatelessWidget {
               .add(RegistrationUsernameChanged(username)),
           decoration: InputDecoration(
             labelText: 'username',
-            errorText: state.username.errorMessage,
+            errorText: state.isInitial ? null : state.username.errorMessage,
           ),
         );
       },
@@ -93,7 +93,7 @@ class _EmailInput extends StatelessWidget {
               .add(RegistrationEmailChanged(email)),
           decoration: InputDecoration(
             labelText: 'email',
-            errorText: state.email.errorMessage,
+            errorText: state.isInitial ? null : state.email.errorMessage,
           ),
         );
       },
@@ -116,7 +116,7 @@ class _PasswordInput extends StatelessWidget {
           obscureText: true,
           decoration: InputDecoration(
             labelText: 'password',
-            errorText: state.password.errorMessage,
+            errorText: state.isInitial ? null : state.password.errorMessage,
           ),
         );
       },
@@ -140,9 +140,11 @@ class _PasswordConfirmInput extends StatelessWidget {
           obscureText: true,
           decoration: InputDecoration(
             labelText: 'password',
-            errorText: state.password.value != state.passwordConfirm.value
-                ? "passwords don't match"
-                : null,
+            errorText: state.isInitial
+                ? null
+                : state.password.value != state.passwordConfirm.value
+                    ? "passwords don't match"
+                    : null,
           ),
         );
       },
