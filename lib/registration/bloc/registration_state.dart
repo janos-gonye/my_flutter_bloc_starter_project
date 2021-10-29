@@ -8,7 +8,7 @@ enum RegistrationStateType {
   registratingError,
 }
 
-class RegistrationState extends Equatable {
+class RegistrationState extends MyFormState {
   const RegistrationState({
     this.username = const Username(''),
     this.password = const Password(''),
@@ -25,15 +25,19 @@ class RegistrationState extends Equatable {
   final RegistrationStateType type;
   final String message;
 
+  @override
   bool get valid =>
       username.valid &&
       password.valid &&
       passwordConfirm.valid &&
       email.valid &&
       password.value == passwordConfirm.value;
+  @override
   bool get invalid => !valid;
 
+  @override
   bool get isInitial => type == RegistrationStateType.initial;
+  @override
   bool get isData => type == RegistrationStateType.data;
   bool get isRegistrating => type == RegistrationStateType.registrating;
   bool get isRegistratingSuccess =>
@@ -41,8 +45,19 @@ class RegistrationState extends Equatable {
   bool get isRegistratingError =>
       type == RegistrationStateType.registratingError;
 
+  @override
   bool get isInProgress => isInitial || isRegistrating;
+  @override
+  bool get isError => isRegistratingError;
+  @override
+  bool get isSuccess => isRegistratingSuccess;
 
+  @override
+  RegistrationState clear() {
+    return const RegistrationState();
+  }
+
+  @override
   RegistrationState copyWith({
     Username? username,
     Password? password,

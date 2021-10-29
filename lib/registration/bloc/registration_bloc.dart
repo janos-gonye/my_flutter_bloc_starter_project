@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 
 import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
+import 'package:my_flutter_bloc_starter_project/shared/bloc/states/base.dart';
 
 part 'registration_event.dart';
 part 'registration_state.dart';
@@ -36,9 +37,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     RegistrationFormInitialized event,
     Emitter<RegistrationState> emit,
   ) {
-    emit(state.copyWith(
-      type: RegistrationStateType.initial,
-    ));
+    emit(state.clear());
   }
 
   void _onUsernameChanged(

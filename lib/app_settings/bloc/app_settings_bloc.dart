@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 
 import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
 import 'package:my_flutter_bloc_starter_project/constants.dart';
+import 'package:my_flutter_bloc_starter_project/shared/bloc/states/base.dart';
 
 part 'app_settings_event.dart';
 part 'app_settings_state.dart';
@@ -31,6 +32,7 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     AppSettingsFormInitialized event,
     Emitter<AppSettingsState> emit,
   ) async {
+    emit(state.clear());
     emit(state.copyWith(type: AppSettingsStateType.loading));
     try {
       final protocol = await appSettingsRepository.protocol;

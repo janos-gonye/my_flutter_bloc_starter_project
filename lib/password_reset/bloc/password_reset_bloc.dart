@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 
 import 'package:my_flutter_bloc_starter_project/authentication/repositories/authentication_repository.dart';
 import 'package:my_flutter_bloc_starter_project/password_reset/password_reset.dart';
+import 'package:my_flutter_bloc_starter_project/shared/bloc/states/base.dart';
 
 part 'password_reset_event.dart';
 part 'password_reset_state.dart';
@@ -32,9 +33,7 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
     PasswordResetFormInitialized event,
     Emitter<PasswordResetState> emit,
   ) {
-    emit(state.clear(
-      type: PasswordResetStateType.initial,
-    ));
+    emit(state.clear());
   }
 
   void _onEmailChanged(

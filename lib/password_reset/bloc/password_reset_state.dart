@@ -8,7 +8,7 @@ enum PasswordResetStateType {
   passwordResettingError,
 }
 
-class PasswordResetState extends Equatable {
+class PasswordResetState extends MyFormState {
   const PasswordResetState({
     this.email = const Email(''),
     this.type = PasswordResetStateType.data,
@@ -17,10 +17,14 @@ class PasswordResetState extends Equatable {
   final Email email;
   final PasswordResetStateType type;
 
+  @override
   bool get valid => email.valid;
+  @override
   bool get invalid => !valid;
 
+  @override
   bool get isInitial => type == PasswordResetStateType.initial;
+  @override
   bool get isData => type == PasswordResetStateType.data;
   bool get ispasswordResetting =>
       type == PasswordResetStateType.passwordResetting;
@@ -29,12 +33,15 @@ class PasswordResetState extends Equatable {
   bool get isPasswordResettingError =>
       type == PasswordResetStateType.passwordResettingError;
 
+  @override
   bool get isInProgress => isInitial || ispasswordResetting;
+  @override
+  bool get isError => isPasswordResettingError;
+  @override
+  bool get isSuccess => isPasswordResettingSuccess;
 
-  PasswordResetState clear({PasswordResetStateType? type}) {
-    return PasswordResetState(
-      type: type ?? PasswordResetStateType.data,
-    );
+  PasswordResetState clear() {
+    return const PasswordResetState();
   }
 
   PasswordResetState copyWith({

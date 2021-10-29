@@ -11,7 +11,7 @@ enum AppSettingsStateType {
   savingError,
 }
 
-class AppSettingsState extends Equatable {
+class AppSettingsState extends MyFormState {
   const AppSettingsState({
     this.protocol = const Protocol(http),
     this.hostname = const Hostname(''),
@@ -19,20 +19,27 @@ class AppSettingsState extends Equatable {
     this.type = AppSettingsStateType.initial,
   });
 
+  @override
   bool get valid => protocol.valid && hostname.valid && port.valid;
+  @override
   bool get invalid => !valid;
 
+  @override
   bool get isInitial => type == AppSettingsStateType.initial;
   bool get isloading => type == AppSettingsStateType.loading;
   bool get isLoadingSuccess => type == AppSettingsStateType.loadingSuccess;
   bool get isLoadingError => type == AppSettingsStateType.loadingError;
+  @override
   bool get isData => type == AppSettingsStateType.data;
   bool get isSaving => type == AppSettingsStateType.saving;
   bool get isSavingSuccess => type == AppSettingsStateType.savingSuccess;
   bool get isSavingError => type == AppSettingsStateType.savingError;
 
+  @override
   bool get isInProgress => isInitial || isloading || isSaving;
+  @override
   bool get isSuccess => isLoadingSuccess || isSavingSuccess;
+  @override
   bool get isError => isLoadingError || isSavingError;
 
   final Protocol protocol;
@@ -40,6 +47,12 @@ class AppSettingsState extends Equatable {
   final Port port;
   final AppSettingsStateType type;
 
+  @override
+  AppSettingsState clear() {
+    return const AppSettingsState();
+  }
+
+  @override
   AppSettingsState copyWith({
     Protocol? protocol,
     Hostname? hostname,

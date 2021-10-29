@@ -8,7 +8,7 @@ enum LoginStateType {
   loggingInError,
 }
 
-class LoginState extends Equatable {
+class LoginState extends MyFormState {
   const LoginState({
     this.username = const Username(''),
     this.password = const Password(''),
@@ -19,17 +19,32 @@ class LoginState extends Equatable {
   final Password password;
   final LoginStateType type;
 
+  @override
   bool get valid => username.valid && password.valid;
+  @override
   bool get invalid => !valid;
 
+  @override
   bool get isInitial => type == LoginStateType.initial;
+  @override
   bool get isData => type == LoginStateType.data;
   bool get isLoggingIn => type == LoginStateType.loggingIn;
   bool get isLoggingInSuccess => type == LoginStateType.loggingInSuccess;
   bool get isLoggingInError => type == LoginStateType.loggingInError;
 
+  @override
   bool get isInProgress => isInitial || isLoggingIn;
+  @override
+  bool get isError => isLoggingInError;
+  @override
+  bool get isSuccess => isLoggingInSuccess;
 
+  @override
+  LoginState clear() {
+    return const LoginState();
+  }
+
+  @override
   LoginState copyWith({
     Username? username,
     Password? password,

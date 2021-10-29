@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 
 import 'package:my_flutter_bloc_starter_project/authentication/repositories/authentication_repository.dart';
 import 'package:my_flutter_bloc_starter_project/login/models/models.dart';
+import 'package:my_flutter_bloc_starter_project/shared/bloc/states/base.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -32,9 +33,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     LoginFormInitialized event,
     Emitter<LoginState> emit,
   ) {
-    emit(state.copyWith(
-      type: LoginStateType.data,
-    ));
+    emit(state.clear());
   }
 
   void _onUsernameChanged(
