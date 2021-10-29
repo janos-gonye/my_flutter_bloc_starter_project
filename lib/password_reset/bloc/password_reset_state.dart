@@ -8,14 +8,13 @@ enum PasswordResetStateType {
   passwordResettingError,
 }
 
-class PasswordResetState extends MyFormState {
+class PasswordResetState extends MyFormState<PasswordResetStateType> {
   const PasswordResetState({
     this.email = const Email(''),
-    this.type = PasswordResetStateType.data,
-  });
+    type = PasswordResetStateType.initial,
+  }) : super(type: type);
 
   final Email email;
-  final PasswordResetStateType type;
 
   @override
   bool get valid => email.valid;

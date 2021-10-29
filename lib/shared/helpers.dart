@@ -27,3 +27,10 @@ bool shouldRerenderFormInputField(
   return ((previous.isInitial && !current.isInitial) ||
       (!previous.isInitial && current.isInitial));
 }
+
+bool shouldFormListen(
+  MyFormState previous,
+  MyFormState current,
+) {
+  return !current.isData && previous.type != current.type;
+}

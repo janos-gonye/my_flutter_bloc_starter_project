@@ -29,7 +29,7 @@ class _AppSettingsFormState extends State<AppSettingsForm> {
   Widget build(BuildContext context) {
     return BlocListener<AppSettingsBloc, AppSettingsState>(
       listenWhen: (previous, current) =>
-          !current.isData || previous.type != current.type,
+          helpers.shouldFormListen(previous, current),
       listener: (context, state) {
         debugPrint("'AppSettingsForm' listener invoked");
         if (state.isSaving) {

@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-abstract class MyFormState extends Equatable {
-  const MyFormState() : super();
+abstract class MyFormState<T> extends Equatable {
+  const MyFormState({required this.type}) : super();
+
+  final T type;
 
   MyFormState copyWith();
 

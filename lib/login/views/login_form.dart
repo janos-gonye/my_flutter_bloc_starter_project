@@ -24,7 +24,7 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(
       listenWhen: (previous, current) =>
-          !current.isData || previous.type != current.type,
+          helpers.shouldFormListen(previous, current),
       listener: (context, state) {
         debugPrint("'LoginForm' listener invoked");
         if (state.isLoggingInError) {

@@ -26,7 +26,7 @@ class _PasswordResetFormState extends State<PasswordResetForm> {
   Widget build(BuildContext context) {
     return BlocListener<PasswordResetBloc, PasswordResetState>(
       listenWhen: (previous, current) =>
-          !current.isData || previous.type != current.type,
+          helpers.shouldFormListen(previous, current),
       listener: (context, state) {
         debugPrint("'PasswordResetForm' listener invoked");
         if (state.isInProgress) {

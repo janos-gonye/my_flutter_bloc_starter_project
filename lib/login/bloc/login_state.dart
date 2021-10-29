@@ -8,16 +8,15 @@ enum LoginStateType {
   loggingInError,
 }
 
-class LoginState extends MyFormState {
+class LoginState extends MyFormState<LoginStateType> {
   const LoginState({
     this.username = const Username(''),
     this.password = const Password(''),
-    this.type = LoginStateType.initial,
-  });
+    type = LoginStateType.initial,
+  }) : super(type: type);
 
   final Username username;
   final Password password;
-  final LoginStateType type;
 
   @override
   bool get valid => username.valid && password.valid;

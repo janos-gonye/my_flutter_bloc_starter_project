@@ -14,15 +14,14 @@ class RegistrationState extends MyFormState {
     this.password = const Password(''),
     this.passwordConfirm = const Password(''),
     this.email = const Email(''),
-    this.type = RegistrationStateType.initial,
+    type = RegistrationStateType.initial,
     this.message = '',
-  });
+  }) : super(type: type);
 
   final Username username;
   final Password password;
   final Password passwordConfirm;
   final Email email;
-  final RegistrationStateType type;
   final String message;
 
   @override

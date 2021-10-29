@@ -11,13 +11,13 @@ enum AppSettingsStateType {
   savingError,
 }
 
-class AppSettingsState extends MyFormState {
+class AppSettingsState extends MyFormState<AppSettingsStateType> {
   const AppSettingsState({
     this.protocol = const Protocol(http),
     this.hostname = const Hostname(''),
     this.port = const Port(''),
-    this.type = AppSettingsStateType.initial,
-  });
+    type = AppSettingsStateType.initial,
+  }) : super(type: type);
 
   @override
   bool get valid => protocol.valid && hostname.valid && port.valid;
@@ -45,7 +45,6 @@ class AppSettingsState extends MyFormState {
   final Protocol protocol;
   final Hostname hostname;
   final Port port;
-  final AppSettingsStateType type;
 
   @override
   AppSettingsState clear() {
