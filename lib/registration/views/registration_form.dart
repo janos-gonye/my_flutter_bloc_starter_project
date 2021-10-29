@@ -26,13 +26,13 @@ class _RegistrationFormState extends State<RegistrationForm> {
   Widget build(BuildContext context) {
     return BlocListener<RegistrationBloc, RegistrationState>(
       listenWhen: (previous, current) =>
-          !current.isData || previous.type != current.type,
+          !current.isData && previous.type != current.type,
       listener: (context, state) {
         debugPrint("'RegistrationForm' listener invoked");
         if (state.isRegistratingError) {
           EasyLoading.dismiss();
           helpers.showSnackbar(context, state.message);
-        } else if (state.isInProgress) {
+        } else if (state.isRegistrating) {
           EasyLoading.show(
             status: 'loading...',
             maskType: EasyLoadingMaskType.clear,

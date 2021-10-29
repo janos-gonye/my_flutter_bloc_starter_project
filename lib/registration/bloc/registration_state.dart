@@ -1,6 +1,7 @@
 part of 'registration_bloc.dart';
 
 enum RegistrationStateType {
+  initial,
   data,
   registrating,
   registratingSuccess,
@@ -13,7 +14,7 @@ class RegistrationState extends Equatable {
     this.password = const Password(''),
     this.passwordConfirm = const Password(''),
     this.email = const Email(''),
-    this.type = RegistrationStateType.data,
+    this.type = RegistrationStateType.initial,
     this.message = '',
   });
 
@@ -32,6 +33,7 @@ class RegistrationState extends Equatable {
       password.value == passwordConfirm.value;
   bool get invalid => !valid;
 
+  bool get isInitial => type == RegistrationStateType.initial;
   bool get isData => type == RegistrationStateType.data;
   bool get isRegistrating => type == RegistrationStateType.registrating;
   bool get isRegistratingSuccess =>
@@ -39,13 +41,7 @@ class RegistrationState extends Equatable {
   bool get isRegistratingError =>
       type == RegistrationStateType.registratingError;
 
-  bool get isInProgress => isRegistrating;
-
-  RegistrationState clear({RegistrationStateType? type}) {
-    return RegistrationState(
-      type: type ?? RegistrationStateType.data,
-    );
-  }
+  bool get isInProgress => isInitial || isRegistrating;
 
   RegistrationState copyWith({
     Username? username,

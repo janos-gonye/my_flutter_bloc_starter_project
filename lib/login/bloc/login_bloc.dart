@@ -13,7 +13,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc({
     required AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
-        super(const LoginState(type: LoginStateType.data)) {
+        super(const LoginState(type: LoginStateType.initial)) {
     on<LoginFormInitialized>(_onInitialized);
     on<LoginUsernameChanged>(_onUsernameChanged);
     on<LoginPasswordChanged>(_onPasswordChanged);
@@ -32,7 +32,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     LoginFormInitialized event,
     Emitter<LoginState> emit,
   ) {
-    emit(state.clear(
+    emit(state.copyWith(
       type: LoginStateType.data,
     ));
   }

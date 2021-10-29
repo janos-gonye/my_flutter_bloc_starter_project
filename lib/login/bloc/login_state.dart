@@ -1,6 +1,7 @@
 part of 'login_bloc.dart';
 
 enum LoginStateType {
+  initial,
   data,
   loggingIn,
   loggingInSuccess,
@@ -11,7 +12,7 @@ class LoginState extends Equatable {
   const LoginState({
     this.username = const Username(''),
     this.password = const Password(''),
-    this.type = LoginStateType.data,
+    this.type = LoginStateType.initial,
   });
 
   final Username username;
@@ -21,18 +22,13 @@ class LoginState extends Equatable {
   bool get valid => username.valid && password.valid;
   bool get invalid => !valid;
 
+  bool get isInitial => type == LoginStateType.initial;
   bool get isData => type == LoginStateType.data;
   bool get isLoggingIn => type == LoginStateType.loggingIn;
   bool get isLoggingInSuccess => type == LoginStateType.loggingInSuccess;
   bool get isLoggingInError => type == LoginStateType.loggingInError;
 
-  bool get isInProgress => isLoggingIn;
-
-  LoginState clear({LoginStateType? type}) {
-    return LoginState(
-      type: type ?? LoginStateType.data,
-    );
-  }
+  bool get isInProgress => isInitial || isLoggingIn;
 
   LoginState copyWith({
     Username? username,

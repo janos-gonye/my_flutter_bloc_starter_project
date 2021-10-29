@@ -1,6 +1,7 @@
 part of 'password_reset_bloc.dart';
 
 enum PasswordResetStateType {
+  initial,
   data,
   passwordResetting,
   passwordResettingSuccess,
@@ -19,6 +20,7 @@ class PasswordResetState extends Equatable {
   bool get valid => email.valid;
   bool get invalid => !valid;
 
+  bool get isInitial => type == PasswordResetStateType.initial;
   bool get isData => type == PasswordResetStateType.data;
   bool get ispasswordResetting =>
       type == PasswordResetStateType.passwordResetting;
@@ -27,7 +29,7 @@ class PasswordResetState extends Equatable {
   bool get isPasswordResettingError =>
       type == PasswordResetStateType.passwordResettingError;
 
-  bool get isInProgress => ispasswordResetting;
+  bool get isInProgress => isInitial || ispasswordResetting;
 
   PasswordResetState clear({PasswordResetStateType? type}) {
     return PasswordResetState(

@@ -13,7 +13,7 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
   PasswordResetBloc({
     required AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
-        super(const PasswordResetState(type: PasswordResetStateType.data)) {
+        super(const PasswordResetState(type: PasswordResetStateType.initial)) {
     on<PasswordResetFormInitialized>(_onInitialized);
     on<PasswordResetEmailChanged>(_onEmailChanged);
     on<PasswordResetFormSubmitted>(_onSubmitted);
@@ -33,7 +33,7 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
     Emitter<PasswordResetState> emit,
   ) {
     emit(state.clear(
-      type: PasswordResetStateType.data,
+      type: PasswordResetStateType.initial,
     ));
   }
 

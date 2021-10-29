@@ -30,7 +30,7 @@ class _LoginFormState extends State<LoginForm> {
         if (state.isLoggingInError) {
           EasyLoading.dismiss();
           helpers.showSnackbar(context, 'Login Failure');
-        } else if (state.isInProgress) {
+        } else if (state.isLoggingIn) {
           EasyLoading.show(
               status: 'loading...', maskType: EasyLoadingMaskType.clear);
         } else {
