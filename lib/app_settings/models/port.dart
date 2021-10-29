@@ -1,6 +1,6 @@
 import 'package:string_validator/string_validator.dart';
 
-import 'package:my_flutter_bloc_starter_project/shared/models/models.dart';
+import 'package:my_flutter_bloc_starter_project/shared/models/base.dart';
 
 enum PortValidationError {
   empty,
