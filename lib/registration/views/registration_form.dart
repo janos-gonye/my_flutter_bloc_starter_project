@@ -5,7 +5,11 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:my_flutter_bloc_starter_project/home/home.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
-import 'package:my_flutter_bloc_starter_project/shared/helpers.dart' as helpers;
+
+import 'package:my_flutter_bloc_starter_project/shared/views/helpers.dart'
+    as helpers;
+import 'package:my_flutter_bloc_starter_project/shared/views/forms/helpers.dart'
+    as form_helpers;
 
 class RegistrationForm extends StatefulWidget {
   const RegistrationForm({Key? key}) : super(key: key);
@@ -26,7 +30,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   Widget build(BuildContext context) {
     return BlocListener<RegistrationBloc, RegistrationState>(
       listenWhen: (previous, current) =>
-          helpers.shouldFormListen(previous, current),
+          form_helpers.shouldFormListen(previous, current),
       listener: (context, state) {
         debugPrint("'RegistrationForm' listener invoked");
         if (state.isRegistratingError) {
@@ -66,7 +70,7 @@ class _UsernameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
       buildWhen: (previous, current) =>
-          helpers.shouldRerenderFormInputField(previous, current) ||
+          form_helpers.shouldRerenderFormInputField(previous, current) ||
           previous.username != current.username,
       builder: (context, state) {
         debugPrint("'RegistrationForm - _UsernameInput' (re)built");
@@ -88,7 +92,7 @@ class _EmailInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
       buildWhen: (previous, current) =>
-          helpers.shouldRerenderFormInputField(previous, current) ||
+          form_helpers.shouldRerenderFormInputField(previous, current) ||
           previous.email != current.email,
       builder: (context, state) {
         debugPrint("'RegistrationForm - _EmailInput' (re)built");
@@ -110,7 +114,7 @@ class _PasswordInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
       buildWhen: (previous, current) =>
-          helpers.shouldRerenderFormInputField(previous, current) ||
+          form_helpers.shouldRerenderFormInputField(previous, current) ||
           previous.password != current.password,
       builder: (context, state) {
         debugPrint("'RegistrationForm - _PasswordInput' (re)built");
@@ -133,7 +137,7 @@ class _PasswordConfirmInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
       buildWhen: (previous, current) =>
-          helpers.shouldRerenderFormInputField(previous, current) ||
+          form_helpers.shouldRerenderFormInputField(previous, current) ||
           previous.password != current.password ||
           previous.passwordConfirm != current.passwordConfirm,
       builder: (context, state) {
@@ -162,7 +166,7 @@ class _SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<RegistrationBloc, RegistrationState>(
       buildWhen: (previous, current) =>
-          helpers.shouldRerenderFormSubmitButton(previous, current),
+          form_helpers.shouldRerenderFormSubmitButton(previous, current),
       builder: (context, state) {
         debugPrint("'RegistrationForm - _SubmitButton' (re)built");
         return ElevatedButton(

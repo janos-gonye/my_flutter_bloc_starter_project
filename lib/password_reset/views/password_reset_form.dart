@@ -5,7 +5,11 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:my_flutter_bloc_starter_project/home/views/home_page.dart';
 import 'package:my_flutter_bloc_starter_project/password_reset/password_reset.dart';
-import 'package:my_flutter_bloc_starter_project/shared/helpers.dart' as helpers;
+
+import 'package:my_flutter_bloc_starter_project/shared/views/helpers.dart'
+    as helpers;
+import 'package:my_flutter_bloc_starter_project/shared/views/forms/helpers.dart'
+    as form_helpers;
 
 class PasswordResetForm extends StatefulWidget {
   const PasswordResetForm({Key? key}) : super(key: key);
@@ -26,7 +30,7 @@ class _PasswordResetFormState extends State<PasswordResetForm> {
   Widget build(BuildContext context) {
     return BlocListener<PasswordResetBloc, PasswordResetState>(
       listenWhen: (previous, current) =>
-          helpers.shouldFormListen(previous, current),
+          form_helpers.shouldFormListen(previous, current),
       listener: (context, state) {
         debugPrint("'PasswordResetForm' listener invoked");
         if (state.isInProgress) {
@@ -61,7 +65,7 @@ class _EmailInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PasswordResetBloc, PasswordResetState>(
       buildWhen: (previous, current) =>
-          helpers.shouldRerenderFormInputField(previous, current) ||
+          form_helpers.shouldRerenderFormInputField(previous, current) ||
           previous.email != current.email,
       builder: (context, state) {
         debugPrint("'PasswordResetForm - _EmailInput' (re)built");
@@ -83,7 +87,7 @@ class _SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PasswordResetBloc, PasswordResetState>(
       buildWhen: (previous, current) =>
-          helpers.shouldRerenderFormSubmitButton(previous, current),
+          form_helpers.shouldRerenderFormSubmitButton(previous, current),
       builder: (context, state) {
         debugPrint("'PasswordResetForm - _SubmitButton' (re)built");
         return ElevatedButton(

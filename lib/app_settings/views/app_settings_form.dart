@@ -8,7 +8,11 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:my_flutter_bloc_starter_project/app_settings/bloc/app_settings_bloc.dart';
 import 'package:my_flutter_bloc_starter_project/constants.dart';
 import 'package:my_flutter_bloc_starter_project/home/views/home_page.dart';
-import 'package:my_flutter_bloc_starter_project/shared/helpers.dart' as helpers;
+
+import 'package:my_flutter_bloc_starter_project/shared/views/helpers.dart'
+    as helpers;
+import 'package:my_flutter_bloc_starter_project/shared/views/forms/helpers.dart'
+    as form_helpers;
 
 class AppSettingsForm extends StatefulWidget {
   const AppSettingsForm({Key? key}) : super(key: key);
@@ -29,7 +33,7 @@ class _AppSettingsFormState extends State<AppSettingsForm> {
   Widget build(BuildContext context) {
     return BlocListener<AppSettingsBloc, AppSettingsState>(
       listenWhen: (previous, current) =>
-          helpers.shouldFormListen(previous, current),
+          form_helpers.shouldFormListen(previous, current),
       listener: (context, state) {
         debugPrint("'AppSettingsForm' listener invoked");
         if (state.isSaving) {
@@ -116,7 +120,7 @@ class _HostnameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AppSettingsBloc, AppSettingsState>(
       buildWhen: (previous, current) =>
-          helpers.shouldRerenderFormInputField(previous, current) ||
+          form_helpers.shouldRerenderFormInputField(previous, current) ||
           previous.hostname != current.hostname,
       builder: (context, state) {
         debugPrint("'AppSettingsForm - _HostnameInput' (re)built");
@@ -143,7 +147,7 @@ class _PortInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AppSettingsBloc, AppSettingsState>(
       buildWhen: (previous, current) =>
-          helpers.shouldRerenderFormInputField(previous, current) ||
+          form_helpers.shouldRerenderFormInputField(previous, current) ||
           previous.port != current.port,
       builder: (context, state) {
         debugPrint("'AppSettingsForm - _PortInput' (re)built");
@@ -174,7 +178,7 @@ class _SubmitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AppSettingsBloc, AppSettingsState>(
       buildWhen: (previous, current) =>
-          helpers.shouldRerenderFormSubmitButton(previous, current),
+          form_helpers.shouldRerenderFormSubmitButton(previous, current),
       builder: (context, state) {
         debugPrint("'AppSettingsForm - _SubmitButton' (re)built");
         return ElevatedButton(
