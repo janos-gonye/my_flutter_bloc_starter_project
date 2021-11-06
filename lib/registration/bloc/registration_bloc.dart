@@ -13,7 +13,7 @@ part 'registration_event.dart';
 part 'registration_state.dart';
 
 class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState>
-    with TransformResponseErrorToStateMixin {
+    with HandleResponseErrorMixin {
   RegistrationBloc({
     required AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
@@ -98,7 +98,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState>
           ),
         ));
       } on DioError catch (e) {
-        final responseError = transformResponseErrorToState(
+        final responseError = handleResponseError(
           error: e,
           fields: ['username', 'password', 'email'],
         );

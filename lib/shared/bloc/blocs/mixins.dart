@@ -12,8 +12,8 @@ class ResponseError {
   final Map<String, String> fieldErrors;
 }
 
-mixin TransformResponseErrorToStateMixin {
-  ResponseError transformResponseErrorToState({
+mixin HandleResponseErrorMixin {
+  ResponseError handleResponseError({
     required DioError error,
     List<String> fields = const [],
   }) {
