@@ -21,6 +21,11 @@ abstract class FormModel<T, E> extends Equatable {
 
   String? get errorMessage;
 
+  FormModel copyWith({
+    String? value,
+    String? serverError,
+  });
+
   @override
   String toString() {
     return "${runtimeType.toString()}(value: ${value.toString()})";

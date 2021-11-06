@@ -102,9 +102,19 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState>
           error: e,
           fields: ['username', 'password', 'email'],
         );
+        final fieldErrors = responseError.fieldErrors;
         emit(state.copyWith(
           type: RegistrationStateType.registratingError,
           message: responseError.message,
+          username: fieldErrors.containsKey('username')
+              ? state.username.copyWith(serverError: fieldErrors['username'])
+              : null,
+          email: fieldErrors.containsKey('email')
+              ? state.email.copyWith(serverError: fieldErrors['email'])
+              : null,
+          password: fieldErrors.containsKey('password')
+              ? state.password.copyWith(serverError: fieldErrors['password'])
+              : null,
         ));
       }
     }

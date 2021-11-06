@@ -35,4 +35,12 @@ class Password extends FormModel<String, PasswordValidationError> {
 
   @override
   List<Object?> get props => super.props + [serverError];
+
+  @override
+  Password copyWith({String? value, String? serverError}) {
+    return Password(
+      value ?? this.value,
+      serverError: serverError ?? this.serverError,
+    );
+  }
 }

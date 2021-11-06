@@ -44,4 +44,12 @@ class Username extends FormModel<String, UsernameValidationError> {
 
   @override
   List<Object?> get props => super.props + [serverError];
+
+  @override
+  Username copyWith({String? value, String? serverError}) {
+    return Username(
+      value ?? this.value,
+      serverError: serverError ?? this.serverError,
+    );
+  }
 }

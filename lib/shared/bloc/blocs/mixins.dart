@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 
 class ResponseError {
@@ -17,10 +19,30 @@ mixin HandleResponseErrorMixin {
     required DioError error,
     List<String> fields = const [],
   }) {
+    String message = 'Connection Error';
+    Map<String, String> fieldErrors = {};
+    if (error.type == DioErrorType.connectTimeout ||
+        error.type == DioErrorType.sendTimeout ||
+        error.type == DioErrorType.receiveTimeout) {
+      message = 'Connection Timed Out';
+    } else if (error.type == DioErrorType.response &&
+        error.response?.statusCode == 400 &&
+        error.response?.data != null) {
+      message = 'Invalid Values';
+      Map<String, dynamic> body = error.response!.data;
+      for (String field in fields) {
+        if (body.containsKey(field) && (body[field] as List).isNotEmpty) {
+          fieldErrors[field] = (body[field] as List).first.toString();
+        }
+      }
+    } else if (error.type == DioErrorType.other) {
+      message = 'Other Error';
+      if (error.error is SocketException) message = 'Socket Exception';
+    }
     return ResponseError(
-      message: 'error occurred',
+      message: message,
       dioError: error,
-      fieldErrors: {},
+      fieldErrors: fieldErrors,
     );
   }
 }

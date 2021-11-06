@@ -30,4 +30,12 @@ class Email extends FormModel<String, EmailValidationError> {
 
   @override
   String toString() => 'Email(serverError: $serverError)';
+
+  @override
+  Email copyWith({String? value, String? serverError}) {
+    return Email(
+      value ?? this.value,
+      serverError: serverError ?? this.serverError,
+    );
+  }
 }

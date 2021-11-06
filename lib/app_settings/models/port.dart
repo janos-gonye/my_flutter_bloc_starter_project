@@ -10,7 +10,8 @@ enum PortValidationError {
 }
 
 class Port extends FormModel<String, PortValidationError> {
-  const Port(String value) : super(value);
+  const Port(String value, {serverError})
+      : super(value, serverError: serverError);
 
   @override
   PortValidationError? get error {
@@ -43,5 +44,11 @@ class Port extends FormModel<String, PortValidationError> {
     if (error == PortValidationError.invalidOutOfRange) {
       return 'Port is out-of-range';
     }
+  }
+
+  @override
+  Port copyWith({String? value, String? serverError}) {
+    return Port(value ?? this.value,
+        serverError: serverError ?? this.serverError);
   }
 }

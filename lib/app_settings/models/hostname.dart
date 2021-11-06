@@ -5,7 +5,8 @@ import 'package:my_flutter_bloc_starter_project/shared/models/base.dart';
 enum HostnameValidationError { empty, invalid }
 
 class Hostname extends FormModel<String, HostnameValidationError> {
-  const Hostname(String value) : super(value);
+  const Hostname(String value, {serverError})
+      : super(value, serverError: serverError);
 
   @override
   HostnameValidationError? get error {
@@ -21,5 +22,13 @@ class Hostname extends FormModel<String, HostnameValidationError> {
   String? get errorMessage {
     if (error == HostnameValidationError.empty) return 'Empty hostname';
     if (error == HostnameValidationError.invalid) return 'Invalid hostname';
+  }
+
+  @override
+  Hostname copyWith({String? value, String? serverError}) {
+    return Hostname(
+      value ?? this.value,
+      serverError: serverError ?? this.serverError,
+    );
   }
 }
