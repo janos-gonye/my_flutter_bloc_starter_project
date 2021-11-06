@@ -17,6 +17,7 @@ class AppSettingsState extends MyFormState<AppSettingsStateType> {
     this.hostname = const Hostname(''),
     this.port = const Port(''),
     type = AppSettingsStateType.initial,
+    this.message = '',
   }) : super(type: type);
 
   @override
@@ -45,6 +46,7 @@ class AppSettingsState extends MyFormState<AppSettingsStateType> {
   final Protocol protocol;
   final Hostname hostname;
   final Port port;
+  final String message;
 
   @override
   AppSettingsState clear() {
@@ -57,15 +59,17 @@ class AppSettingsState extends MyFormState<AppSettingsStateType> {
     Hostname? hostname,
     Port? port,
     AppSettingsStateType? type,
+    String? message,
   }) {
     return AppSettingsState(
       protocol: protocol ?? this.protocol,
       hostname: hostname ?? this.hostname,
       port: port ?? this.port,
       type: type ?? this.type,
+      message: message ?? this.message,
     );
   }
 
   @override
-  List<Object> get props => [port, hostname, protocol, type];
+  List<Object> get props => [port, hostname, protocol, type, message];
 }

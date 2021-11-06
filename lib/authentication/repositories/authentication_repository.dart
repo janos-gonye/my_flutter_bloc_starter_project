@@ -54,10 +54,18 @@ class AuthenticationRepository {
     );
   }
 
-  Future<void> resetPassword({
+  Future<String> resetPassword({
     required Email email,
   }) async {
-    await Future.delayed(const Duration(milliseconds: 300));
+    Uri? serverUri = await appSettingsRepository.serverUri;
+    if (serverUri == null) {
+      throw Exception('app settings server uri not configured');
+    }
+    serverUri = serverUri.replace(path: constants.apiPathAuthResetPassword);
+    final response = await dio.postUri(serverUri, data: {
+      'email': email.value,
+    });
+    return response.data['detail'];
   }
 
   void logOut() {

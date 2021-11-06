@@ -91,9 +91,15 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
           protocol: state.protocol,
           port: state.port,
         );
-        emit(state.copyWith(type: AppSettingsStateType.savingSuccess));
+        emit(state.copyWith(
+          type: AppSettingsStateType.savingSuccess,
+          message: 'Settings saved',
+        ));
       } catch (_) {
-        emit(state.copyWith(type: AppSettingsStateType.savingError));
+        emit(state.copyWith(
+          type: AppSettingsStateType.savingError,
+          message: 'Saving settings failed',
+        ));
       }
     }
   }

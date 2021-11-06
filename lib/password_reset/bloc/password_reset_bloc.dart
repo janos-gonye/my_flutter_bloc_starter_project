@@ -1,16 +1,19 @@
 import 'package:flutter/widgets.dart';
 
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:my_flutter_bloc_starter_project/authentication/repositories/authentication_repository.dart';
 import 'package:my_flutter_bloc_starter_project/password_reset/password_reset.dart';
+import 'package:my_flutter_bloc_starter_project/shared/bloc/blocs/mixins.dart';
 import 'package:my_flutter_bloc_starter_project/shared/bloc/states/base.dart';
 
 part 'password_reset_event.dart';
 part 'password_reset_state.dart';
 
-class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
+class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState>
+    with HandleResponseErrorMixin {
   PasswordResetBloc({
     required AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
@@ -53,13 +56,24 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState> {
     if (state.valid) {
       emit(state.copyWith(type: PasswordResetStateType.passwordResetting));
       try {
-        await _authenticationRepository.resetPassword(email: state.email);
         emit(state.copyWith(
           type: PasswordResetStateType.passwordResettingSuccess,
+          message: await _authenticationRepository.resetPassword(
+            email: state.email,
+          ),
         ));
-      } catch (_) {
+      } on DioError catch (e) {
+        final responseError = handleResponseError(
+          error: e,
+          fields: ['email'],
+        );
+        final fieldErrors = responseError.fieldErrors;
         emit(state.copyWith(
           type: PasswordResetStateType.passwordResettingError,
+          message: responseError.message,
+          email: fieldErrors.containsKey('email')
+              ? state.email.copyWith(serverError: fieldErrors['email'])
+              : null,
         ));
       }
     }

@@ -12,9 +12,11 @@ class PasswordResetState extends MyFormState<PasswordResetStateType> {
   const PasswordResetState({
     this.email = const Email(''),
     type = PasswordResetStateType.initial,
+    this.message = '',
   }) : super(type: type);
 
   final Email email;
+  final String message;
 
   @override
   bool get valid => email.valid;
@@ -48,13 +50,15 @@ class PasswordResetState extends MyFormState<PasswordResetStateType> {
   PasswordResetState copyWith({
     Email? email,
     PasswordResetStateType? type,
+    String? message,
   }) {
     return PasswordResetState(
       email: email ?? this.email,
       type: type ?? this.type,
+      message: message ?? this.message,
     );
   }
 
   @override
-  List<Object> get props => [email, type];
+  List<Object> get props => [email, type, message];
 }

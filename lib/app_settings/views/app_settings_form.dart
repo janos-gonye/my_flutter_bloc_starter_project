@@ -44,14 +44,14 @@ class _AppSettingsFormState extends State<AppSettingsForm> {
         }
         if (state.isSavingSuccess) {
           EasyLoading.dismiss();
-          helpers.showSnackbar(context, 'Settings saved');
+          helpers.showSnackbar(context, state.message);
           Navigator.of(context).pushNamedAndRemoveUntil(
             HomePage.routeName,
             (route) => false,
           );
         } else if (state.isSavingError) {
           EasyLoading.dismiss();
-          helpers.showSnackbar(context, 'Saving settings failed');
+          helpers.showSnackbar(context, state.message);
         }
       },
       child: BlocBuilder<AppSettingsBloc, AppSettingsState>(

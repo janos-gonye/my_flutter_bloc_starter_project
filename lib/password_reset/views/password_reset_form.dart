@@ -38,10 +38,10 @@ class _PasswordResetFormState extends State<PasswordResetForm> {
               status: 'loading...', maskType: EasyLoadingMaskType.clear);
         } else if (state.isPasswordResettingError) {
           EasyLoading.dismiss();
-          helpers.showSnackbar(context, 'Sending email failed');
+          helpers.showSnackbar(context, state.message);
         } else if (state.isPasswordResettingSuccess) {
           EasyLoading.dismiss();
-          helpers.showSnackbar(context, 'Confirmation email sent');
+          helpers.showSnackbar(context, state.message);
           Navigator.of(context).pushNamedAndRemoveUntil(
             HomePage.routeName,
             (route) => false,
