@@ -33,7 +33,7 @@ class _PasswordResetFormState extends State<PasswordResetForm> {
           form_helpers.shouldFormListen(previous, current),
       listener: (context, state) {
         debugPrint("'PasswordResetForm' listener invoked");
-        if (state.isInProgress) {
+        if (state.ispasswordResetting) {
           EasyLoading.show(
               status: 'loading...', maskType: EasyLoadingMaskType.clear);
         } else if (state.isPasswordResettingError) {
