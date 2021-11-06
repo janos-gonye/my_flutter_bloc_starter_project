@@ -24,3 +24,7 @@ bool shouldFormListen(
 ) {
   return !current.isData && previous.type != current.type;
 }
+
+bool handleError() {
+  return true;
+}

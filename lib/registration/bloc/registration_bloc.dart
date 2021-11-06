@@ -6,12 +6,14 @@ import 'package:equatable/equatable.dart';
 
 import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
+import 'package:my_flutter_bloc_starter_project/shared/bloc/blocs/mixins.dart';
 import 'package:my_flutter_bloc_starter_project/shared/bloc/states/base.dart';
 
 part 'registration_event.dart';
 part 'registration_state.dart';
 
-class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
+class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState>
+    with TransformResponseErrorToStateMixin {
   RegistrationBloc({
     required AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
@@ -87,33 +89,23 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
     if (state.valid) {
       emit(state.copyWith(type: RegistrationStateType.registrating));
       try {
-        final successMessage = await _authenticationRepository.registrate(
-          username: state.username,
-          password: state.password,
-          email: state.email,
-        );
         emit(state.copyWith(
           type: RegistrationStateType.registratingSuccess,
-          message: successMessage,
+          message: await _authenticationRepository.registrate(
+            username: state.username,
+            password: state.password,
+            email: state.email,
+          ),
         ));
       } on DioError catch (e) {
-        if (e.response != null &&
-            e.response?.statusCode == 400 &&
-            e.response?.data != null) {
-          final errors = Map<String, List<dynamic>>.from(e.response!.data);
-          emit(
-            state.stateFormServerError(
-              type: RegistrationStateType.registratingError,
-              message: 'invalid values',
-              errors: errors,
-            ),
-          );
-        } else {
-          emit(state.copyWith(
-            type: RegistrationStateType.registratingError,
-            message: e.response!.data.toString(),
-          ));
-        }
+        final responseError = transformResponseErrorToState(
+          error: e,
+          fields: ['username', 'password', 'email'],
+        );
+        emit(state.copyWith(
+          type: RegistrationStateType.registratingError,
+          message: responseError.message,
+        ));
       }
     }
   }
