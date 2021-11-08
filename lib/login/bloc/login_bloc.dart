@@ -89,6 +89,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState>
         emit(state.copyWith(
           type: LoginStateType.loggingInError,
           message: message,
+          password: const Password(''),
         ));
       }
     }

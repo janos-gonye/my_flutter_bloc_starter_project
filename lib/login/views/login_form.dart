@@ -74,7 +74,20 @@ class _UsernameInput extends StatelessWidget {
   }
 }
 
-class _PasswordInput extends StatelessWidget {
+class _PasswordInput extends StatefulWidget {
+  @override
+  State<_PasswordInput> createState() => _PasswordInputState();
+}
+
+class _PasswordInputState extends State<_PasswordInput> {
+  final _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(
@@ -83,7 +96,11 @@ class _PasswordInput extends StatelessWidget {
           previous.password != current.password,
       builder: (context, state) {
         debugPrint("'LoginForm - _PasswordInput' (re)built");
+        if (_controller.text != state.password.value) {
+          _controller.text = state.password.value;
+        }
         return TextField(
+          controller: _controller,
           onChanged: (password) => BlocProvider.of<LoginBloc>(context)
               .add(LoginPasswordChanged(password)),
           obscureText: true,
