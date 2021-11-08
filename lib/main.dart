@@ -18,7 +18,7 @@ void main() {
   final authenticationRepository = AuthenticationRepository(
     dio: dio,
     appSettingsRepository: appSettingsRepository,
-    authenticationStoreRepository: const TokenRepository(
+    tokenRepository: const TokenRepository(
       secureStorage: FlutterSecureStorage(),
     ),
   );

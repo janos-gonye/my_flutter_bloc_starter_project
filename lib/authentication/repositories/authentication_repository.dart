@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:dio/dio.dart';
 
 import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
@@ -14,12 +16,12 @@ class AuthenticationRepository {
   AuthenticationRepository({
     required this.dio,
     required this.appSettingsRepository,
-    required this.authenticationStoreRepository,
+    required this.tokenRepository,
   });
 
   final AppSettingsRepository appSettingsRepository;
   final Dio dio;
-  final TokenRepository authenticationStoreRepository;
+  final TokenRepository tokenRepository;
 
   final _controller = StreamController<AuthenticationStatus>();
 
@@ -60,6 +62,10 @@ class AuthenticationRepository {
       'username': username.value,
       'password': password.value,
     });
+    tokenRepository.write(
+      accessToken: response.data['access'],
+      refreshToken: response.data['refresh'],
+    );
   }
 
   Future<String> resetPassword({
