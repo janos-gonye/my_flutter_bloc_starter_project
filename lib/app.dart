@@ -13,7 +13,7 @@ import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
 import 'package:my_flutter_bloc_starter_project/splash/splash.dart';
 import 'package:my_flutter_bloc_starter_project/user/user.dart';
 
-class MyStarterProjectApp extends StatelessWidget {
+class MyStarterProjectApp extends StatefulWidget {
   const MyStarterProjectApp({
     Key? key,
     required this.appSettingsRepository,
@@ -26,42 +26,53 @@ class MyStarterProjectApp extends StatelessWidget {
   final UserRepository userRepository;
 
   @override
+  State<MyStarterProjectApp> createState() => _MyStarterProjectAppState();
+}
+
+class _MyStarterProjectAppState extends State<MyStarterProjectApp> {
+  @override
+  void dispose() {
+    widget.authenticationRepository.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider(
-          create: (context) => appSettingsRepository,
+          create: (context) => widget.appSettingsRepository,
         ),
         RepositoryProvider(
-          create: (context) => authenticationRepository,
+          create: (context) => widget.authenticationRepository,
         ),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider<AppSettingsBloc>(
             create: (context) => AppSettingsBloc(
-              appSettingsRepository: appSettingsRepository,
+              appSettingsRepository: widget.appSettingsRepository,
             ),
           ),
           BlocProvider<AuthenticationBloc>(
             create: (context) => AuthenticationBloc(
-              authenticationRepository: authenticationRepository,
-              userRepository: userRepository,
+              authenticationRepository: widget.authenticationRepository,
+              userRepository: widget.userRepository,
             ),
           ),
           BlocProvider(
             create: (context) => LoginBloc(
-              authenticationRepository: authenticationRepository,
+              authenticationRepository: widget.authenticationRepository,
             ),
           ),
           BlocProvider(
             create: (context) => RegistrationBloc(
-              authenticationRepository: authenticationRepository,
+              authenticationRepository: widget.authenticationRepository,
             ),
           ),
           BlocProvider(
             create: (context) => PasswordResetBloc(
-              authenticationRepository: authenticationRepository,
+              authenticationRepository: widget.authenticationRepository,
             ),
           ),
         ],
