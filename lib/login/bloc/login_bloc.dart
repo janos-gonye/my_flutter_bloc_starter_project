@@ -29,7 +29,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState>
 
   @override
   void onTransition(Transition<LoginEvent, LoginState> transition) {
-    debugPrint(transition.toString());
+    debugPrint(transition.nextState.toString());
     super.onTransition(transition);
   }
 

@@ -31,7 +31,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState>
   @override
   void onTransition(
       Transition<RegistrationEvent, RegistrationState> transition) {
-    debugPrint(transition.toString());
+    debugPrint(transition.nextState.toString());
     super.onTransition(transition);
   }
 

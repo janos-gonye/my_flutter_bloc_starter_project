@@ -28,7 +28,7 @@ class PasswordResetBloc extends Bloc<PasswordResetEvent, PasswordResetState>
   @override
   void onTransition(
       Transition<PasswordResetEvent, PasswordResetState> transition) {
-    debugPrint(transition.toString());
+    debugPrint(transition.nextState.toString());
     super.onTransition(transition);
   }
 
