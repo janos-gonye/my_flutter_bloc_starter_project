@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
+import 'package:my_flutter_bloc_starter_project/user/views/user_page.dart';
 
 import 'package:my_flutter_bloc_starter_project/shared/views/helpers.dart'
     as helpers;
@@ -37,6 +38,12 @@ class _LoginFormState extends State<LoginForm> {
         } else if (state.isLoggingIn) {
           EasyLoading.show(
               status: 'loading...', maskType: EasyLoadingMaskType.clear);
+        } else if (state.isLoggingInSuccess) {
+          EasyLoading.dismiss();
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            UserPage.routeName,
+            (route) => false,
+          );
         } else {
           EasyLoading.dismiss();
         }

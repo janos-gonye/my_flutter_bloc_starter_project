@@ -44,7 +44,7 @@ class AuthenticationRepository {
     return response.data[constants.apiResponseMessageKey];
   }
 
-  Future<String> logIn({
+  Future<void> logIn({
     required Username username,
     required Password password,
   }) async {
@@ -57,7 +57,6 @@ class AuthenticationRepository {
       'username': username.value,
       'password': password.value,
     });
-    return response.data[constants.apiResponseMessageKey];
   }
 
   Future<String> resetPassword({
