@@ -113,8 +113,21 @@ class _ProtocolInput extends StatelessWidget {
   }
 }
 
-class _HostnameInput extends StatelessWidget {
+class _HostnameInput extends StatefulWidget {
   const _HostnameInput({Key? key}) : super(key: key);
+
+  @override
+  State<_HostnameInput> createState() => _HostnameInputState();
+}
+
+class _HostnameInputState extends State<_HostnameInput> {
+  final _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,8 +137,11 @@ class _HostnameInput extends StatelessWidget {
           previous.hostname != current.hostname,
       builder: (context, state) {
         debugPrint("'AppSettingsForm - _HostnameInput' (re)built");
-        return TextFormField(
-          initialValue: state.hostname.value,
+        if (_controller.text != state.hostname.value) {
+          _controller.text = state.hostname.value;
+        }
+        return TextField(
+          controller: _controller,
           onChanged: (hostname) {
             BlocProvider.of<AppSettingsBloc>(context)
                 .add(AppSettingsHostnameUpdated(hostname));
@@ -140,8 +156,21 @@ class _HostnameInput extends StatelessWidget {
   }
 }
 
-class _PortInput extends StatelessWidget {
+class _PortInput extends StatefulWidget {
   const _PortInput({Key? key}) : super(key: key);
+
+  @override
+  State<_PortInput> createState() => _PortInputState();
+}
+
+class _PortInputState extends State<_PortInput> {
+  final _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -151,8 +180,11 @@ class _PortInput extends StatelessWidget {
           previous.port != current.port,
       builder: (context, state) {
         debugPrint("'AppSettingsForm - _PortInput' (re)built");
-        return TextFormField(
-          initialValue: state.port.value,
+        if (_controller.text != state.port.value) {
+          _controller.text = state.port.value;
+        }
+        return TextField(
+          controller: _controller,
           onChanged: (port) {
             BlocProvider.of<AppSettingsBloc>(context)
                 .add(AppSettingsPortUpdated(port));
