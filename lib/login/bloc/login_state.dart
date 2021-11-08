@@ -13,10 +13,12 @@ class LoginState extends MyFormState<LoginStateType> {
     this.username = const Username(''),
     this.password = const Password(''),
     type = LoginStateType.initial,
+    this.message = '',
   }) : super(type: type);
 
   final Username username;
   final Password password;
+  final String message;
 
   @override
   bool get valid => username.valid && password.valid;
@@ -48,14 +50,16 @@ class LoginState extends MyFormState<LoginStateType> {
     Username? username,
     Password? password,
     LoginStateType? type,
+    String? message,
   }) {
     return LoginState(
       username: username ?? this.username,
       password: password ?? this.password,
       type: type ?? this.type,
+      message: message ?? this.message,
     );
   }
 
   @override
-  List<Object> get props => [username, password, type];
+  List<Object> get props => [username, password, type, message];
 }

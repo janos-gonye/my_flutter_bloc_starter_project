@@ -8,5 +8,8 @@ const int connectionTimeout = 10000;
 const int receiveTimeout = 3000;
 const contentType = 'application/json';
 
+const apiResponseMessageKey = 'detail';
+
 const apiPathAuthRegistration = '/auth/registration/';
 const apiPathAuthResetPassword = '/auth/reset-password/';
+const apiPathAuthLogin = '/token/';

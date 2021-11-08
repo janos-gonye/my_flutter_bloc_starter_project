@@ -1,16 +1,20 @@
 import 'package:flutter/widgets.dart';
 
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:my_flutter_bloc_starter_project/authentication/repositories/authentication_repository.dart';
+import 'package:my_flutter_bloc_starter_project/constants.dart' as constants;
 import 'package:my_flutter_bloc_starter_project/login/models/models.dart';
+import 'package:my_flutter_bloc_starter_project/shared/bloc/blocs/mixins.dart';
 import 'package:my_flutter_bloc_starter_project/shared/bloc/states/base.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
 
-class LoginBloc extends Bloc<LoginEvent, LoginState> {
+class LoginBloc extends Bloc<LoginEvent, LoginState>
+    with HandleResponseErrorMixin {
   LoginBloc({
     required AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
@@ -63,13 +67,29 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (state.valid) {
       emit(state.copyWith(type: LoginStateType.loggingIn));
       try {
-        await _authenticationRepository.logIn(
-          username: state.username,
-          password: state.password,
-        );
-        emit(state.copyWith(type: LoginStateType.loggingInSuccess));
-      } catch (_) {
-        emit(state.copyWith(type: LoginStateType.loggingInError));
+        emit(state.copyWith(
+          type: LoginStateType.loggingInSuccess,
+          message: await _authenticationRepository.logIn(
+            username: state.username,
+            password: state.password,
+          ),
+        ));
+      } on DioError catch (e) {
+        final responseError = handleResponseError(error: e, fields: [
+          'username',
+          'password',
+        ]);
+        String message;
+        if (responseError.dioError.response?.statusCode == 401) {
+          message = responseError
+              .dioError.response?.data[constants.apiResponseMessageKey];
+        } else {
+          message = responseError.message;
+        }
+        emit(state.copyWith(
+          type: LoginStateType.loggingInError,
+          message: message,
+        ));
       }
     }
   }
