@@ -56,10 +56,15 @@ class AuthenticationRepository {
       throw Exception('app settings server uri not configured');
     }
     serverUri = serverUri.replace(path: constants.apiPathAuthLogin);
-    await dio.postUri(serverUri, data: {
+    final response = await dio.postUri(serverUri, data: {
       'username': username.value,
       'password': password.value,
     });
+    Map<String, dynamic> body = response.data;
+    await authenticationTokenRepository.write(
+      accessToken: body['access'],
+      refreshToken: body['refresh'],
+    );
     _controller.add(AuthenticationStatus.authenticated);
   }
 
@@ -77,7 +82,8 @@ class AuthenticationRepository {
     return response.data[constants.apiResponseMessageKey];
   }
 
-  void logOut() {
+  void logOut() async {
+    await authenticationTokenRepository.clear();
     _controller.add(AuthenticationStatus.unauthenticated);
   }
 
