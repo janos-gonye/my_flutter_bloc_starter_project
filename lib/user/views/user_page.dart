@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:my_flutter_bloc_starter_project/change_password/change_password.dart';
 
 class UserPage extends StatelessWidget {
   const UserPage({Key? key}) : super(key: key);
@@ -12,9 +13,25 @@ class UserPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('User Page'),
       ),
-      body: const Center(
+      body: Center(
         child: SingleChildScrollView(
-          child: Text('User Page'),
+          child: Column(
+            children: [
+              Row(
+                children: const [
+                  Text(
+                    'Change Password',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5),
+              const ChangePasswordForm(),
+            ],
+          ),
         ),
       ),
     );

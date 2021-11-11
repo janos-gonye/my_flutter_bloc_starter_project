@@ -44,7 +44,7 @@ class AuthenticationRepository {
     return response.data[constants.apiResponseMessageKey];
   }
 
-  Future<String> logIn({
+  Future<void> logIn({
     required Username username,
     required Password password,
   }) async {
@@ -53,11 +53,11 @@ class AuthenticationRepository {
       throw Exception('app settings server uri not configured');
     }
     serverUri = serverUri.replace(path: constants.apiPathAuthLogin);
-    final response = await dio.postUri(serverUri, data: {
+    await dio.postUri(serverUri, data: {
       'username': username.value,
       'password': password.value,
     });
-    return response.data[constants.apiResponseMessageKey];
+    _controller.add(AuthenticationStatus.authenticated);
   }
 
   Future<String> resetPassword({

@@ -148,7 +148,7 @@ class _PasswordConfirmInput extends StatelessWidget {
                   .add(RegistrationPasswordConfirmChanged(passwordConfirm)),
           obscureText: true,
           decoration: InputDecoration(
-            labelText: 'password',
+            labelText: 'confirm password',
             errorText: state.isInitial
                 ? null
                 : state.password.value != state.passwordConfirm.value

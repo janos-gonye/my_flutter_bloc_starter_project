@@ -67,13 +67,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState>
     if (state.valid) {
       emit(state.copyWith(type: LoginStateType.loggingIn));
       try {
-        emit(state.copyWith(
-          type: LoginStateType.loggingInSuccess,
-          message: await _authenticationRepository.logIn(
-            username: state.username,
-            password: state.password,
-          ),
-        ));
+        await _authenticationRepository.logIn(
+          username: state.username,
+          password: state.password,
+        );
+        emit(state.copyWith(type: LoginStateType.loggingInSuccess));
       } on DioError catch (e) {
         final responseError = handleResponseError(error: e, fields: [
           'username',
