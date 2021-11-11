@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
 import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
+import 'package:my_flutter_bloc_starter_project/change_email/change_email.dart';
 import 'package:my_flutter_bloc_starter_project/change_password/bloc/change_password_bloc.dart';
 import 'package:my_flutter_bloc_starter_project/home/home.dart';
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
@@ -67,6 +68,11 @@ class MyStarterProjectApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => ChangePasswordBloc(
+              authenticationRepository: authenticationRepository,
+            ),
+          ),
+          BlocProvider(
+            create: (context) => ChangeEmailBloc(
               authenticationRepository: authenticationRepository,
             ),
           ),
