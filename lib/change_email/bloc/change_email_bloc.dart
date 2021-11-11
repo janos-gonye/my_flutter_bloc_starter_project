@@ -69,8 +69,13 @@ class ChangeEmailBloc extends Bloc<ChangeEmailEvent, ChangeEmailState>
       try {
         await Future.delayed(const Duration(seconds: 3));
         emit(state.copyWith(
-          type: ChangeEmailStateType.emailChangingError,
+          type: ChangeEmailStateType.emailChangingSuccess,
           message: 'Email changed',
+        ));
+        emit(state.copyWith(
+          type: ChangeEmailStateType.initial,
+          email: const Email(''),
+          emailConfirm: const Email(''),
         ));
       } on DioError catch (e) {
         emit(state.copyWith(

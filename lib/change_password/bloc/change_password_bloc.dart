@@ -71,8 +71,13 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState>
       try {
         await Future.delayed(const Duration(seconds: 3));
         emit(state.copyWith(
-          type: ChangePasswordStateType.passwordChangingError,
+          type: ChangePasswordStateType.passwordChangingSuccess,
           message: 'Password changed',
+        ));
+        emit(state.copyWith(
+          type: ChangePasswordStateType.initial,
+          password: const Password(''),
+          passwordConfirm: const Password(''),
         ));
       } on DioError catch (e) {
         emit(state.copyWith(
