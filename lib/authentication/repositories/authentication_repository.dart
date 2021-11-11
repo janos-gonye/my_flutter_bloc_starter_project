@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 
 import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
+import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
 import 'package:my_flutter_bloc_starter_project/constants.dart' as constants;
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
@@ -13,9 +14,11 @@ class AuthenticationRepository {
   AuthenticationRepository({
     required this.dio,
     required this.appSettingsRepository,
+    required this.authenticationTokenRepository,
   });
 
   final AppSettingsRepository appSettingsRepository;
+  final AuthenticationTokenRepository authenticationTokenRepository;
   final Dio dio;
 
   final _controller = StreamController<AuthenticationStatus>();
