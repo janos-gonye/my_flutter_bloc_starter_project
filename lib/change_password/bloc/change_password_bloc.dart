@@ -5,10 +5,9 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
+import 'package:my_flutter_bloc_starter_project/change_password/change_password.dart';
 import 'package:my_flutter_bloc_starter_project/shared/bloc/blocs/mixins.dart';
 import 'package:my_flutter_bloc_starter_project/shared/bloc/states/base.dart';
-
-import 'package:my_flutter_bloc_starter_project/change_password/change_password.dart';
 
 part 'change_password_event.dart';
 part 'change_password_state.dart';
@@ -74,11 +73,7 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState>
           type: ChangePasswordStateType.passwordChangingSuccess,
           message: 'Password changed',
         ));
-        emit(state.copyWith(
-          type: ChangePasswordStateType.initial,
-          password: const Password(''),
-          passwordConfirm: const Password(''),
-        ));
+        emit(state.clear());
       } on DioError catch (e) {
         emit(state.copyWith(
           type: ChangePasswordStateType.passwordChangingError,

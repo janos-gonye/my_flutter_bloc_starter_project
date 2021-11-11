@@ -5,10 +5,9 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
+import 'package:my_flutter_bloc_starter_project/change_email/change_email.dart';
 import 'package:my_flutter_bloc_starter_project/shared/bloc/blocs/mixins.dart';
 import 'package:my_flutter_bloc_starter_project/shared/bloc/states/base.dart';
-
-import 'package:my_flutter_bloc_starter_project/change_email/change_email.dart';
 
 part 'change_email_event.dart';
 part 'change_email_state.dart';
@@ -72,11 +71,7 @@ class ChangeEmailBloc extends Bloc<ChangeEmailEvent, ChangeEmailState>
           type: ChangeEmailStateType.emailChangingSuccess,
           message: 'Email changed',
         ));
-        emit(state.copyWith(
-          type: ChangeEmailStateType.initial,
-          email: const Email(''),
-          emailConfirm: const Email(''),
-        ));
+        emit(state.clear());
       } on DioError catch (e) {
         emit(state.copyWith(
           type: ChangeEmailStateType.emailChangingError,

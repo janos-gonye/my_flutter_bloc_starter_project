@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
 import 'package:my_flutter_bloc_starter_project/shared/views/helpers.dart';
 

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
 import 'package:my_flutter_bloc_starter_project/change_email/views/views.dart';
 import 'package:my_flutter_bloc_starter_project/change_password/change_password.dart';
+import 'package:my_flutter_bloc_starter_project/remove_account/remove_account.dart';
 import 'package:my_flutter_bloc_starter_project/shared/views/app_bars/authenticated_page_app_bar.dart';
 
 class UserPage extends StatelessWidget {
@@ -46,6 +48,8 @@ class UserPage extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               const ChangeEmailForm(),
+              const SizedBox(height: 30),
+              const RemoveAccountForm(),
             ],
           ),
         ),

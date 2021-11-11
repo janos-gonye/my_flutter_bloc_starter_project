@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+
 import 'package:my_flutter_bloc_starter_project/change_email/bloc/change_email_bloc.dart';
 
 import 'package:my_flutter_bloc_starter_project/shared/views/helpers.dart'

@@ -12,6 +12,7 @@ import 'package:my_flutter_bloc_starter_project/home/home.dart';
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
 import 'package:my_flutter_bloc_starter_project/password_reset/password_reset.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
+import 'package:my_flutter_bloc_starter_project/remove_account/remove_account.dart';
 import 'package:my_flutter_bloc_starter_project/splash/splash.dart';
 import 'package:my_flutter_bloc_starter_project/user/user.dart';
 
@@ -73,6 +74,11 @@ class MyStarterProjectApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => ChangeEmailBloc(
+              authenticationRepository: authenticationRepository,
+            ),
+          ),
+          BlocProvider(
+            create: (context) => RemoveAccountBloc(
               authenticationRepository: authenticationRepository,
             ),
           ),
