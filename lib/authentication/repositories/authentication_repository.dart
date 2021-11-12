@@ -13,6 +13,7 @@ enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 class AuthenticationRepository {
   AuthenticationRepository({
     required this.unAuthenticatedDio,
+    required this.authenticatedDio,
     required this.appSettingsRepository,
     required this.authenticationTokenRepository,
   });
@@ -20,6 +21,7 @@ class AuthenticationRepository {
   final AppSettingsRepository appSettingsRepository;
   final AuthenticationTokenRepository authenticationTokenRepository;
   final Dio unAuthenticatedDio;
+  final Dio authenticatedDio;
 
   final _controller = StreamController<AuthenticationStatus>();
 
@@ -88,4 +90,16 @@ class AuthenticationRepository {
   }
 
   void dispose() => _controller.close();
+
+  Future<String> changeEmail({required Email email}) async {
+    Uri? serverUri = await appSettingsRepository.serverUri;
+    if (serverUri == null) {
+      throw Exception('app settings server uri not configured');
+    }
+    serverUri = serverUri.replace(path: constants.apiPathAuthChangeEmail);
+    final response = await authenticatedDio.patchUri(serverUri, data: {
+      'email': email.value,
+    });
+    return response.data[constants.apiResponseMessageKey];
+  }
 }
