@@ -11,7 +11,7 @@ import 'package:my_flutter_bloc_starter_project/constants.dart' as constants;
 import 'package:my_flutter_bloc_starter_project/user/user.dart';
 
 void main() {
-  Dio dio = initDio();
+  Dio unAuthenticatedDio = initUnAuthenticatedDio();
   const secureStorage = FlutterSecureStorage();
   const authenticationTokenRepository = AuthenticationTokenRepository(
     secureStorage: secureStorage,
@@ -20,7 +20,7 @@ void main() {
     secureStorage: secureStorage,
   );
   final authenticationRepository = AuthenticationRepository(
-    dio: dio,
+    unAuthenticatedDio: unAuthenticatedDio,
     appSettingsRepository: appSettingsRepository,
     authenticationTokenRepository: authenticationTokenRepository,
   );
@@ -28,13 +28,15 @@ void main() {
     MyStarterProjectApp(
       appSettingsRepository: appSettingsRepository,
       authenticationRepository: authenticationRepository,
-      userRepository: UserRepository(dio: dio),
+      userRepository: UserRepository(
+        unAuthenticatedDio: unAuthenticatedDio,
+      ),
     ),
   );
 }
 
-Dio initDio() {
-  final Dio _dio = Dio();
+Dio initUnAuthenticatedDio() {
+  final _dio = Dio();
   _dio.options.connectTimeout = constants.connectionTimeout;
   _dio.options.receiveTimeout = constants.receiveTimeout;
   _dio.options.contentType = constants.contentType;

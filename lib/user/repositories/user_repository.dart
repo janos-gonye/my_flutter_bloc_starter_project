@@ -5,9 +5,11 @@ import 'package:dio/dio.dart';
 import 'package:my_flutter_bloc_starter_project/user/user.dart';
 
 class UserRepository {
-  UserRepository({required this.dio});
+  UserRepository({
+    required this.unAuthenticatedDio,
+  });
 
-  final Dio dio;
+  final Dio unAuthenticatedDio;
 
   User? _user;
 

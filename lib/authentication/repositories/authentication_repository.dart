@@ -12,14 +12,14 @@ enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
 class AuthenticationRepository {
   AuthenticationRepository({
-    required this.dio,
+    required this.unAuthenticatedDio,
     required this.appSettingsRepository,
     required this.authenticationTokenRepository,
   });
 
   final AppSettingsRepository appSettingsRepository;
   final AuthenticationTokenRepository authenticationTokenRepository;
-  final Dio dio;
+  final Dio unAuthenticatedDio;
 
   final _controller = StreamController<AuthenticationStatus>();
 
@@ -39,7 +39,7 @@ class AuthenticationRepository {
       throw Exception('app settings server uri not configured');
     }
     serverUri = serverUri.replace(path: constants.apiPathAuthRegistration);
-    final response = await dio.postUri(serverUri, data: {
+    final response = await unAuthenticatedDio.postUri(serverUri, data: {
       'username': username.value,
       'password': password.value,
       'email': email.value,
@@ -56,7 +56,7 @@ class AuthenticationRepository {
       throw Exception('app settings server uri not configured');
     }
     serverUri = serverUri.replace(path: constants.apiPathAuthLogin);
-    final response = await dio.postUri(serverUri, data: {
+    final response = await unAuthenticatedDio.postUri(serverUri, data: {
       'username': username.value,
       'password': password.value,
     });
@@ -76,7 +76,7 @@ class AuthenticationRepository {
       throw Exception('app settings server uri not configured');
     }
     serverUri = serverUri.replace(path: constants.apiPathAuthResetPassword);
-    final response = await dio.postUri(serverUri, data: {
+    final response = await unAuthenticatedDio.postUri(serverUri, data: {
       'email': email.value,
     });
     return response.data[constants.apiResponseMessageKey];
