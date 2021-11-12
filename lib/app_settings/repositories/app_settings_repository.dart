@@ -1,6 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
+import 'package:my_flutter_bloc_starter_project/constants.dart' as constants;
 
 class AppSettingsRepository {
   const AppSettingsRepository({
@@ -14,7 +15,7 @@ class AppSettingsRepository {
   }
 
   Future<Protocol> get protocol async {
-    final protocol = await _readKey('protocol');
+    final protocol = await _readKey(constants.storageKeyProtocol);
     if (protocol == null) {
       return const Protocol('https');
     }
@@ -22,7 +23,7 @@ class AppSettingsRepository {
   }
 
   Future<Hostname> get hostname async {
-    final hostname = await _readKey('hostname');
+    final hostname = await _readKey(constants.storageKeyHostname);
     if (hostname == null) {
       return const Hostname('');
     }
@@ -30,7 +31,7 @@ class AppSettingsRepository {
   }
 
   Future<Port> get port async {
-    final port = await _readKey('port');
+    final port = await _readKey(constants.storageKeyPort);
     if (port == null) {
       return const Port('');
     }
@@ -42,9 +43,18 @@ class AppSettingsRepository {
     required Protocol protocol,
     required Port port,
   }) async {
-    await secureStorage.write(key: 'protocol', value: protocol.value);
-    await secureStorage.write(key: 'hostname', value: hostname.value);
-    await secureStorage.write(key: 'port', value: port.value);
+    await secureStorage.write(
+      key: constants.storageKeyProtocol,
+      value: protocol.value,
+    );
+    await secureStorage.write(
+      key: constants.storageKeyHostname,
+      value: hostname.value,
+    );
+    await secureStorage.write(
+      key: constants.storageKeyPort,
+      value: port.value,
+    );
   }
 
   Future<Uri?> get serverUri async {

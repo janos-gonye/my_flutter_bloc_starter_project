@@ -1,5 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+import 'package:my_flutter_bloc_starter_project/constants.dart' as constants;
+
 class AuthenticationTokenRepository {
   const AuthenticationTokenRepository({
     required this.secureStorage,
@@ -15,20 +17,24 @@ class AuthenticationTokenRepository {
     required String accessToken,
     required String refreshToken,
   }) async {
-    await secureStorage.write(key: 'access_token', value: accessToken);
-    await secureStorage.write(key: 'refresh_token', value: refreshToken);
+    await secureStorage.write(
+        key: constants.storageKeyAccessToken, value: accessToken);
+    await secureStorage.write(
+      key: constants.storageKeyRefreshToken,
+      value: refreshToken,
+    );
   }
 
   Future<String?> get accessToken async {
-    return await _readKey('access_token');
+    return await _readKey(constants.storageKeyAccessToken);
   }
 
   Future<String?> get refreshToken async {
-    return await _readKey('refresh_token');
+    return await _readKey(constants.storageKeyRefreshToken);
   }
 
   Future<void> clear() async {
-    secureStorage.delete(key: 'access_token');
-    secureStorage.delete(key: 'refresh_token');
+    secureStorage.delete(key: constants.storageKeyAccessToken);
+    secureStorage.delete(key: constants.storageKeyRefreshToken);
   }
 }

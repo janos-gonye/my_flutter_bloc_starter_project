@@ -10,6 +10,13 @@ const contentType = 'application/json';
 
 const apiResponseMessageKey = 'detail';
 
+const apiPathAuthChangeEmail = '/auth/change-email/';
 const apiPathAuthRegistration = '/auth/registration/';
 const apiPathAuthResetPassword = '/auth/reset-password/';
 const apiPathAuthLogin = '/token/';
+
+const storageKeyAccessToken = '';
+const storageKeyRefreshToken = 'refresh_token';
+const storageKeyProtocol = 'protocol';
+const storageKeyHostname = 'hostname';
+const storageKeyPort = 'port';
