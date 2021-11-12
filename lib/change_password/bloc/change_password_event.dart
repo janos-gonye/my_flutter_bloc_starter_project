@@ -11,22 +11,31 @@ class ChangePasswordFormInitialized extends ChangePasswordEvent {
   const ChangePasswordFormInitialized();
 }
 
-class ChangePasswordPasswordChanged extends ChangePasswordEvent {
-  const ChangePasswordPasswordChanged(this.password);
+class ChangePasswordCurrentPasswordChanged extends ChangePasswordEvent {
+  const ChangePasswordCurrentPasswordChanged(this.currentPassword);
 
-  final String password;
+  final String currentPassword;
 
   @override
-  List<Object> get props => [password];
+  List<Object> get props => [currentPassword];
 }
 
-class ChangePasswordPasswordConfirmChanged extends ChangePasswordEvent {
-  const ChangePasswordPasswordConfirmChanged(this.passwordConfirm);
+class ChangePasswordNewPasswordChanged extends ChangePasswordEvent {
+  const ChangePasswordNewPasswordChanged(this.newPassword);
 
-  final String passwordConfirm;
+  final String newPassword;
 
   @override
-  List<Object> get props => [passwordConfirm];
+  List<Object> get props => [newPassword];
+}
+
+class ChangePasswordNewPasswordConfirmChanged extends ChangePasswordEvent {
+  const ChangePasswordNewPasswordConfirmChanged(this.newPasswordConfirm);
+
+  final String newPasswordConfirm;
+
+  @override
+  List<Object> get props => [newPasswordConfirm];
 }
 
 class ChangePasswordFormSubmitted extends ChangePasswordEvent {

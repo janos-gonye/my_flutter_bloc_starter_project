@@ -10,18 +10,21 @@ enum ChangePasswordStateType {
 
 class ChangePasswordState extends MyFormState<ChangePasswordStateType> {
   const ChangePasswordState({
-    this.password = const Password(''),
-    this.passwordConfirm = const Password(''),
+    this.currentPassword = const Password(''),
+    this.newPassword = const Password(''),
+    this.newPasswordConfirm = const Password(''),
     type = ChangePasswordStateType.initial,
     this.message = '',
   }) : super(type: type);
 
-  final Password password;
-  final Password passwordConfirm;
+  final Password currentPassword;
+  final Password newPassword;
+  final Password newPasswordConfirm;
   final String message;
 
   @override
-  bool get valid => password.valid && passwordConfirm.valid;
+  bool get valid =>
+      currentPassword.valid && newPassword.valid && newPasswordConfirm.valid;
   @override
   bool get invalid => !valid;
 
@@ -50,19 +53,22 @@ class ChangePasswordState extends MyFormState<ChangePasswordStateType> {
 
   @override
   ChangePasswordState copyWith({
-    Password? password,
-    Password? passwordConfirm,
+    Password? currentPassword,
+    Password? newPassword,
+    Password? newPasswordConfirm,
     ChangePasswordStateType? type,
     String? message,
   }) {
     return ChangePasswordState(
-      password: password ?? this.password,
-      passwordConfirm: passwordConfirm ?? this.passwordConfirm,
+      currentPassword: currentPassword ?? this.currentPassword,
+      newPassword: newPassword ?? this.newPassword,
+      newPasswordConfirm: newPasswordConfirm ?? this.newPasswordConfirm,
       type: type ?? this.type,
       message: message ?? this.message,
     );
   }
 
   @override
-  List<Object> get props => [password, passwordConfirm, type, message];
+  List<Object> get props =>
+      [currentPassword, newPassword, newPasswordConfirm, type, message];
 }

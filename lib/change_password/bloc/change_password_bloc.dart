@@ -20,8 +20,9 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState>
         super(
             const ChangePasswordState(type: ChangePasswordStateType.initial)) {
     on<ChangePasswordFormInitialized>(_onInitialized);
-    on<ChangePasswordPasswordChanged>(_onPasswordChanged);
-    on<ChangePasswordPasswordConfirmChanged>(_onPasswordConfirmChanged);
+    on<ChangePasswordCurrentPasswordChanged>(_onOldPasswordChanged);
+    on<ChangePasswordNewPasswordChanged>(_onNewPasswordChanged);
+    on<ChangePasswordNewPasswordConfirmChanged>(_onNewPasswordConfirmChanged);
     on<ChangePasswordFormSubmitted>(_onSubmitted);
   }
 
@@ -41,22 +42,32 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState>
     emit(state.clear());
   }
 
-  void _onPasswordChanged(
-    ChangePasswordPasswordChanged event,
+  void _onOldPasswordChanged(
+    ChangePasswordCurrentPasswordChanged event,
     Emitter<ChangePasswordState> emit,
   ) {
     emit(state.copyWith(
-      password: Password(event.password),
+      currentPassword: Password(event.currentPassword),
       type: ChangePasswordStateType.data,
     ));
   }
 
-  void _onPasswordConfirmChanged(
-    ChangePasswordPasswordConfirmChanged event,
+  void _onNewPasswordChanged(
+    ChangePasswordNewPasswordChanged event,
     Emitter<ChangePasswordState> emit,
   ) {
     emit(state.copyWith(
-      passwordConfirm: Password(event.passwordConfirm),
+      newPassword: Password(event.newPassword),
+      type: ChangePasswordStateType.data,
+    ));
+  }
+
+  void _onNewPasswordConfirmChanged(
+    ChangePasswordNewPasswordConfirmChanged event,
+    Emitter<ChangePasswordState> emit,
+  ) {
+    emit(state.copyWith(
+      newPasswordConfirm: Password(event.newPasswordConfirm),
       type: ChangePasswordStateType.data,
     ));
   }

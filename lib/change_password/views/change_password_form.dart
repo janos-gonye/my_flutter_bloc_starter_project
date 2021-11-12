@@ -48,8 +48,9 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
       },
       child: Column(
         children: [
-          _PasswordInput(),
-          _PasswordConfirmInput(),
+          _CurrentPasswordInput(),
+          _NewPasswordInput(),
+          _NewPasswordConfirmInput(),
           _SubmitButton(),
         ],
       ),
@@ -57,12 +58,12 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
   }
 }
 
-class _PasswordInput extends StatefulWidget {
+class _CurrentPasswordInput extends StatefulWidget {
   @override
-  State<_PasswordInput> createState() => _PasswordInputState();
+  State<_CurrentPasswordInput> createState() => _CurrentPasswordInputState();
 }
 
-class _PasswordInputState extends State<_PasswordInput> {
+class _CurrentPasswordInputState extends State<_CurrentPasswordInput> {
   final _controller = TextEditingController();
 
   @override
@@ -76,20 +77,22 @@ class _PasswordInputState extends State<_PasswordInput> {
     return BlocBuilder<ChangePasswordBloc, ChangePasswordState>(
       buildWhen: (previous, current) =>
           form_helpers.shouldRerenderFormInputField(previous, current) ||
-          previous.password != current.password,
+          previous.currentPassword != current.currentPassword,
       builder: (context, state) {
         debugPrint("'ChangePasswordForm - _PasswordInput' (re)built");
-        if (_controller.text != state.password.value) {
-          _controller.text = state.password.value;
+        if (_controller.text != state.currentPassword.value) {
+          _controller.text = state.currentPassword.value;
         }
         return TextField(
           controller: _controller,
-          onChanged: (password) => BlocProvider.of<ChangePasswordBloc>(context)
-              .add(ChangePasswordPasswordChanged(password)),
+          onChanged: (currentPassword) =>
+              BlocProvider.of<ChangePasswordBloc>(context)
+                  .add(ChangePasswordCurrentPasswordChanged(currentPassword)),
           obscureText: true,
           decoration: InputDecoration(
-            labelText: 'password',
-            errorText: state.isInitial ? null : state.password.errorMessage,
+            labelText: 'current password',
+            errorText:
+                state.isInitial ? null : state.currentPassword.errorMessage,
           ),
         );
       },
@@ -97,12 +100,12 @@ class _PasswordInputState extends State<_PasswordInput> {
   }
 }
 
-class _PasswordConfirmInput extends StatefulWidget {
+class _NewPasswordInput extends StatefulWidget {
   @override
-  State<_PasswordConfirmInput> createState() => _PasswordConfirmInputState();
+  State<_NewPasswordInput> createState() => _NewPasswordInputState();
 }
 
-class _PasswordConfirmInputState extends State<_PasswordConfirmInput> {
+class _NewPasswordInputState extends State<_NewPasswordInput> {
   final _controller = TextEditingController();
 
   @override
@@ -116,24 +119,65 @@ class _PasswordConfirmInputState extends State<_PasswordConfirmInput> {
     return BlocBuilder<ChangePasswordBloc, ChangePasswordState>(
       buildWhen: (previous, current) =>
           form_helpers.shouldRerenderFormInputField(previous, current) ||
-          previous.password != current.password ||
-          previous.passwordConfirm != current.passwordConfirm,
+          previous.newPassword != current.newPassword,
       builder: (context, state) {
-        debugPrint("'ChangePasswordForm - _PasswordConfirmInput' (re)built");
-        if (_controller.text != state.passwordConfirm.value) {
-          _controller.text = state.passwordConfirm.value;
+        debugPrint("'ChangePasswordForm - _NewPasswordInput' (re)built");
+        if (_controller.text != state.newPassword.value) {
+          _controller.text = state.newPassword.value;
+        }
+        return TextField(
+          controller: _controller,
+          onChanged: (password) => BlocProvider.of<ChangePasswordBloc>(context)
+              .add(ChangePasswordNewPasswordChanged(password)),
+          obscureText: true,
+          decoration: InputDecoration(
+            labelText: 'new password',
+            errorText: state.isInitial ? null : state.newPassword.errorMessage,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _NewPasswordConfirmInput extends StatefulWidget {
+  @override
+  State<_NewPasswordConfirmInput> createState() =>
+      _NewPasswordConfirmInputState();
+}
+
+class _NewPasswordConfirmInputState extends State<_NewPasswordConfirmInput> {
+  final _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ChangePasswordBloc, ChangePasswordState>(
+      buildWhen: (previous, current) =>
+          form_helpers.shouldRerenderFormInputField(previous, current) ||
+          previous.newPassword != current.newPassword ||
+          previous.newPasswordConfirm != current.newPasswordConfirm,
+      builder: (context, state) {
+        debugPrint("'ChangePasswordForm - _NewPasswordConfirmInput' (re)built");
+        if (_controller.text != state.newPasswordConfirm.value) {
+          _controller.text = state.newPasswordConfirm.value;
         }
         return TextField(
           controller: _controller,
           onChanged: (passwordConfirm) =>
-              BlocProvider.of<ChangePasswordBloc>(context)
-                  .add(ChangePasswordPasswordConfirmChanged(passwordConfirm)),
+              BlocProvider.of<ChangePasswordBloc>(context).add(
+                  ChangePasswordNewPasswordConfirmChanged(passwordConfirm)),
           obscureText: true,
           decoration: InputDecoration(
-            labelText: 'confirm password',
+            labelText: 'confirm new password',
             errorText: state.isInitial
                 ? null
-                : state.password.value != state.passwordConfirm.value
+                : state.newPassword.value != state.newPasswordConfirm.value
                     ? "passwords don't match"
                     : null,
           ),
