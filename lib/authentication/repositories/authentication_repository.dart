@@ -26,6 +26,7 @@ class AuthenticationRepository {
   final _controller = StreamController<AuthenticationStatus>();
 
   Stream<AuthenticationStatus> get status async* {
+    // TODO: To be implemented
     await Future<void>.delayed(const Duration(seconds: 1));
     yield AuthenticationStatus.unauthenticated;
     yield* _controller.stream;
@@ -80,6 +81,22 @@ class AuthenticationRepository {
     serverUri = serverUri.replace(path: constants.apiPathAuthResetPassword);
     final response = await unAuthenticatedDio.postUri(serverUri, data: {
       'email': email.value,
+    });
+    return response.data[constants.apiResponseMessageKey];
+  }
+
+  Future<String> changePassword({
+    required Password currentPassword,
+    required Password newPassword,
+  }) async {
+    Uri? serverUri = await appSettingsRepository.serverUri;
+    if (serverUri == null) {
+      throw Exception('app settings server uri not configured');
+    }
+    serverUri = serverUri.replace(path: constants.apiPathAuthChangePassword);
+    final response = await authenticatedDio.patchUri(serverUri, data: {
+      'current_password': currentPassword.value,
+      'new_password': newPassword.value,
     });
     return response.data[constants.apiResponseMessageKey];
   }

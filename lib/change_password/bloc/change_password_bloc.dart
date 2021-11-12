@@ -79,16 +79,31 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState>
     if (state.valid) {
       emit(state.copyWith(type: ChangePasswordStateType.passwordChanging));
       try {
-        await Future.delayed(const Duration(seconds: 3));
         emit(state.copyWith(
           type: ChangePasswordStateType.passwordChangingSuccess,
-          message: 'Password changed',
+          message: await _authenticationRepository.changePassword(
+            currentPassword: state.currentPassword,
+            newPassword: state.newPassword,
+          ),
         ));
         emit(state.clear());
       } on DioError catch (e) {
+        final responseError = handleResponseError(
+          error: e,
+          fields: ['current_password', 'new_password'],
+        );
+        final fieldErrors = responseError.fieldErrors;
         emit(state.copyWith(
           type: ChangePasswordStateType.passwordChangingError,
-          message: e.message,
+          message: responseError.message,
+          currentPassword: fieldErrors.containsKey('current_password')
+              ? state.currentPassword
+                  .copyWith(serverError: fieldErrors['current_password'])
+              : null,
+          newPassword: fieldErrors.containsKey('new_password')
+              ? state.newPassword
+                  .copyWith(serverError: fieldErrors['new_password'])
+              : null,
         ));
       }
     }
