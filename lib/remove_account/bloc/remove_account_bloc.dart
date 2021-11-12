@@ -44,16 +44,16 @@ class RemoveAccountBloc extends Bloc<RemoveAccountEvent, RemoveAccountState>
     if (state.valid) {
       emit(state.copyWith(type: RemoveAccountStateType.removingAccount));
       try {
-        await Future.delayed(const Duration(seconds: 3));
         emit(state.copyWith(
           type: RemoveAccountStateType.removingAccountSuccess,
-          message: 'Account Removed & All Data Erased',
+          message: await _authenticationRepository.removeAccount(),
         ));
         emit(state.clear());
-      } on DioError catch (_) {
+      } on DioError catch (e) {
+        final responseError = handleResponseError(error: e);
         emit(state.copyWith(
           type: RemoveAccountStateType.removingAccountError,
-          message: 'Removing Account Failed',
+          message: responseError.message,
         ));
       }
     }

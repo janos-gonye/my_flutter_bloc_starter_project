@@ -67,9 +67,12 @@ class _SubmitButton extends StatelessWidget {
           child: const Text('Remove Account & Erase All Data'),
           onPressed: state.invalid || state.isRegistrating
               ? null
-              : () {
-                  BlocProvider.of<RemoveAccountBloc>(context)
-                      .add(const RemoveAccountFormSubmitted());
+              : () async {
+                  // TODO: Add confirmation popup
+                  if (true) {
+                    BlocProvider.of<RemoveAccountBloc>(context)
+                        .add(const RemoveAccountFormSubmitted());
+                  }
                 },
         );
       },

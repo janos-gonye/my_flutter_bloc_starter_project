@@ -119,4 +119,16 @@ class AuthenticationRepository {
     });
     return response.data[constants.apiResponseMessageKey];
   }
+
+  Future<String> removeAccount() async {
+    Uri? serverUri = await appSettingsRepository.serverUri;
+    if (serverUri == null) {
+      throw Exception('app settings server uri not configured');
+    }
+    serverUri = serverUri.replace(
+      path: constants.apiPathAuthDeleteRegistration,
+    );
+    final response = await authenticatedDio.deleteUri(serverUri);
+    return response.data[constants.apiResponseMessageKey];
+  }
 }

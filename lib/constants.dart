@@ -12,6 +12,7 @@ const apiResponseMessageKey = 'detail';
 
 const apiPathAuthChangeEmail = '/auth/change-email/';
 const apiPathAuthRegistration = '/auth/registration/';
+const apiPathAuthDeleteRegistration = '/auth/registration/delete/';
 const apiPathAuthResetPassword = '/auth/reset-password/';
 const apiPathAuthChangePassword = '/auth/change-password/';
 const apiPathAuthLogin = '/token/';
