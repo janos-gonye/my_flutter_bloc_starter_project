@@ -11,7 +11,7 @@ import 'package:my_flutter_bloc_starter_project/user/user.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'
     as secure_storage;
 
-void main() {
+void main() async {
   const secureStorage = secure_storage.FlutterSecureStorage();
   const authenticationTokenRepository = AuthenticationTokenRepository(
     secureStorage: secureStorage,
@@ -24,6 +24,15 @@ void main() {
 
   const appSettingsRepository = AppSettingsRepository(
     secureStorage: secureStorage,
+  );
+
+  // Must be called, otherwise
+  //`appSettingsRepository.serverUri` throws an error.
+  WidgetsFlutterBinding.ensureInitialized();
+  loadServerUri(
+    appSettingsRepository,
+    unAuthenticatedDio,
+    authenticatedDio,
   );
 
   final authenticationRepository = AuthenticationRepository(
@@ -40,4 +49,17 @@ void main() {
       ),
     ),
   );
+}
+
+void loadServerUri(
+  AppSettingsRepository appSettingsRepository,
+  Dio unAuthenticatedDio,
+  Dio authenticatedDio,
+) async {
+  final serverUri = await appSettingsRepository.serverUri;
+  if (serverUri == null) {
+    final serverUriString = serverUri.toString();
+    unAuthenticatedDio.options.baseUrl = serverUriString;
+    authenticatedDio.options.baseUrl = serverUriString;
+  }
 }
