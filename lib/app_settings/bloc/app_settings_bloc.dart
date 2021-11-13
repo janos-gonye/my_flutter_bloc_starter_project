@@ -35,9 +35,12 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
     emit(state.clear());
     emit(state.copyWith(type: AppSettingsStateType.loading));
     try {
-      final protocol = await appSettingsRepository.protocol;
-      final hostname = await appSettingsRepository.hostname;
-      final port = await appSettingsRepository.port;
+      Protocol? protocol = await appSettingsRepository.protocol;
+      Hostname? hostname = await appSettingsRepository.hostname;
+      Port? port = await appSettingsRepository.port;
+      protocol ??= Protocol(protocol!.value);
+      hostname ??= Hostname(hostname!.value);
+      port ??= Port(port!.value);
       emit(state.copyWith(
         type: AppSettingsStateType.loadingSuccess,
         protocol: protocol,

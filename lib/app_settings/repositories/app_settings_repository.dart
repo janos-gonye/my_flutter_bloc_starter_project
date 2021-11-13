@@ -10,32 +10,23 @@ class AppSettingsRepository {
 
   final FlutterSecureStorage secureStorage;
 
-  Future<String?> _readKey(String key) async {
+  Future<String?> _readKey(String key) {
     return secureStorage.read(key: key);
   }
 
-  Future<Protocol> get protocol async {
-    final protocol = await _readKey(constants.storageKeyProtocol);
-    if (protocol == null) {
-      return const Protocol('https');
-    }
-    return Protocol(protocol);
+  Future<Protocol?> get protocol async {
+    final _protocol = await _readKey(constants.storageKeyProtocol);
+    return _protocol == null ? null : Protocol(_protocol);
   }
 
-  Future<Hostname> get hostname async {
-    final hostname = await _readKey(constants.storageKeyHostname);
-    if (hostname == null) {
-      return const Hostname('');
-    }
-    return Hostname(hostname);
+  Future<Hostname?> get hostname async {
+    final _hostname = await _readKey(constants.storageKeyHostname);
+    return _hostname == null ? null : Hostname(_hostname);
   }
 
-  Future<Port> get port async {
+  Future<Port?> get port async {
     final port = await _readKey(constants.storageKeyPort);
-    if (port == null) {
-      return const Port('');
-    }
-    return Port(port);
+    return port == null ? null : Port(port);
   }
 
   Future<void> write({
@@ -61,7 +52,12 @@ class AppSettingsRepository {
     final _protocol = await protocol;
     final _hostname = await hostname;
     final _port = await port;
-    if (_protocol.invalid || _hostname.invalid || _port.invalid) {
+    if (_protocol == null ||
+        _hostname == null ||
+        _port == null ||
+        _protocol.invalid ||
+        _hostname.invalid ||
+        _port.invalid) {
       return null;
     }
     return Uri(
