@@ -37,7 +37,11 @@ mixin HandleResponseErrorMixin {
       }
     } else if (error.type == DioErrorType.other) {
       message = 'Other Error';
-      if (error.error is SocketException) message = 'Socket Exception';
+      if (error.error is SocketException) {
+        message = 'Socket Exception. Check Server Address';
+      } else if (error.error is RangeError) {
+        message = 'Server Address Not Configured';
+      }
     }
     return ResponseError(
       message: message,
