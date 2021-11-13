@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 
-import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
 import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
 import 'package:my_flutter_bloc_starter_project/constants.dart' as constants;
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
@@ -14,11 +13,9 @@ class AuthenticationRepository {
   AuthenticationRepository({
     required this.unAuthenticatedDio,
     required this.authenticatedDio,
-    required this.appSettingsRepository,
     required this.authenticationTokenRepository,
   });
 
-  final AppSettingsRepository appSettingsRepository;
   final AuthenticationTokenRepository authenticationTokenRepository;
   final Dio unAuthenticatedDio;
   final Dio authenticatedDio;
@@ -37,16 +34,14 @@ class AuthenticationRepository {
     required Password password,
     required Email email,
   }) async {
-    Uri? serverUri = await appSettingsRepository.serverUri;
-    if (serverUri == null) {
-      throw Exception('app settings server uri not configured');
-    }
-    serverUri = serverUri.replace(path: constants.apiPathAuthRegistration);
-    final response = await unAuthenticatedDio.postUri(serverUri, data: {
-      'username': username.value,
-      'password': password.value,
-      'email': email.value,
-    });
+    final response = await unAuthenticatedDio.post(
+      constants.apiPathAuthRegistration,
+      data: {
+        'username': username.value,
+        'password': password.value,
+        'email': email.value,
+      },
+    );
     return response.data[constants.apiResponseMessageKey];
   }
 
@@ -54,15 +49,13 @@ class AuthenticationRepository {
     required Username username,
     required Password password,
   }) async {
-    Uri? serverUri = await appSettingsRepository.serverUri;
-    if (serverUri == null) {
-      throw Exception('app settings server uri not configured');
-    }
-    serverUri = serverUri.replace(path: constants.apiPathAuthLogin);
-    final response = await unAuthenticatedDio.postUri(serverUri, data: {
-      'username': username.value,
-      'password': password.value,
-    });
+    final response = await unAuthenticatedDio.post(
+      constants.apiPathAuthLogin,
+      data: {
+        'username': username.value,
+        'password': password.value,
+      },
+    );
     Map<String, dynamic> body = response.data;
     await authenticationTokenRepository.write(
       accessToken: body['access'],
@@ -74,14 +67,12 @@ class AuthenticationRepository {
   Future<String> resetPassword({
     required Email email,
   }) async {
-    Uri? serverUri = await appSettingsRepository.serverUri;
-    if (serverUri == null) {
-      throw Exception('app settings server uri not configured');
-    }
-    serverUri = serverUri.replace(path: constants.apiPathAuthResetPassword);
-    final response = await unAuthenticatedDio.postUri(serverUri, data: {
-      'email': email.value,
-    });
+    final response = await unAuthenticatedDio.post(
+      constants.apiPathAuthResetPassword,
+      data: {
+        'email': email.value,
+      },
+    );
     return response.data[constants.apiResponseMessageKey];
   }
 
@@ -89,15 +80,13 @@ class AuthenticationRepository {
     required Password currentPassword,
     required Password newPassword,
   }) async {
-    Uri? serverUri = await appSettingsRepository.serverUri;
-    if (serverUri == null) {
-      throw Exception('app settings server uri not configured');
-    }
-    serverUri = serverUri.replace(path: constants.apiPathAuthChangePassword);
-    final response = await authenticatedDio.patchUri(serverUri, data: {
-      'current_password': currentPassword.value,
-      'new_password': newPassword.value,
-    });
+    final response = await authenticatedDio.post(
+      constants.apiPathAuthChangePassword,
+      data: {
+        'current_password': currentPassword.value,
+        'new_password': newPassword.value,
+      },
+    );
     return response.data[constants.apiResponseMessageKey];
   }
 
@@ -109,26 +98,19 @@ class AuthenticationRepository {
   void dispose() => _controller.close();
 
   Future<String> changeEmail({required Email email}) async {
-    Uri? serverUri = await appSettingsRepository.serverUri;
-    if (serverUri == null) {
-      throw Exception('app settings server uri not configured');
-    }
-    serverUri = serverUri.replace(path: constants.apiPathAuthChangeEmail);
-    final response = await authenticatedDio.patchUri(serverUri, data: {
-      'email': email.value,
-    });
+    final response = await authenticatedDio.patch(
+      constants.apiPathAuthChangeEmail,
+      data: {
+        'email': email.value,
+      },
+    );
     return response.data[constants.apiResponseMessageKey];
   }
 
   Future<String> removeAccount() async {
-    Uri? serverUri = await appSettingsRepository.serverUri;
-    if (serverUri == null) {
-      throw Exception('app settings server uri not configured');
-    }
-    serverUri = serverUri.replace(
-      path: constants.apiPathAuthDeleteRegistration,
+    final response = await authenticatedDio.delete(
+      constants.apiPathAuthDeleteRegistration,
     );
-    final response = await authenticatedDio.deleteUri(serverUri);
     return response.data[constants.apiResponseMessageKey];
   }
 }
