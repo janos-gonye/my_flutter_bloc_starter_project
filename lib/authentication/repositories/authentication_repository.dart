@@ -23,9 +23,7 @@ class AuthenticationRepository {
   final _controller = StreamController<AuthenticationStatus>();
 
   Stream<AuthenticationStatus> get status async* {
-    // TODO: To be implemented
-    await Future<void>.delayed(const Duration(seconds: 1));
-    yield AuthenticationStatus.unauthenticated;
+    yield AuthenticationStatus.unknown;
     yield* _controller.stream;
   }
 
@@ -112,5 +110,19 @@ class AuthenticationRepository {
       constants.apiPathAuthDeleteRegistration,
     );
     return response.data[constants.apiResponseMessageKey];
+  }
+
+  Future<bool> tokenVerify() async {
+    String? accessToken = await authenticationTokenRepository.accessToken;
+    if (accessToken == null) {
+      return false;
+    }
+    await unAuthenticatedDio.post(
+      constants.apiPathAuthTokenVerify,
+      data: {
+        'token': accessToken,
+      },
+    );
+    return true;
   }
 }

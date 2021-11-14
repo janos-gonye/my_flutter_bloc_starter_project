@@ -94,14 +94,14 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
-    BlocProvider.of<AuthenticationBloc>(context).add(ApplicationStarted());
+    BlocProvider.of<AuthenticationBloc>(context)
+        .add(AuthenticationApplicationStarted());
+    debugPrint("'ApplicationStarted' event added to 'AuthenticationBloc'");
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      BlocProvider.of<AuthenticationBloc>(context).add(ApplicationResumed());
-    }
+    if (state == AppLifecycleState.resumed) {}
   }
 
   @override

@@ -16,6 +16,7 @@ const apiPathAuthDeleteRegistration = '/auth/registration/delete/';
 const apiPathAuthResetPassword = '/auth/reset-password/';
 const apiPathAuthChangePassword = '/auth/change-password/';
 const apiPathAuthLogin = '/token/';
+const apiPathAuthTokenVerify = '/token/verify';
 
 const storageKeyAccessToken = '';
 const storageKeyRefreshToken = 'refresh_token';

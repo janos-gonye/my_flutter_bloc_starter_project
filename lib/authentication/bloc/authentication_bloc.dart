@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
+
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
 import 'package:my_flutter_bloc_starter_project/authentication/repositories/authentication_repository.dart';
@@ -16,6 +19,7 @@ class AuthenticationBloc
         super(const AuthenticationState.unknown()) {
     on<AuthenticationStatusChanged>(_onAuthenticationStatusChanged);
     on<AuthenticationLogoutRequested>(_onAuthenticationLogoutRequested);
+    on<AuthenticationApplicationStarted>(_onApplicationStarted);
     _authenticationStatusSubscription = _authenticationRepository.status.listen(
       (status) => add(AuthenticationStatusChanged(status)),
     );
@@ -24,6 +28,14 @@ class AuthenticationBloc
   final AuthenticationRepository _authenticationRepository;
   late StreamSubscription<AuthenticationStatus>
       _authenticationStatusSubscription;
+
+  @override
+  void onTransition(
+    Transition<AuthenticationEvent, AuthenticationState> transition,
+  ) {
+    debugPrint(transition.toString());
+    super.onTransition(transition);
+  }
 
   @override
   Future<void> close() {
@@ -51,5 +63,20 @@ class AuthenticationBloc
     Emitter<AuthenticationState> emit,
   ) {
     _authenticationRepository.logOut();
+  }
+
+  void _onApplicationStarted(
+    AuthenticationApplicationStarted event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    try {
+      if (await _authenticationRepository.tokenVerify()) {
+        emit(const AuthenticationState.authenticated());
+      } else {
+        emit(const AuthenticationState.unauthenticated());
+      }
+    } on DioError catch (e) {
+      emit(const AuthenticationState.unauthenticated());
+    }
   }
 }
