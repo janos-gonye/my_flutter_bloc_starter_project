@@ -19,7 +19,8 @@ class AuthenticationBloc
         super(const AuthenticationState.unknown()) {
     on<AuthenticationStatusChanged>(_onAuthenticationStatusChanged);
     on<AuthenticationLogoutRequested>(_onAuthenticationLogoutRequested);
-    on<AuthenticationApplicationStarted>(_onApplicationStarted);
+    on<ApplicationStarted>(_onApplicationStarted);
+    on<ApplicationResumed>(_onApplicationResumed);
     _authenticationStatusSubscription = _authenticationRepository.status.listen(
       (status) => add(AuthenticationStatusChanged(status)),
     );
@@ -66,7 +67,7 @@ class AuthenticationBloc
   }
 
   void _onApplicationStarted(
-    AuthenticationApplicationStarted event,
+    ApplicationStarted event,
     Emitter<AuthenticationState> emit,
   ) async {
     try {
@@ -75,8 +76,25 @@ class AuthenticationBloc
       } else {
         emit(const AuthenticationState.unauthenticated());
       }
-    } on DioError catch (e) {
+    } on DioError catch (_) {
+      // Logout the user if error occurs on application start app
       emit(const AuthenticationState.unauthenticated());
+    }
+  }
+
+  void _onApplicationResumed(
+    ApplicationResumed event,
+    Emitter<AuthenticationState> emit,
+  ) async {
+    try {
+      emit(const AuthenticationState.verifying());
+      if (await _authenticationRepository.tokenVerify()) {
+        emit(const AuthenticationState.authenticated());
+      } else {
+        emit(const AuthenticationState.unauthenticated());
+      }
+    } on DioError catch (_) {
+      // TODO: Emit token expired
     }
   }
 }

@@ -94,14 +94,16 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
-    BlocProvider.of<AuthenticationBloc>(context)
-        .add(AuthenticationApplicationStarted());
+    BlocProvider.of<AuthenticationBloc>(context).add(ApplicationStarted());
     debugPrint("'ApplicationStarted' event added to 'AuthenticationBloc'");
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {}
+    if (state == AppLifecycleState.resumed) {
+      debugPrint("'ApplicationResumed' event added to 'AuthenticationBloc'");
+      BlocProvider.of<AuthenticationBloc>(context).add(ApplicationResumed());
+    }
   }
 
   @override
@@ -110,6 +112,8 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
     super.dispose();
   }
 
+  // Check if it is necessary to push the route.
+  String? lastRoute;
   NavigatorState get _navigator => _navigatorKey.currentState!;
 
   @override
@@ -138,18 +142,33 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
               EasyLoading.dismiss();
               switch (state.status) {
                 case AuthenticationStatus.authenticated:
-                  _navigator.pushNamedAndRemoveUntil(
-                    UserPage.routeName,
-                    (route) => false,
-                  );
+                  EasyLoading.dismiss();
+                  if (lastRoute != UserPage.routeName) {
+                    _navigator.pushNamedAndRemoveUntil(
+                      UserPage.routeName,
+                      (route) => false,
+                    );
+                  }
+                  lastRoute = UserPage.routeName;
                   break;
                 case AuthenticationStatus.unauthenticated:
-                  _navigator.pushNamedAndRemoveUntil(
-                    HomePage.routeName,
-                    (route) => false,
+                  EasyLoading.dismiss();
+                  if (lastRoute != HomePage.routeName) {
+                    _navigator.pushNamedAndRemoveUntil(
+                      HomePage.routeName,
+                      (route) => false,
+                    );
+                    lastRoute = HomePage.routeName;
+                  }
+                  break;
+                case AuthenticationStatus.verifying:
+                  EasyLoading.show(
+                    status: 'checking\nauthentication...',
+                    maskType: EasyLoadingMaskType.clear,
                   );
                   break;
                 default:
+                  EasyLoading.dismiss();
                   break;
               }
             },

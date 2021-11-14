@@ -18,4 +18,6 @@ class AuthenticationStatusChanged extends AuthenticationEvent {
 
 class AuthenticationLogoutRequested extends AuthenticationEvent {}
 
-class AuthenticationApplicationStarted extends AuthenticationEvent {}
+class ApplicationStarted extends AuthenticationEvent {}
+
+class ApplicationResumed extends AuthenticationEvent {}

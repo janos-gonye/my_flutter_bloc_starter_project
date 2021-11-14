@@ -7,7 +7,7 @@ import 'package:my_flutter_bloc_starter_project/constants.dart' as constants;
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
 
-enum AuthenticationStatus { unknown, authenticated, unauthenticated }
+enum AuthenticationStatus { unknown, authenticated, unauthenticated, verifying }
 
 class AuthenticationRepository {
   AuthenticationRepository({
