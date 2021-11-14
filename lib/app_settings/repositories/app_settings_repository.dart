@@ -48,7 +48,7 @@ class AppSettingsRepository {
     );
   }
 
-  Future<Uri?> get serverUri async {
+  Future<Uri?> get serverURI async {
     final _protocol = await protocol;
     final _hostname = await hostname;
     final _port = await port;

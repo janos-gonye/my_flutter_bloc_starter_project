@@ -6,6 +6,7 @@ import 'package:my_flutter_bloc_starter_project/app.dart';
 import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
 import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
 import 'package:my_flutter_bloc_starter_project/shared/factory_funcs.dart';
+import 'package:my_flutter_bloc_starter_project/shared/repositories/base_uri_configurer_repository.dart';
 import 'package:my_flutter_bloc_starter_project/user/user.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'
@@ -25,15 +26,16 @@ void main() async {
   const appSettingsRepository = AppSettingsRepository(
     secureStorage: secureStorage,
   );
+  final baseURIConfigurerRepository = BaseURIConfigurerRepository(
+    appSettingsRepository: appSettingsRepository,
+    authenticatedDio: authenticatedDio,
+    unAuthenticatedDio: unAuthenticatedDio,
+  );
 
   // Must be called, otherwise
-  //`appSettingsRepository.serverUri` throws an error.
+  //`appSettingsRepository.serverURI` throws an error.
   WidgetsFlutterBinding.ensureInitialized();
-  loadServerUri(
-    appSettingsRepository,
-    unAuthenticatedDio,
-    authenticatedDio,
-  );
+  await baseURIConfigurerRepository.reloadBaseURI();
 
   final authenticationRepository = AuthenticationRepository(
     unAuthenticatedDio: unAuthenticatedDio,
@@ -44,22 +46,10 @@ void main() async {
     MyStarterProjectApp(
       appSettingsRepository: appSettingsRepository,
       authenticationRepository: authenticationRepository,
+      baseURIConfigurerRepository: baseURIConfigurerRepository,
       userRepository: UserRepository(
         unAuthenticatedDio: unAuthenticatedDio,
       ),
     ),
   );
-}
-
-void loadServerUri(
-  AppSettingsRepository appSettingsRepository,
-  Dio unAuthenticatedDio,
-  Dio authenticatedDio,
-) async {
-  final serverUri = await appSettingsRepository.serverUri;
-  if (serverUri == null) {
-    final serverUriString = serverUri.toString();
-    unAuthenticatedDio.options.baseUrl = serverUriString;
-    authenticatedDio.options.baseUrl = serverUriString;
-  }
 }

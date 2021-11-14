@@ -80,7 +80,7 @@ class AuthenticationRepository {
     required Password currentPassword,
     required Password newPassword,
   }) async {
-    final response = await authenticatedDio.post(
+    final response = await authenticatedDio.patch(
       constants.apiPathAuthChangePassword,
       data: {
         'current_password': currentPassword.value,

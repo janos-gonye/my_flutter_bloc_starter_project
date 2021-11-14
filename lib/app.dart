@@ -13,6 +13,7 @@ import 'package:my_flutter_bloc_starter_project/login/login.dart';
 import 'package:my_flutter_bloc_starter_project/password_reset/password_reset.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
 import 'package:my_flutter_bloc_starter_project/remove_account/remove_account.dart';
+import 'package:my_flutter_bloc_starter_project/shared/repositories/base_uri_configurer_repository.dart';
 import 'package:my_flutter_bloc_starter_project/splash/splash.dart';
 import 'package:my_flutter_bloc_starter_project/user/user.dart';
 
@@ -21,11 +22,13 @@ class MyStarterProjectApp extends StatelessWidget {
     Key? key,
     required this.appSettingsRepository,
     required this.authenticationRepository,
+    required this.baseURIConfigurerRepository,
     required this.userRepository,
   }) : super(key: key);
 
   final AppSettingsRepository appSettingsRepository;
   final AuthenticationRepository authenticationRepository;
+  final BaseURIConfigurerRepository baseURIConfigurerRepository;
   final UserRepository userRepository;
 
   @override
@@ -44,6 +47,7 @@ class MyStarterProjectApp extends StatelessWidget {
           BlocProvider<AppSettingsBloc>(
             create: (context) => AppSettingsBloc(
               appSettingsRepository: appSettingsRepository,
+              baseURIConfigurerRepository: baseURIConfigurerRepository,
             ),
           ),
           BlocProvider<AuthenticationBloc>(

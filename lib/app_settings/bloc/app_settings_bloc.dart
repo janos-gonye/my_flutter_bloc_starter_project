@@ -6,13 +6,16 @@ import 'package:equatable/equatable.dart';
 import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
 import 'package:my_flutter_bloc_starter_project/constants.dart';
 import 'package:my_flutter_bloc_starter_project/shared/bloc/states/base.dart';
+import 'package:my_flutter_bloc_starter_project/shared/repositories/base_uri_configurer_repository.dart';
 
 part 'app_settings_event.dart';
 part 'app_settings_state.dart';
 
 class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
-  AppSettingsBloc({required this.appSettingsRepository})
-      : super(const AppSettingsState()) {
+  AppSettingsBloc({
+    required this.appSettingsRepository,
+    required this.baseURIConfigurerRepository,
+  }) : super(const AppSettingsState()) {
     on<AppSettingsFormInitialized>(_onInitialized);
     on<AppSettingsProtocolUpdated>(_onProtocolChanged);
     on<AppSettingsHostnameUpdated>(_onHostnameChanged);
@@ -21,6 +24,7 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
   }
 
   final AppSettingsRepository appSettingsRepository;
+  final BaseURIConfigurerRepository baseURIConfigurerRepository;
 
   @override
   void onTransition(Transition<AppSettingsEvent, AppSettingsState> transition) {
@@ -94,6 +98,7 @@ class AppSettingsBloc extends Bloc<AppSettingsEvent, AppSettingsState> {
           protocol: state.protocol,
           port: state.port,
         );
+        await baseURIConfigurerRepository.reloadBaseURI();
         emit(state.copyWith(
           type: AppSettingsStateType.savingSuccess,
           message: 'Settings saved',
