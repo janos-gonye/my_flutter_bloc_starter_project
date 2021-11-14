@@ -87,8 +87,28 @@ class AppView extends StatefulWidget {
   _AppViewState createState() => _AppViewState();
 }
 
-class _AppViewState extends State<AppView> {
+class _AppViewState extends State<AppView> with WidgetsBindingObserver {
   final _navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addObserver(this);
+    BlocProvider.of<AuthenticationBloc>(context).add(ApplicationStarted());
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      BlocProvider.of<AuthenticationBloc>(context).add(ApplicationResumed());
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
+  }
 
   NavigatorState get _navigator => _navigatorKey.currentState!;
 
