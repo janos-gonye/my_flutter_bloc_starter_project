@@ -23,13 +23,11 @@ class MyStarterProjectApp extends StatelessWidget {
     required this.appSettingsRepository,
     required this.authenticationRepository,
     required this.baseURIConfigurerRepository,
-    required this.userRepository,
   }) : super(key: key);
 
   final AppSettingsRepository appSettingsRepository;
   final AuthenticationRepository authenticationRepository;
   final BaseURIConfigurerRepository baseURIConfigurerRepository;
-  final UserRepository userRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +42,6 @@ class MyStarterProjectApp extends StatelessWidget {
         BlocProvider<AuthenticationBloc>(
           create: (context) => AuthenticationBloc(
             authenticationRepository: authenticationRepository,
-            userRepository: userRepository,
           ),
         ),
         BlocProvider(
