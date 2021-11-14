@@ -33,62 +33,52 @@ class MyStarterProjectApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
+    return MultiBlocProvider(
       providers: [
-        RepositoryProvider(
-          create: (context) => appSettingsRepository,
+        BlocProvider<AppSettingsBloc>(
+          create: (context) => AppSettingsBloc(
+            appSettingsRepository: appSettingsRepository,
+            baseURIConfigurerRepository: baseURIConfigurerRepository,
+          ),
         ),
-        RepositoryProvider(
-          create: (context) => authenticationRepository,
+        BlocProvider<AuthenticationBloc>(
+          create: (context) => AuthenticationBloc(
+            authenticationRepository: authenticationRepository,
+            userRepository: userRepository,
+          ),
+        ),
+        BlocProvider(
+          create: (context) => LoginBloc(
+            authenticationRepository: authenticationRepository,
+          ),
+        ),
+        BlocProvider(
+          create: (context) => RegistrationBloc(
+            authenticationRepository: authenticationRepository,
+          ),
+        ),
+        BlocProvider(
+          create: (context) => PasswordResetBloc(
+            authenticationRepository: authenticationRepository,
+          ),
+        ),
+        BlocProvider(
+          create: (context) => ChangePasswordBloc(
+            authenticationRepository: authenticationRepository,
+          ),
+        ),
+        BlocProvider(
+          create: (context) => ChangeEmailBloc(
+            authenticationRepository: authenticationRepository,
+          ),
+        ),
+        BlocProvider(
+          create: (context) => RemoveAccountBloc(
+            authenticationRepository: authenticationRepository,
+          ),
         ),
       ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<AppSettingsBloc>(
-            create: (context) => AppSettingsBloc(
-              appSettingsRepository: appSettingsRepository,
-              baseURIConfigurerRepository: baseURIConfigurerRepository,
-            ),
-          ),
-          BlocProvider<AuthenticationBloc>(
-            create: (context) => AuthenticationBloc(
-              authenticationRepository: authenticationRepository,
-              userRepository: userRepository,
-            ),
-          ),
-          BlocProvider(
-            create: (context) => LoginBloc(
-              authenticationRepository: authenticationRepository,
-            ),
-          ),
-          BlocProvider(
-            create: (context) => RegistrationBloc(
-              authenticationRepository: authenticationRepository,
-            ),
-          ),
-          BlocProvider(
-            create: (context) => PasswordResetBloc(
-              authenticationRepository: authenticationRepository,
-            ),
-          ),
-          BlocProvider(
-            create: (context) => ChangePasswordBloc(
-              authenticationRepository: authenticationRepository,
-            ),
-          ),
-          BlocProvider(
-            create: (context) => ChangeEmailBloc(
-              authenticationRepository: authenticationRepository,
-            ),
-          ),
-          BlocProvider(
-            create: (context) => RemoveAccountBloc(
-              authenticationRepository: authenticationRepository,
-            ),
-          ),
-        ],
-        child: const AppView(),
-      ),
+      child: const AppView(),
     );
   }
 }
