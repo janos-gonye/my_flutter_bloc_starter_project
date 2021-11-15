@@ -138,6 +138,7 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
       builder: EasyLoading.init(
         builder: (context, child) {
           return BlocListener<AuthenticationBloc, AuthenticationState>(
+            listenWhen: (previous, current) => previous != current,
             listener: (context, state) {
               EasyLoading.dismiss();
               switch (state.status) {
