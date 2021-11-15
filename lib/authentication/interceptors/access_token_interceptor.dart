@@ -17,11 +17,12 @@ class AddAccessTokenInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
+    // An `AuthenticatedDio` instance only gets used after a login, therefore
+    // `accessToken` can't be `null`. Yet, if it, for some reason, is `null`,
+    // a `null` converted to string is just null, so a response saying invalid
+    // token will come back.
     String? accessToken = await authenticationTokenRepository.accessToken;
-    // TODO: Handle if 'accessToken' is null
-    assert(accessToken != null);
-    debugPrint(accessToken);
     options.headers[HttpHeaders.authorizationHeader] = 'Bearer $accessToken';
-    super.onRequest(options, handler);
+    handler.next(options);
   }
 }
