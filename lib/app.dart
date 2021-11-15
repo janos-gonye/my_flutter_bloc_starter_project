@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
+import 'package:my_flutter_bloc_starter_project/authenticated_home/views/views.dart';
 import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
 import 'package:my_flutter_bloc_starter_project/change_email/change_email.dart';
 import 'package:my_flutter_bloc_starter_project/change_password/bloc/change_password_bloc.dart';
@@ -12,11 +13,11 @@ import 'package:my_flutter_bloc_starter_project/home/home.dart';
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
 import 'package:my_flutter_bloc_starter_project/not_found/not_found.dart';
 import 'package:my_flutter_bloc_starter_project/password_reset/password_reset.dart';
+import 'package:my_flutter_bloc_starter_project/profile_settings/views/views.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
 import 'package:my_flutter_bloc_starter_project/remove_account/remove_account.dart';
 import 'package:my_flutter_bloc_starter_project/shared/repositories/base_uri_configurer_repository.dart';
 import 'package:my_flutter_bloc_starter_project/splash/splash.dart';
-import 'package:my_flutter_bloc_starter_project/user/user.dart';
 
 import 'package:my_flutter_bloc_starter_project/shared/views/helpers.dart'
     as helpers;
@@ -138,9 +139,11 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
         AppSettingsPage.routeName: (context) => const AppSettingsPage(),
         LoginPage.routeName: (context) => const LoginPage(),
         SplashPage.routeName: (context) => const SplashPage(),
-        UserPage.routeName: (context) => const UserPage(),
+        AuthenticatedHomePage.routeName: (context) =>
+            const AuthenticatedHomePage(),
         RegistrationPage.routeName: (context) => const RegistrationPage(),
         PasswordResetPage.routeName: (context) => const PasswordResetPage(),
+        ProfileSettings.routeName: (context) => const ProfileSettings(),
       },
       onUnknownRoute: (RouteSettings settings) => MaterialPageRoute(
         builder: (BuildContext context) => const NotFoundPage(),
@@ -155,10 +158,10 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
                 case AuthenticationStatus.loggedIn:
                 case AuthenticationStatus.onAppStartStillLoggedIn:
                   _navigator.pushNamedAndRemoveUntil(
-                    UserPage.routeName,
+                    AuthenticatedHomePage.routeName,
                     (route) => false,
                   );
-                  lastRoute = UserPage.routeName;
+                  lastRoute = AuthenticatedHomePage.routeName;
                   break;
                 case AuthenticationStatus.loggedOut:
                 case AuthenticationStatus.onAppStartSessionExpired:
@@ -185,12 +188,12 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
                   lastRoute = HomePage.routeName;
                   break;
                 case AuthenticationStatus.onResumeStillLoggedIn:
-                  if (lastRoute != UserPage.routeName) {
+                  if (lastRoute != AuthenticatedHomePage.routeName) {
                     _navigator.pushNamedAndRemoveUntil(
-                      UserPage.routeName,
+                      AuthenticatedHomePage.routeName,
                       (route) => false,
                     );
-                    lastRoute = UserPage.routeName;
+                    lastRoute = AuthenticatedHomePage.routeName;
                   }
                   break;
                 case AuthenticationStatus.onResumeSessionExpired:

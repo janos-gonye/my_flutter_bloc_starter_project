@@ -6,16 +6,16 @@ import 'package:my_flutter_bloc_starter_project/change_password/change_password.
 import 'package:my_flutter_bloc_starter_project/remove_account/remove_account.dart';
 import 'package:my_flutter_bloc_starter_project/shared/views/app_bars/authenticated_page_app_bar.dart';
 
-class UserPage extends StatelessWidget {
-  const UserPage({Key? key}) : super(key: key);
+class ProfileSettings extends StatelessWidget {
+  const ProfileSettings({Key? key}) : super(key: key);
 
-  static String get routeName => 'user';
+  static String get routeName => 'profile-settings';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AuthenticatedPageAppBar(
-        title: 'User Page',
+        title: 'Settings',
       ),
       body: Center(
         child: SingleChildScrollView(
