@@ -18,6 +18,7 @@ import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
 import 'package:my_flutter_bloc_starter_project/remove_account/remove_account.dart';
 import 'package:my_flutter_bloc_starter_project/shared/repositories/base_uri_configurer_repository.dart';
 import 'package:my_flutter_bloc_starter_project/splash/splash.dart';
+import 'package:my_flutter_bloc_starter_project/theme_selector/theme_selector.dart';
 
 import 'package:my_flutter_bloc_starter_project/shared/views/helpers.dart'
     as helpers;
@@ -83,6 +84,9 @@ class MyStarterProjectApp extends StatelessWidget {
             authenticationRepository: authenticationRepository,
           ),
         ),
+        BlocProvider(
+          create: (context) => ThemeSelectorBloc(),
+        ),
       ],
       child: const AppView(),
     );
@@ -128,93 +132,97 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: FlexColorScheme.light(scheme: FlexScheme.damask).toTheme,
-      darkTheme: FlexColorScheme.dark(scheme: FlexScheme.damask).toTheme,
-      themeMode: ThemeMode.dark,
-      navigatorKey: _navigatorKey,
-      initialRoute: SplashPage.routeName,
-      routes: {
-        HomePage.routeName: (context) => const HomePage(),
-        AppSettingsPage.routeName: (context) => const AppSettingsPage(),
-        LoginPage.routeName: (context) => const LoginPage(),
-        SplashPage.routeName: (context) => const SplashPage(),
-        AuthenticatedHomePage.routeName: (context) =>
-            const AuthenticatedHomePage(),
-        RegistrationPage.routeName: (context) => const RegistrationPage(),
-        PasswordResetPage.routeName: (context) => const PasswordResetPage(),
-        ProfileSettings.routeName: (context) => const ProfileSettings(),
-      },
-      onUnknownRoute: (RouteSettings settings) => MaterialPageRoute(
-        builder: (BuildContext context) => const NotFoundPage(),
-      ),
-      builder: EasyLoading.init(
-        builder: (context, child) {
-          return BlocListener<AuthenticationBloc, AuthenticationState>(
-            listenWhen: (previous, current) => previous != current,
-            listener: (context, state) {
-              EasyLoading.dismiss();
-              switch (state.status) {
-                case AuthenticationStatus.loggedIn:
-                case AuthenticationStatus.onAppStartStillLoggedIn:
-                  _navigator.pushNamedAndRemoveUntil(
-                    AuthenticatedHomePage.routeName,
-                    (route) => false,
-                  );
-                  lastRoute = AuthenticatedHomePage.routeName;
-                  break;
-                case AuthenticationStatus.loggedOut:
-                case AuthenticationStatus.onAppStartSessionExpired:
-                case AuthenticationStatus.onAppStartError:
-                case AuthenticationStatus.onAccountRemoval:
-                  _navigator.pushNamedAndRemoveUntil(
-                    HomePage.routeName,
-                    (route) => false,
-                  );
-                  lastRoute = HomePage.routeName;
-                  break;
-                case AuthenticationStatus.onResumeVerifying:
-                  EasyLoading.show(
-                    status: 'check\nauthentication...',
-                    maskType: EasyLoadingMaskType.clear,
-                  );
-                  break;
-                case AuthenticationStatus.onRequestSessionExpired:
-                  helpers.showSnackbar(context, 'Session expired');
-                  _navigator.pushNamedAndRemoveUntil(
-                    HomePage.routeName,
-                    (route) => false,
-                  );
-                  lastRoute = HomePage.routeName;
-                  break;
-                case AuthenticationStatus.onResumeStillLoggedIn:
-                  if (lastRoute != AuthenticatedHomePage.routeName) {
-                    _navigator.pushNamedAndRemoveUntil(
-                      AuthenticatedHomePage.routeName,
-                      (route) => false,
-                    );
-                    lastRoute = AuthenticatedHomePage.routeName;
+    return BlocBuilder<ThemeSelectorBloc, ThemeSelectorState>(
+      builder: (context, state) {
+        return MaterialApp(
+          theme: FlexColorScheme.light(scheme: FlexScheme.damask).toTheme,
+          darkTheme: FlexColorScheme.dark(scheme: FlexScheme.damask).toTheme,
+          themeMode: state.themeMode,
+          navigatorKey: _navigatorKey,
+          initialRoute: SplashPage.routeName,
+          routes: {
+            HomePage.routeName: (context) => const HomePage(),
+            AppSettingsPage.routeName: (context) => const AppSettingsPage(),
+            LoginPage.routeName: (context) => const LoginPage(),
+            SplashPage.routeName: (context) => const SplashPage(),
+            AuthenticatedHomePage.routeName: (context) =>
+                const AuthenticatedHomePage(),
+            RegistrationPage.routeName: (context) => const RegistrationPage(),
+            PasswordResetPage.routeName: (context) => const PasswordResetPage(),
+            ProfileSettings.routeName: (context) => const ProfileSettings(),
+          },
+          onUnknownRoute: (RouteSettings settings) => MaterialPageRoute(
+            builder: (BuildContext context) => const NotFoundPage(),
+          ),
+          builder: EasyLoading.init(
+            builder: (context, child) {
+              return BlocListener<AuthenticationBloc, AuthenticationState>(
+                listenWhen: (previous, current) => previous != current,
+                listener: (context, state) {
+                  EasyLoading.dismiss();
+                  switch (state.status) {
+                    case AuthenticationStatus.loggedIn:
+                    case AuthenticationStatus.onAppStartStillLoggedIn:
+                      _navigator.pushNamedAndRemoveUntil(
+                        AuthenticatedHomePage.routeName,
+                        (route) => false,
+                      );
+                      lastRoute = AuthenticatedHomePage.routeName;
+                      break;
+                    case AuthenticationStatus.loggedOut:
+                    case AuthenticationStatus.onAppStartSessionExpired:
+                    case AuthenticationStatus.onAppStartError:
+                    case AuthenticationStatus.onAccountRemoval:
+                      _navigator.pushNamedAndRemoveUntil(
+                        HomePage.routeName,
+                        (route) => false,
+                      );
+                      lastRoute = HomePage.routeName;
+                      break;
+                    case AuthenticationStatus.onResumeVerifying:
+                      EasyLoading.show(
+                        status: 'check\nauthentication...',
+                        maskType: EasyLoadingMaskType.clear,
+                      );
+                      break;
+                    case AuthenticationStatus.onRequestSessionExpired:
+                      helpers.showSnackbar(context, 'Session expired');
+                      _navigator.pushNamedAndRemoveUntil(
+                        HomePage.routeName,
+                        (route) => false,
+                      );
+                      lastRoute = HomePage.routeName;
+                      break;
+                    case AuthenticationStatus.onResumeStillLoggedIn:
+                      if (lastRoute != AuthenticatedHomePage.routeName) {
+                        _navigator.pushNamedAndRemoveUntil(
+                          AuthenticatedHomePage.routeName,
+                          (route) => false,
+                        );
+                        lastRoute = AuthenticatedHomePage.routeName;
+                      }
+                      break;
+                    case AuthenticationStatus.onResumeSessionExpired:
+                    case AuthenticationStatus.onResumeError:
+                      if (lastRoute != HomePage.routeName) {
+                        helpers.showSnackbar(context, 'Session expired');
+                        _navigator.pushNamedAndRemoveUntil(
+                          HomePage.routeName,
+                          (route) => false,
+                        );
+                        lastRoute = HomePage.routeName;
+                      }
+                      break;
+                    default:
+                      break;
                   }
-                  break;
-                case AuthenticationStatus.onResumeSessionExpired:
-                case AuthenticationStatus.onResumeError:
-                  if (lastRoute != HomePage.routeName) {
-                    helpers.showSnackbar(context, 'Session expired');
-                    _navigator.pushNamedAndRemoveUntil(
-                      HomePage.routeName,
-                      (route) => false,
-                    );
-                    lastRoute = HomePage.routeName;
-                  }
-                  break;
-                default:
-                  break;
-              }
+                },
+                child: child,
+              );
             },
-            child: child,
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
