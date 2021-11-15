@@ -74,11 +74,12 @@ class AuthenticationBloc
       if (await _authenticationRepository.tokenVerify()) {
         emit(const AuthenticationState.authenticated());
       } else {
+        _authenticationRepository.clearTokens();
         emit(const AuthenticationState.unauthenticated());
       }
     } on DioError catch (_) {
-      // Logout the user if error occurs on application start app
-      emit(const AuthenticationState.unauthenticated());
+      _authenticationRepository.clearTokens();
+      emit(const AuthenticationState.error());
     }
   }
 
@@ -91,10 +92,12 @@ class AuthenticationBloc
       if (await _authenticationRepository.tokenVerify()) {
         emit(const AuthenticationState.authenticated());
       } else {
+        _authenticationRepository.clearTokens();
         emit(const AuthenticationState.unauthenticated());
       }
     } on DioError catch (_) {
-      // TODO: Emit token expired
+      _authenticationRepository.clearTokens();
+      emit(const AuthenticationState.error());
     }
   }
 }

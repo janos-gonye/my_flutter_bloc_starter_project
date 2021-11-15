@@ -17,6 +17,9 @@ import 'package:my_flutter_bloc_starter_project/shared/repositories/base_uri_con
 import 'package:my_flutter_bloc_starter_project/splash/splash.dart';
 import 'package:my_flutter_bloc_starter_project/user/user.dart';
 
+import 'package:my_flutter_bloc_starter_project/shared/views/helpers.dart'
+    as helpers;
+
 class MyStarterProjectApp extends StatelessWidget {
   const MyStarterProjectApp({
     Key? key,
@@ -153,8 +156,10 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
                   lastRoute = UserPage.routeName;
                   break;
                 case AuthenticationStatus.unauthenticated:
+                case AuthenticationStatus.error:
                   EasyLoading.dismiss();
                   if (lastRoute != HomePage.routeName) {
+                    helpers.showSnackbar(context, 'Session expired');
                     _navigator.pushNamedAndRemoveUntil(
                       HomePage.routeName,
                       (route) => false,

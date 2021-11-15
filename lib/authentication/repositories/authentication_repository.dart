@@ -7,7 +7,13 @@ import 'package:my_flutter_bloc_starter_project/constants.dart' as constants;
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
 
-enum AuthenticationStatus { unknown, authenticated, unauthenticated, verifying }
+enum AuthenticationStatus {
+  unknown,
+  authenticated,
+  unauthenticated,
+  verifying,
+  error,
+}
 
 class AuthenticationRepository {
   AuthenticationRepository({
@@ -124,5 +130,9 @@ class AuthenticationRepository {
       },
     );
     return true;
+  }
+
+  void clearTokens() async {
+    await authenticationTokenRepository.clear();
   }
 }
