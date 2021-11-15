@@ -47,7 +47,7 @@ class _RemoveAccountFormState extends State<RemoveAccountForm> {
           EasyLoading.dismiss();
           helpers.showSnackbar(context, state.message);
           BlocProvider.of<AuthenticationBloc>(context)
-              .add(AuthenticationLogoutRequested());
+              .add(AccountRemovalRequested());
         } else {
           EasyLoading.dismiss();
         }
