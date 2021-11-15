@@ -1,3 +1,4 @@
+import 'package:my_flutter_bloc_starter_project/constants.dart' as constants;
 import 'package:my_flutter_bloc_starter_project/shared/models/base.dart';
 
 enum ProtocolValidationError { empty, invalid }
@@ -10,7 +11,7 @@ class Protocol extends FormModel<String, ProtocolValidationError> {
   ProtocolValidationError? get error {
     if (value.isEmpty) {
       return ProtocolValidationError.empty;
-    } else if (!['http', 'https'].contains(value)) {
+    } else if (!constants.protocols.contains(value)) {
       return ProtocolValidationError.invalid;
     }
   }
