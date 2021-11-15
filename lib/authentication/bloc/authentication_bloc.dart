@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/widgets.dart';
 
 import 'package:bloc/bloc.dart';
@@ -17,10 +15,11 @@ class AuthenticationBloc
     required AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
         super(const AuthenticationState.unknown()) {
-    on<AuthenticationStatusChanged>(_onAuthenticationStatusChanged);
-    on<AuthenticationLogoutRequested>(_onAuthenticationLogoutRequested);
+    on<LoginRequested>(_onLoginRequested);
+    on<LogoutRequested>(_onLogoutRequested);
     on<ApplicationStarted>(_onApplicationStarted);
     on<ApplicationResumed>(_onApplicationResumed);
+    on<AccountRemovalRequested>(_onAccountRemovalRequested);
   }
 
   final AuthenticationRepository _authenticationRepository;
@@ -33,25 +32,19 @@ class AuthenticationBloc
     super.onTransition(transition);
   }
 
-  void _onAuthenticationStatusChanged(
-    AuthenticationStatusChanged event,
+  void _onLoginRequested(
+    LoginRequested event,
     Emitter<AuthenticationState> emit,
-  ) async {
-    switch (event.status) {
-      case AuthenticationStatus.unauthenticated:
-        return emit(const AuthenticationState.unauthenticated());
-      case AuthenticationStatus.authenticated:
-        return emit(const AuthenticationState.authenticated());
-      default:
-        return emit(const AuthenticationState.unknown());
-    }
+  ) {
+    emit(const AuthenticationState.loggedIn());
   }
 
-  void _onAuthenticationLogoutRequested(
-    AuthenticationLogoutRequested event,
+  void _onLogoutRequested(
+    LogoutRequested event,
     Emitter<AuthenticationState> emit,
   ) {
     _authenticationRepository.logOut();
+    emit(const AuthenticationState.loggedOut());
   }
 
   void _onApplicationStarted(
@@ -60,14 +53,14 @@ class AuthenticationBloc
   ) async {
     try {
       if (await _authenticationRepository.tokenVerify()) {
-        emit(const AuthenticationState.authenticated());
+        emit(const AuthenticationState.onAppStartStillLoggedIn());
       } else {
         _authenticationRepository.clearTokens();
-        emit(const AuthenticationState.unauthenticated());
+        emit(const AuthenticationState.onAppStartSessionExpired());
       }
     } on DioError catch (_) {
       _authenticationRepository.clearTokens();
-      emit(const AuthenticationState.error());
+      emit(const AuthenticationState.onAppStartError());
     }
   }
 
@@ -76,16 +69,23 @@ class AuthenticationBloc
     Emitter<AuthenticationState> emit,
   ) async {
     try {
-      emit(const AuthenticationState.verifying());
+      emit(const AuthenticationState.onResumeVerifying());
       if (await _authenticationRepository.tokenVerify()) {
-        emit(const AuthenticationState.authenticated());
+        emit(const AuthenticationState.onResumeVerifyStillLoggedIn());
       } else {
         _authenticationRepository.clearTokens();
-        emit(const AuthenticationState.unauthenticated());
+        emit(const AuthenticationState.onResumeVerifySessionExpired());
       }
     } on DioError catch (_) {
       _authenticationRepository.clearTokens();
-      emit(const AuthenticationState.error());
+      emit(const AuthenticationState.onResumeVerifyingError());
     }
+  }
+
+  void _onAccountRemovalRequested(
+    AccountRemovalRequested event,
+    Emitter<AuthenticationState> emit,
+  ) {
+    emit(const AuthenticationState.onAccountRemoval());
   }
 }

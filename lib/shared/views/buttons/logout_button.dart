@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
 
+import 'package:my_flutter_bloc_starter_project/shared/views/helpers.dart'
+    as helpers;
+
 class AppBarLogoutButton extends StatelessWidget {
   const AppBarLogoutButton({Key? key}) : super(key: key);
 
@@ -12,6 +15,7 @@ class AppBarLogoutButton extends StatelessWidget {
     return IconButton(
       icon: const Icon(Icons.logout_rounded),
       onPressed: () {
+        helpers.showSnackbar(context, 'Successfully logged out');
         BlocProvider.of<AuthenticationBloc>(context).add(LogoutRequested());
       },
     );

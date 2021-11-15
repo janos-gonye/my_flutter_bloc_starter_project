@@ -115,8 +115,9 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  // Check if it is necessary to push the route.
-  String? lastRoute;
+  // Store last route, so that the application can decide if navigation
+  // is necessary on application resume event.
+  String lastRoute = '';
   NavigatorState get _navigator => _navigatorKey.currentState!;
 
   @override
@@ -145,19 +146,49 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
             listener: (context, state) {
               EasyLoading.dismiss();
               switch (state.status) {
-                case AuthenticationStatus.authenticated:
-                  EasyLoading.dismiss();
+                case AuthenticationStatus.loggedIn:
+                case AuthenticationStatus.onAppStartStillLoggedIn:
+                  _navigator.pushNamedAndRemoveUntil(
+                    UserPage.routeName,
+                    (route) => false,
+                  );
+                  lastRoute = UserPage.routeName;
+                  break;
+                case AuthenticationStatus.loggedOut:
+                case AuthenticationStatus.onAppStartSessionExpired:
+                case AuthenticationStatus.onAppStartError:
+                case AuthenticationStatus.onAccountRemoval:
+                  _navigator.pushNamedAndRemoveUntil(
+                    HomePage.routeName,
+                    (route) => false,
+                  );
+                  lastRoute = HomePage.routeName;
+                  break;
+                case AuthenticationStatus.onResumeVerifying:
+                  EasyLoading.show(
+                    status: 'check\nauthentication...',
+                    maskType: EasyLoadingMaskType.clear,
+                  );
+                  break;
+                case AuthenticationStatus.onRequestSessionExpired:
+                  helpers.showSnackbar(context, 'Session expired');
+                  _navigator.pushNamedAndRemoveUntil(
+                    HomePage.routeName,
+                    (route) => false,
+                  );
+                  lastRoute = HomePage.routeName;
+                  break;
+                case AuthenticationStatus.onResumeStillLoggedIn:
                   if (lastRoute != UserPage.routeName) {
                     _navigator.pushNamedAndRemoveUntil(
                       UserPage.routeName,
                       (route) => false,
                     );
+                    lastRoute = UserPage.routeName;
                   }
-                  lastRoute = UserPage.routeName;
                   break;
-                case AuthenticationStatus.unauthenticated:
-                case AuthenticationStatus.error:
-                  EasyLoading.dismiss();
+                case AuthenticationStatus.onResumeSessionExpired:
+                case AuthenticationStatus.onResumeError:
                   if (lastRoute != HomePage.routeName) {
                     helpers.showSnackbar(context, 'Session expired');
                     _navigator.pushNamedAndRemoveUntil(
@@ -167,14 +198,7 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
                     lastRoute = HomePage.routeName;
                   }
                   break;
-                case AuthenticationStatus.verifying:
-                  EasyLoading.show(
-                    status: 'checking\nauthentication...',
-                    maskType: EasyLoadingMaskType.clear,
-                  );
-                  break;
                 default:
-                  EasyLoading.dismiss();
                   break;
               }
             },

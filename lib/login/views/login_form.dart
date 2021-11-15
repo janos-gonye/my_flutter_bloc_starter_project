@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
+import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
 
 import 'package:my_flutter_bloc_starter_project/shared/views/helpers.dart'
@@ -30,15 +31,17 @@ class _LoginFormState extends State<LoginForm> {
       listenWhen: (previous, current) =>
           form_helpers.shouldFormListen(previous, current),
       listener: (context, state) {
+        EasyLoading.dismiss();
         debugPrint("'LoginForm' listener invoked");
-        if (state.isLoggingInError) {
-          EasyLoading.dismiss();
+        if (state.isLoggingInSuccess) {
+          BlocProvider.of<AuthenticationBloc>(context).add(LoginRequested());
+        } else if (state.isLoggingInError) {
           helpers.showSnackbar(context, state.message);
         } else if (state.isLoggingIn) {
           EasyLoading.show(
-              status: 'loading...', maskType: EasyLoadingMaskType.clear);
-        } else {
-          EasyLoading.dismiss();
+            status: 'loading...',
+            maskType: EasyLoadingMaskType.clear,
+          );
         }
       },
       child: Column(
