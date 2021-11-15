@@ -17,6 +17,7 @@ const apiPathAuthResetPassword = '/auth/reset-password/';
 const apiPathAuthChangePassword = '/auth/change-password/';
 const apiPathAuthLogin = '/token/';
 const apiPathAuthTokenVerify = '/token/verify';
+const apiPathAuthTokenRefresh = '/token/refresh';
 
 const storageKeyAccessToken = '';
 const storageKeyRefreshToken = 'refresh_token';

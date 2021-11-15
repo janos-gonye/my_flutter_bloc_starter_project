@@ -132,6 +132,22 @@ class AuthenticationRepository {
     return true;
   }
 
+  Future<bool> refreshToken() async {
+    String? refreshToken = await authenticationTokenRepository.refreshToken;
+    if (refreshToken == null) {
+      return false;
+    }
+    final response = await unAuthenticatedDio.post(
+      constants.apiPathAuthTokenRefresh,
+      data: {
+        'refresh': refreshToken,
+      },
+    );
+    String accesToken = response.data[constants.storageKeyAccessToken];
+    authenticationTokenRepository.write(accessToken: accesToken);
+    return true;
+  }
+
   void clearTokens() async {
     await authenticationTokenRepository.clear();
   }

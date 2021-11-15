@@ -14,15 +14,21 @@ class AuthenticationTokenRepository {
   }
 
   Future<void> write({
-    required String accessToken,
-    required String refreshToken,
+    String? accessToken,
+    String? refreshToken,
   }) async {
-    await secureStorage.write(
-        key: constants.storageKeyAccessToken, value: accessToken);
-    await secureStorage.write(
-      key: constants.storageKeyRefreshToken,
-      value: refreshToken,
-    );
+    if (accessToken != null) {
+      await secureStorage.write(
+        key: constants.storageKeyAccessToken,
+        value: accessToken,
+      );
+    }
+    if (refreshToken != null) {
+      await secureStorage.write(
+        key: constants.storageKeyRefreshToken,
+        value: refreshToken,
+      );
+    }
   }
 
   Future<String?> get accessToken async {
