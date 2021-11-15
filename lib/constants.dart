@@ -7,6 +7,10 @@ const int connectionTimeout = 10000;
 // as milliseconds
 const int receiveTimeout = 3000;
 const contentType = 'application/json';
+const retryOnFailStatusCodes = [408, 502, 503, 504];
+const retryOnFailmaxRetries = 5;
+const retryOnFailinitialDelayMilliSeconds = 0;
+const retryOnFailbackoffMilliSeconds = 100;
 
 const apiResponseMessageKey = 'detail';
 
