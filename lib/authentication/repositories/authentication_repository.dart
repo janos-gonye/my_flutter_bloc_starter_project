@@ -7,14 +7,6 @@ import 'package:my_flutter_bloc_starter_project/constants.dart' as constants;
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
 
-enum AuthenticationStatus {
-  unknown,
-  authenticated,
-  unauthenticated,
-  verifying,
-  error,
-}
-
 class AuthenticationRepository {
   AuthenticationRepository({
     required this.unAuthenticatedDio,
@@ -25,13 +17,6 @@ class AuthenticationRepository {
   final AuthenticationTokenRepository authenticationTokenRepository;
   final Dio unAuthenticatedDio;
   final Dio authenticatedDio;
-
-  final _controller = StreamController<AuthenticationStatus>();
-
-  Stream<AuthenticationStatus> get status async* {
-    yield AuthenticationStatus.unknown;
-    yield* _controller.stream;
-  }
 
   Future<String> registrate({
     required Username username,
@@ -65,7 +50,6 @@ class AuthenticationRepository {
       accessToken: body['access'],
       refreshToken: body['refresh'],
     );
-    _controller.add(AuthenticationStatus.authenticated);
   }
 
   Future<String> resetPassword({
@@ -96,10 +80,7 @@ class AuthenticationRepository {
 
   void logOut() async {
     await authenticationTokenRepository.clear();
-    _controller.add(AuthenticationStatus.unauthenticated);
   }
-
-  void dispose() => _controller.close();
 
   Future<String> changeEmail({required Email email}) async {
     final response = await authenticatedDio.patch(

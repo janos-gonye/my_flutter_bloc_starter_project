@@ -21,14 +21,9 @@ class AuthenticationBloc
     on<AuthenticationLogoutRequested>(_onAuthenticationLogoutRequested);
     on<ApplicationStarted>(_onApplicationStarted);
     on<ApplicationResumed>(_onApplicationResumed);
-    _authenticationStatusSubscription = _authenticationRepository.status.listen(
-      (status) => add(AuthenticationStatusChanged(status)),
-    );
   }
 
   final AuthenticationRepository _authenticationRepository;
-  late StreamSubscription<AuthenticationStatus>
-      _authenticationStatusSubscription;
 
   @override
   void onTransition(
@@ -36,13 +31,6 @@ class AuthenticationBloc
   ) {
     debugPrint(transition.toString());
     super.onTransition(transition);
-  }
-
-  @override
-  Future<void> close() {
-    _authenticationStatusSubscription.cancel();
-    _authenticationRepository.dispose();
-    return super.close();
   }
 
   void _onAuthenticationStatusChanged(
