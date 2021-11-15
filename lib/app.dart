@@ -10,6 +10,7 @@ import 'package:my_flutter_bloc_starter_project/change_email/change_email.dart';
 import 'package:my_flutter_bloc_starter_project/change_password/bloc/change_password_bloc.dart';
 import 'package:my_flutter_bloc_starter_project/home/home.dart';
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
+import 'package:my_flutter_bloc_starter_project/not_found/not_found.dart';
 import 'package:my_flutter_bloc_starter_project/password_reset/password_reset.dart';
 import 'package:my_flutter_bloc_starter_project/registration/registration.dart';
 import 'package:my_flutter_bloc_starter_project/remove_account/remove_account.dart';
@@ -137,8 +138,9 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
         RegistrationPage.routeName: (context) => const RegistrationPage(),
         PasswordResetPage.routeName: (context) => const PasswordResetPage(),
       },
-      // TODO: Add 'onUnknownRoute' event
-
+      onUnknownRoute: (RouteSettings settings) => MaterialPageRoute(
+        builder: (BuildContext context) => const NotFoundPage(),
+      ),
       builder: EasyLoading.init(
         builder: (context, child) {
           return BlocListener<AuthenticationBloc, AuthenticationState>(
