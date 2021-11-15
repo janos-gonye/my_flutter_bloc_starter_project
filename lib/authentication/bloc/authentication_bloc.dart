@@ -60,8 +60,17 @@ class AuthenticationBloc
         emit(const AuthenticationState.onAppStartSessionExpired());
       }
     } on DioError catch (_) {
-      _authenticationRepository.clearTokens();
-      emit(const AuthenticationState.onAppStartError());
+      try {
+        if (await _authenticationRepository.refreshToken()) {
+          emit(const AuthenticationState.onAppStartStillLoggedIn());
+        } else {
+          _authenticationRepository.clearTokens();
+          emit(const AuthenticationState.onAppStartSessionExpired());
+        }
+      } on DioError {
+        _authenticationRepository.clearTokens();
+        emit(const AuthenticationState.onAppStartError());
+      }
     }
   }
 
@@ -78,8 +87,17 @@ class AuthenticationBloc
         emit(const AuthenticationState.onResumeVerifySessionExpired());
       }
     } on DioError catch (_) {
-      _authenticationRepository.clearTokens();
-      emit(const AuthenticationState.onResumeVerifyingError());
+      try {
+        if (await _authenticationRepository.refreshToken()) {
+          emit(const AuthenticationState.onResumeVerifyStillLoggedIn());
+        } else {
+          _authenticationRepository.clearTokens();
+          emit(const AuthenticationState.onResumeVerifySessionExpired());
+        }
+      } on DioError {
+        _authenticationRepository.clearTokens();
+        emit(const AuthenticationState.onResumeVerifyingError());
+      }
     }
   }
 

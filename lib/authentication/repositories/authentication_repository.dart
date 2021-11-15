@@ -124,7 +124,7 @@ class AuthenticationRepository {
         'refresh': refreshToken,
       },
     );
-    String accesToken = response.data[constants.storageKeyAccessToken];
+    String accesToken = response.data['access'];
     authenticationTokenRepository.write(accessToken: accesToken);
     return true;
   }
