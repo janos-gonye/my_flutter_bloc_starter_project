@@ -15,16 +15,17 @@ part 'change_email_state.dart';
 class ChangeEmailBloc extends Bloc<ChangeEmailEvent, ChangeEmailState>
     with HandleResponseErrorMixin {
   ChangeEmailBloc({
-    required AuthenticationRepository authenticationRepository,
-  })  : _authenticationRepository = authenticationRepository,
-        super(const ChangeEmailState(type: ChangeEmailStateType.initial)) {
+    required this.authenticationBloc,
+    required this.authenticationRepository,
+  }) : super(const ChangeEmailState(type: ChangeEmailStateType.initial)) {
     on<ChangeEmailFormInitialized>(_onInitialized);
     on<ChangeEmailEmailChanged>(_onEmailChanged);
     on<ChangeEmailEmailConfirmChanged>(_onEmailConfirmChanged);
     on<ChangeEmailFormSubmitted>(_onSubmitted);
   }
 
-  final AuthenticationRepository _authenticationRepository;
+  final AuthenticationBloc authenticationBloc;
+  final AuthenticationRepository authenticationRepository;
 
   @override
   void onTransition(Transition<ChangeEmailEvent, ChangeEmailState> transition) {
@@ -68,7 +69,7 @@ class ChangeEmailBloc extends Bloc<ChangeEmailEvent, ChangeEmailState>
       try {
         emit(state.copyWith(
           type: ChangeEmailStateType.emailChangingSuccess,
-          message: await _authenticationRepository.changeEmail(
+          message: await authenticationRepository.changeEmail(
             email: state.email,
           ),
         ));
@@ -76,6 +77,10 @@ class ChangeEmailBloc extends Bloc<ChangeEmailEvent, ChangeEmailState>
       } on DioError catch (e) {
         final responseError = handleResponseError(error: e, fields: ['email']);
         final fieldErrors = responseError.fieldErrors;
+        if (e.response?.statusCode == 401) {
+          authenticationBloc.add(RequestSessionExpired());
+          return;
+        }
         emit(state.copyWith(
           type: ChangeEmailStateType.emailChangingError,
           message: responseError.message,

@@ -14,14 +14,15 @@ part 'remove_account_state.dart';
 class RemoveAccountBloc extends Bloc<RemoveAccountEvent, RemoveAccountState>
     with HandleResponseErrorMixin {
   RemoveAccountBloc({
-    required AuthenticationRepository authenticationRepository,
-  })  : _authenticationRepository = authenticationRepository,
-        super(const RemoveAccountState(type: RemoveAccountStateType.initial)) {
+    required this.authenticationBloc,
+    required this.authenticationRepository,
+  }) : super(const RemoveAccountState(type: RemoveAccountStateType.initial)) {
     on<RemoveAccountFormInitialized>(_onInitialized);
     on<RemoveAccountFormSubmitted>(_onSubmitted);
   }
 
-  final AuthenticationRepository _authenticationRepository;
+  final AuthenticationBloc authenticationBloc;
+  final AuthenticationRepository authenticationRepository;
 
   @override
   void onTransition(
@@ -46,11 +47,15 @@ class RemoveAccountBloc extends Bloc<RemoveAccountEvent, RemoveAccountState>
       try {
         emit(state.copyWith(
           type: RemoveAccountStateType.removingAccountSuccess,
-          message: await _authenticationRepository.removeAccount(),
+          message: await authenticationRepository.removeAccount(),
         ));
         emit(state.clear());
       } on DioError catch (e) {
         final responseError = handleResponseError(error: e);
+        if (e.response?.statusCode == 401) {
+          authenticationBloc.add(RequestSessionExpired());
+          return;
+        }
         emit(state.copyWith(
           type: RemoveAccountStateType.removingAccountError,
           message: responseError.message,

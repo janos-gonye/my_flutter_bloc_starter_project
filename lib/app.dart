@@ -35,6 +35,9 @@ class MyStarterProjectApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authenticationBloc = AuthenticationBloc(
+      authenticationRepository: authenticationRepository,
+    );
     return MultiBlocProvider(
       providers: [
         BlocProvider<AppSettingsBloc>(
@@ -44,9 +47,7 @@ class MyStarterProjectApp extends StatelessWidget {
           ),
         ),
         BlocProvider<AuthenticationBloc>(
-          create: (context) => AuthenticationBloc(
-            authenticationRepository: authenticationRepository,
-          ),
+          create: (context) => authenticationBloc,
         ),
         BlocProvider(
           create: (context) => LoginBloc(
@@ -65,16 +66,19 @@ class MyStarterProjectApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => ChangePasswordBloc(
+            authenticationBloc: authenticationBloc,
             authenticationRepository: authenticationRepository,
           ),
         ),
         BlocProvider(
           create: (context) => ChangeEmailBloc(
+            authenticationBloc: authenticationBloc,
             authenticationRepository: authenticationRepository,
           ),
         ),
         BlocProvider(
           create: (context) => RemoveAccountBloc(
+            authenticationBloc: authenticationBloc,
             authenticationRepository: authenticationRepository,
           ),
         ),

@@ -15,10 +15,9 @@ part 'change_password_state.dart';
 class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState>
     with HandleResponseErrorMixin {
   ChangePasswordBloc({
-    required AuthenticationRepository authenticationRepository,
-  })  : _authenticationRepository = authenticationRepository,
-        super(
-            const ChangePasswordState(type: ChangePasswordStateType.initial)) {
+    required this.authenticationBloc,
+    required this.authenticationRepository,
+  }) : super(const ChangePasswordState(type: ChangePasswordStateType.initial)) {
     on<ChangePasswordFormInitialized>(_onInitialized);
     on<ChangePasswordCurrentPasswordChanged>(_onOldPasswordChanged);
     on<ChangePasswordNewPasswordChanged>(_onNewPasswordChanged);
@@ -26,7 +25,8 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState>
     on<ChangePasswordFormSubmitted>(_onSubmitted);
   }
 
-  final AuthenticationRepository _authenticationRepository;
+  final AuthenticationBloc authenticationBloc;
+  final AuthenticationRepository authenticationRepository;
 
   @override
   void onTransition(
@@ -81,7 +81,7 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState>
       try {
         emit(state.copyWith(
           type: ChangePasswordStateType.passwordChangingSuccess,
-          message: await _authenticationRepository.changePassword(
+          message: await authenticationRepository.changePassword(
             currentPassword: state.currentPassword,
             newPassword: state.newPassword,
           ),
@@ -93,6 +93,10 @@ class ChangePasswordBloc extends Bloc<ChangePasswordEvent, ChangePasswordState>
           fields: ['current_password', 'new_password'],
         );
         final fieldErrors = responseError.fieldErrors;
+        if (e.response?.statusCode == 401) {
+          authenticationBloc.add(RequestSessionExpired());
+          return;
+        }
         emit(state.copyWith(
           type: ChangePasswordStateType.passwordChangingError,
           message: responseError.message,

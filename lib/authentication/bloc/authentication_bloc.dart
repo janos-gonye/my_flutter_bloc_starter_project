@@ -20,6 +20,7 @@ class AuthenticationBloc
     on<ApplicationStarted>(_onApplicationStarted);
     on<ApplicationResumed>(_onApplicationResumed);
     on<AccountRemovalRequested>(_onAccountRemovalRequested);
+    on<RequestSessionExpired>(_onRequestSessionExpired);
   }
 
   final AuthenticationRepository _authenticationRepository;
@@ -87,5 +88,12 @@ class AuthenticationBloc
     Emitter<AuthenticationState> emit,
   ) {
     emit(const AuthenticationState.onAccountRemoval());
+  }
+
+  void _onRequestSessionExpired(
+    RequestSessionExpired event,
+    Emitter<AuthenticationState> emit,
+  ) {
+    emit(const AuthenticationState.onRequestSessionExpired());
   }
 }
