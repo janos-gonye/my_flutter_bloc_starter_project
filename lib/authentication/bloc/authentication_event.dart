@@ -15,4 +15,6 @@ class ApplicationStarted extends AuthenticationEvent {}
 
 class ApplicationResumed extends AuthenticationEvent {}
 
+class RequestSessionExpired extends AuthenticationEvent {}
+
 class AccountRemovalRequested extends AuthenticationEvent {}

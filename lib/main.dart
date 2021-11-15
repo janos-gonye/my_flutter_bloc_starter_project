@@ -19,6 +19,7 @@ void main() async {
 
   Dio unAuthenticatedDio = buildUnAuthenticatedDio();
   Dio authenticatedDio = buildAuthenticatedDio(
+    unAuthenticatedDio: unAuthenticatedDio,
     authenticationTokenRepository: authenticationTokenRepository,
   );
 

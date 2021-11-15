@@ -24,12 +24,18 @@ Dio buildUnAuthenticatedDio() {
 }
 
 Dio buildAuthenticatedDio({
+  required Dio unAuthenticatedDio,
   required AuthenticationTokenRepository authenticationTokenRepository,
 }) {
   final _dio = buildUnAuthenticatedDio();
   _dio.interceptors.addAll([
     AddAccessTokenInterceptor(
       authenticationTokenRepository: authenticationTokenRepository,
+    ),
+    RefreshTokenInterceptor(
+      authenticationTokenRepository: authenticationTokenRepository,
+      unAuthenticatedDio: unAuthenticatedDio,
+      authenticationDio: _dio,
     ),
   ]);
   return _dio;
