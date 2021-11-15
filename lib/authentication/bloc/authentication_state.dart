@@ -1,21 +1,24 @@
 part of 'authentication_bloc.dart';
 
+enum AuthenticationStatus {
+  unknown,
+
+  loggedIn,
+  loggedOut,
+
+  onAppStartStillLoggedIn,
+  onAppStartSessionExpired,
+
+  onRequestSessionExpired,
+
+  onResumeVerifying,
+  onResumeVerifyStillLoggedIn,
+  onResumeVerifySessionExpired,
+  onResumseVerifyingError,
+}
+
 class AuthenticationState extends Equatable {
-  const AuthenticationState._({this.status = AuthenticationStatus.unknown});
-
-  const AuthenticationState.unknown() : this._();
-
-  const AuthenticationState.authenticated()
-      : this._(status: AuthenticationStatus.authenticated);
-
-  const AuthenticationState.unauthenticated()
-      : this._(status: AuthenticationStatus.unauthenticated);
-
-  const AuthenticationState.verifying()
-      : this._(status: AuthenticationStatus.verifying);
-
-  const AuthenticationState.error()
-      : this._(status: AuthenticationStatus.error);
+  const AuthenticationState(this.status);
 
   final AuthenticationStatus status;
 
