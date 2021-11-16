@@ -135,8 +135,8 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
     return BlocBuilder<ThemeSelectorBloc, ThemeSelectorState>(
       builder: (context, state) {
         return MaterialApp(
-          theme: FlexColorScheme.light(scheme: FlexScheme.damask).toTheme,
-          darkTheme: FlexColorScheme.dark(scheme: FlexScheme.damask).toTheme,
+          theme: FlexColorScheme.light(scheme: state.scheme).toTheme,
+          darkTheme: FlexColorScheme.dark(scheme: state.scheme).toTheme,
           themeMode: state.themeMode,
           navigatorKey: _navigatorKey,
           initialRoute: SplashPage.routeName,

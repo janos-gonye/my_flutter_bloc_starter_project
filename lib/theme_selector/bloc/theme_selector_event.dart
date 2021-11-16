@@ -21,3 +21,12 @@ class ThemeSelectorThemeModeSwitchChanged extends ThemeSelectorEvent {
   @override
   List<Object?> get props => [switched];
 }
+
+class ThemeSelectorSchemeSelected extends ThemeSelectorEvent {
+  const ThemeSelectorSchemeSelected(this.scheme);
+
+  final FlexScheme scheme;
+
+  @override
+  List<Object?> get props => [scheme];
+}

@@ -4,18 +4,22 @@ class ThemeSelectorState extends Equatable {
   const ThemeSelectorState({
     this.selectedThemeMode = ThemeMode.light,
     this.systemTheme = true,
+    this.scheme = FlexScheme.hippieBlue,
   });
 
   final ThemeMode selectedThemeMode;
   final bool systemTheme;
+  final FlexScheme scheme;
 
   ThemeSelectorState copyWith({
     ThemeMode? selectedThemeMode,
     bool? systemTheme,
+    FlexScheme? scheme,
   }) {
     return ThemeSelectorState(
       selectedThemeMode: selectedThemeMode ?? this.selectedThemeMode,
       systemTheme: systemTheme ?? this.systemTheme,
+      scheme: scheme ?? this.scheme,
     );
   }
 
@@ -27,5 +31,5 @@ class ThemeSelectorState extends Equatable {
   }
 
   @override
-  List<Object> get props => [systemTheme, selectedThemeMode];
+  List<Object> get props => [systemTheme, selectedThemeMode, scheme];
 }
