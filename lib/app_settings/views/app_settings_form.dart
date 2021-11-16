@@ -7,7 +7,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:my_flutter_bloc_starter_project/app_settings/bloc/app_settings_bloc.dart';
 import 'package:my_flutter_bloc_starter_project/constants.dart';
-import 'package:my_flutter_bloc_starter_project/home/views/home_page.dart';
 
 import 'package:my_flutter_bloc_starter_project/shared/views/helpers.dart'
     as helpers;
@@ -45,10 +44,6 @@ class _AppSettingsFormState extends State<AppSettingsForm> {
         if (state.isSavingSuccess) {
           EasyLoading.dismiss();
           helpers.showSnackbar(context, state.message);
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            HomePage.routeName,
-            (route) => false,
-          );
         } else if (state.isSavingError) {
           EasyLoading.dismiss();
           helpers.showSnackbar(context, state.message);
