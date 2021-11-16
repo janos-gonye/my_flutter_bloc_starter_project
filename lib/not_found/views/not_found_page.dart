@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 class NotFoundPage extends StatelessWidget {
   const NotFoundPage({Key? key}) : super(key: key);
 
+  static String routeName = 'not-found';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

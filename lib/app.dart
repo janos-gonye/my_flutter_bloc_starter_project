@@ -150,6 +150,7 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
             RegistrationPage.routeName: (context) => const RegistrationPage(),
             PasswordResetPage.routeName: (context) => const PasswordResetPage(),
             ProfileSettings.routeName: (context) => const ProfileSettings(),
+            NotFoundPage.routeName: (context) => const NotFoundPage(),
           },
           onUnknownRoute: (RouteSettings settings) => MaterialPageRoute(
             builder: (BuildContext context) => const NotFoundPage(),
