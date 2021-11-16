@@ -123,7 +123,7 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && connectivity) {
+    if (state == AppLifecycleState.resumed && isAppNotFreezed) {
       debugPrint("'ApplicationResumed' event added to 'AuthenticationBloc'");
       BlocProvider.of<AuthenticationBloc>(context).add(ApplicationResumed());
     }
@@ -138,8 +138,19 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
   // Store last route, so that the application can decide if navigation
   // is necessary on application resume event.
   String lastRoute = '';
-  bool connectivity = false;
+  bool isAppFreezed = false;
+  bool get isAppNotFreezed => !isAppFreezed;
   NavigatorState get _navigator => _navigatorKey.currentState!;
+
+  void freezeApplication() {
+    _navigator.pushNamed(NoConnectivityPage.routeName);
+    isAppFreezed = true;
+  }
+
+  void unFreezeApplication() {
+    _navigator.pop();
+    isAppFreezed = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -171,23 +182,18 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
           builder: EasyLoading.init(
             builder: (context, child) {
               return BlocListener<ConnectivityBloc, ConnectivityState>(
-                listenWhen: (previous, current) => previous != current,
+                listenWhen: (previous, current) =>
+                    previous.result != current.result,
                 listener: (context, state) {
-                  if (state.result == ConnectivityResult.none) {
-                    if (connectivity) {
-                      connectivity = false;
-                      _navigator.pushNamed(NoConnectivityPage.routeName);
-                    }
-                  } else {
-                    if (!connectivity) {
-                      _navigator.pop();
-                    }
-                    connectivity = true;
+                  if (state.isNotConnected && isAppNotFreezed) {
+                    freezeApplication();
+                  } else if (state.isConnected && isAppFreezed) {
+                    unFreezeApplication();
                   }
                 },
                 child: BlocListener<AuthenticationBloc, AuthenticationState>(
                   listenWhen: (previous, current) =>
-                      previous != current && connectivity,
+                      previous != current && !isAppFreezed,
                   listener: (context, state) {
                     EasyLoading.dismiss();
                     switch (state.status) {

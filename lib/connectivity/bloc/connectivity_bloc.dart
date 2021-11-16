@@ -11,7 +11,10 @@ part 'connectivity_state.dart';
 
 class ConnectivityBloc extends Bloc<ConnectivityEvent, ConnectivityState> {
   ConnectivityBloc({required this.connectivity})
-      : super(const ConnectivityState(result: ConnectivityResult.none)) {
+      : super(const ConnectivityState(
+          isInitializing: true,
+          result: ConnectivityResult.none,
+        )) {
     on<ConnectivityChanged>(_onConnectivityChanged);
     connectivitySubscription = connectivity.onConnectivityChanged.listen(
       _updateConnectionStatus,
@@ -38,7 +41,7 @@ class ConnectivityBloc extends Bloc<ConnectivityEvent, ConnectivityState> {
     ConnectivityChanged event,
     Emitter<ConnectivityState> emit,
   ) {
-    emit(ConnectivityState(result: event.result));
+    emit(ConnectivityState(result: event.result, isInitializing: false));
   }
 
   @override

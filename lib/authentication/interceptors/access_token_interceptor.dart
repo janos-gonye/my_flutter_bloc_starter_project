@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/widgets.dart';
-
 import 'package:dio/dio.dart';
 
 import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
