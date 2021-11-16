@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -9,6 +10,7 @@ import 'package:my_flutter_bloc_starter_project/authenticated_home/views/views.d
 import 'package:my_flutter_bloc_starter_project/authentication/authentication.dart';
 import 'package:my_flutter_bloc_starter_project/change_email/change_email.dart';
 import 'package:my_flutter_bloc_starter_project/change_password/bloc/change_password_bloc.dart';
+import 'package:my_flutter_bloc_starter_project/connectivity/connectivity.dart';
 import 'package:my_flutter_bloc_starter_project/home/home.dart';
 import 'package:my_flutter_bloc_starter_project/login/login.dart';
 import 'package:my_flutter_bloc_starter_project/not_found/not_found.dart';
@@ -29,11 +31,13 @@ class MyStarterProjectApp extends StatelessWidget {
     required this.appSettingsRepository,
     required this.authenticationRepository,
     required this.baseURIConfigurerRepository,
+    required this.connectivity,
   }) : super(key: key);
 
   final AppSettingsRepository appSettingsRepository;
   final AuthenticationRepository authenticationRepository;
   final BaseURIConfigurerRepository baseURIConfigurerRepository;
+  final Connectivity connectivity;
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +91,12 @@ class MyStarterProjectApp extends StatelessWidget {
         BlocProvider(
           create: (context) => ThemeSelectorBloc(),
         ),
+        BlocProvider(
+          lazy: false,
+          create: (context) => ConnectivityBloc(
+            connectivity: connectivity,
+          ),
+        ),
       ],
       child: const AppView(),
     );
@@ -113,7 +123,7 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
+    if (state == AppLifecycleState.resumed && connectivity) {
       debugPrint("'ApplicationResumed' event added to 'AuthenticationBloc'");
       BlocProvider.of<AuthenticationBloc>(context).add(ApplicationResumed());
     }
@@ -128,6 +138,7 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
   // Store last route, so that the application can decide if navigation
   // is necessary on application resume event.
   String lastRoute = '';
+  bool connectivity = false;
   NavigatorState get _navigator => _navigatorKey.currentState!;
 
   @override
@@ -151,74 +162,93 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
             PasswordResetPage.routeName: (context) => const PasswordResetPage(),
             ProfileSettings.routeName: (context) => const ProfileSettings(),
             NotFoundPage.routeName: (context) => const NotFoundPage(),
+            NoConnectivityPage.routeName: (context) =>
+                const NoConnectivityPage(),
           },
           onUnknownRoute: (RouteSettings settings) => MaterialPageRoute(
             builder: (BuildContext context) => const NotFoundPage(),
           ),
           builder: EasyLoading.init(
             builder: (context, child) {
-              return BlocListener<AuthenticationBloc, AuthenticationState>(
+              return BlocListener<ConnectivityBloc, ConnectivityState>(
                 listenWhen: (previous, current) => previous != current,
                 listener: (context, state) {
-                  EasyLoading.dismiss();
-                  switch (state.status) {
-                    case AuthenticationStatus.loggedIn:
-                    case AuthenticationStatus.onAppStartStillLoggedIn:
-                      _navigator.pushNamedAndRemoveUntil(
-                        AuthenticatedHomePage.routeName,
-                        (route) => false,
-                      );
-                      lastRoute = AuthenticatedHomePage.routeName;
-                      break;
-                    case AuthenticationStatus.loggedOut:
-                    case AuthenticationStatus.onAppStartSessionExpired:
-                    case AuthenticationStatus.onAppStartError:
-                    case AuthenticationStatus.onAccountRemoval:
-                      _navigator.pushNamedAndRemoveUntil(
-                        HomePage.routeName,
-                        (route) => false,
-                      );
-                      lastRoute = HomePage.routeName;
-                      break;
-                    case AuthenticationStatus.onResumeVerifying:
-                      EasyLoading.show(
-                        status: 'check\nauthentication...',
-                        maskType: EasyLoadingMaskType.clear,
-                      );
-                      break;
-                    case AuthenticationStatus.onRequestSessionExpired:
-                      helpers.showSnackbar(context, 'Session expired');
-                      _navigator.pushNamedAndRemoveUntil(
-                        HomePage.routeName,
-                        (route) => false,
-                      );
-                      lastRoute = HomePage.routeName;
-                      break;
-                    case AuthenticationStatus.onResumeStillLoggedIn:
-                      if (lastRoute != AuthenticatedHomePage.routeName) {
+                  if (state.result == ConnectivityResult.none) {
+                    if (connectivity) {
+                      connectivity = false;
+                      _navigator.pushNamed(NoConnectivityPage.routeName);
+                    }
+                  } else {
+                    if (!connectivity) {
+                      _navigator.pop();
+                    }
+                    connectivity = true;
+                  }
+                },
+                child: BlocListener<AuthenticationBloc, AuthenticationState>(
+                  listenWhen: (previous, current) =>
+                      previous != current && connectivity,
+                  listener: (context, state) {
+                    EasyLoading.dismiss();
+                    switch (state.status) {
+                      case AuthenticationStatus.loggedIn:
+                      case AuthenticationStatus.onAppStartStillLoggedIn:
                         _navigator.pushNamedAndRemoveUntil(
                           AuthenticatedHomePage.routeName,
                           (route) => false,
                         );
                         lastRoute = AuthenticatedHomePage.routeName;
-                      }
-                      break;
-                    case AuthenticationStatus.onResumeSessionExpired:
-                    case AuthenticationStatus.onResumeError:
-                      if (lastRoute != HomePage.routeName) {
+                        break;
+                      case AuthenticationStatus.loggedOut:
+                      case AuthenticationStatus.onAppStartSessionExpired:
+                      case AuthenticationStatus.onAppStartError:
+                      case AuthenticationStatus.onAccountRemoval:
+                        _navigator.pushNamedAndRemoveUntil(
+                          HomePage.routeName,
+                          (route) => false,
+                        );
+                        lastRoute = HomePage.routeName;
+                        break;
+                      case AuthenticationStatus.onResumeVerifying:
+                        EasyLoading.show(
+                          status: 'check\nauthentication...',
+                          maskType: EasyLoadingMaskType.clear,
+                        );
+                        break;
+                      case AuthenticationStatus.onRequestSessionExpired:
                         helpers.showSnackbar(context, 'Session expired');
                         _navigator.pushNamedAndRemoveUntil(
                           HomePage.routeName,
                           (route) => false,
                         );
                         lastRoute = HomePage.routeName;
-                      }
-                      break;
-                    default:
-                      break;
-                  }
-                },
-                child: child,
+                        break;
+                      case AuthenticationStatus.onResumeStillLoggedIn:
+                        if (lastRoute != AuthenticatedHomePage.routeName) {
+                          _navigator.pushNamedAndRemoveUntil(
+                            AuthenticatedHomePage.routeName,
+                            (route) => false,
+                          );
+                          lastRoute = AuthenticatedHomePage.routeName;
+                        }
+                        break;
+                      case AuthenticationStatus.onResumeSessionExpired:
+                      case AuthenticationStatus.onResumeError:
+                        if (lastRoute != HomePage.routeName) {
+                          helpers.showSnackbar(context, 'Session expired');
+                          _navigator.pushNamedAndRemoveUntil(
+                            HomePage.routeName,
+                            (route) => false,
+                          );
+                          lastRoute = HomePage.routeName;
+                        }
+                        break;
+                      default:
+                        break;
+                    }
+                  },
+                  child: child,
+                ),
               );
             },
           ),
