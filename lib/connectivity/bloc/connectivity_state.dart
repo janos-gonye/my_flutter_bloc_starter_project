@@ -3,16 +3,16 @@ part of 'connectivity_bloc.dart';
 class ConnectivityState extends Equatable {
   const ConnectivityState({
     this.result = ConnectivityResult.none,
-    this.isInitializing = true,
+    this.isInitialized = false,
   });
 
   final ConnectivityResult result;
-  final bool isInitializing;
+  final bool isInitialized;
 
   @override
-  List<Object> get props => [result, isInitializing];
+  List<Object> get props => [result, isInitialized];
 
-  bool get isNotInitializing => !isInitializing;
+  bool get isNotInitialized => !isInitialized;
 
   bool get isConnected => result != ConnectivityResult.none;
 

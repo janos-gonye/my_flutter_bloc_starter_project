@@ -117,15 +117,18 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance?.addObserver(this);
-    BlocProvider.of<AuthenticationBloc>(context).add(ApplicationStarted());
-    debugPrint("'ApplicationStarted' event added to 'AuthenticationBloc'");
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && isAppNotFreezed) {
-      debugPrint("'ApplicationResumed' event added to 'AuthenticationBloc'");
-      BlocProvider.of<AuthenticationBloc>(context).add(ApplicationResumed());
+    debugPrint("Application life cycle state is '${state.toString()}'");
+    if (state == AppLifecycleState.resumed) {
+      if (isAppNotFreezed) {
+        debugPrint("Application is not freezed, so it can be resumed");
+        BlocProvider.of<AuthenticationBloc>(context).add(ApplicationResumed());
+      } else {
+        debugPrint("Application is freezed, so it cannot be resumed");
+      }
     }
   }
 
@@ -138,17 +141,34 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
   // Store last route, so that the application can decide if navigation
   // is necessary on application resume event.
   String lastRoute = '';
+
+  bool isAppStarting = true;
+  bool get isNotAppStarting => !isAppStarting;
+
+  bool isFreezedOnAppStart = false;
+
   bool isAppFreezed = false;
   bool get isAppNotFreezed => !isAppFreezed;
+
   NavigatorState get _navigator => _navigatorKey.currentState!;
 
   void freezeApplication() {
+    debugPrint("Freeze Application due to no connectivity");
     _navigator.pushNamed(NoConnectivityPage.routeName);
     isAppFreezed = true;
   }
 
   void unFreezeApplication() {
-    _navigator.pop();
+    debugPrint("Unfreeze Application since connection got created");
+    if (isFreezedOnAppStart) {
+      debugPrint("Application got freezed on start");
+      BlocProvider.of<AuthenticationBloc>(context).add(ApplicationStarted());
+    } else {
+      _navigator.pop();
+      debugPrint("Application didn't get freezed on start app");
+      BlocProvider.of<AuthenticationBloc>(context).add(ApplicationResumed());
+    }
+    isFreezedOnAppStart = false;
     isAppFreezed = false;
   }
 
@@ -181,16 +201,40 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
           ),
           builder: EasyLoading.init(
             builder: (context, child) {
-              return BlocListener<ConnectivityBloc, ConnectivityState>(
-                listenWhen: (previous, current) =>
-                    previous.result != current.result,
-                listener: (context, state) {
-                  if (state.isNotConnected && isAppNotFreezed) {
-                    freezeApplication();
-                  } else if (state.isConnected && isAppFreezed) {
-                    unFreezeApplication();
-                  }
-                },
+              return MultiBlocListener(
+                listeners: [
+                  // Handles connectivity issues on application start
+                  BlocListener<ConnectivityBloc, ConnectivityState>(
+                    listenWhen: (previous, current) =>
+                        isAppStarting && current.isInitialized,
+                    listener: (context, state) {
+                      isAppStarting = false;
+                      debugPrint(
+                          "Connectivity on application start: ${state.result}");
+                      if (state.isConnected) {
+                        BlocProvider.of<AuthenticationBloc>(context)
+                            .add(ApplicationStarted());
+                      } else {
+                        _navigator.pushNamed(NoConnectivityPage.routeName);
+                        isAppFreezed = true;
+                        isFreezedOnAppStart = true;
+                      }
+                    },
+                  ),
+                  // Handles connectivity issues during run
+                  BlocListener<ConnectivityBloc, ConnectivityState>(
+                    listenWhen: (previous, current) =>
+                        isNotAppStarting &&
+                        previous.isConnected != current.isConnected,
+                    listener: (context, state) {
+                      if (state.isNotConnected && isAppNotFreezed) {
+                        freezeApplication();
+                      } else if (state.isConnected && isAppFreezed) {
+                        unFreezeApplication();
+                      }
+                    },
+                  ),
+                ],
                 child: BlocListener<AuthenticationBloc, AuthenticationState>(
                   listenWhen: (previous, current) =>
                       previous != current && !isAppFreezed,

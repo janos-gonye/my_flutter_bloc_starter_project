@@ -18,17 +18,26 @@ class NoConnectivityPage extends StatelessWidget {
         body: Center(
           child: SingleChildScrollView(
             child: Column(
-              children: const [
-                Icon(
+              children: [
+                const Icon(
                   Icons.no_cell_outlined,
                   size: 280,
                 ),
-                Text(
-                  "No Connection?!",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.ac_unit_outlined),
+                    SizedBox(width: 10),
+                    Text(
+                      "No Internet?!",
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Icon(Icons.ac_unit_outlined),
+                  ],
                 ),
               ],
             ),

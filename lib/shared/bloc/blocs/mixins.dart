@@ -39,7 +39,8 @@ mixin HandleResponseErrorMixin {
       message = 'Other Error';
       if (error.error is SocketException) {
         message = 'Socket Exception. Check Server Address';
-      } else if (error.error is RangeError) {
+      } else if (error.error is RangeError ||
+          error.error.toString().contains('No host specified in URI')) {
         message = 'Server Address Not Configured';
       }
     }
