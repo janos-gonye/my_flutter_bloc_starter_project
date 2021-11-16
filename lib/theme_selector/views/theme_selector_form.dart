@@ -26,6 +26,8 @@ class ThemeSelectorForm extends StatelessWidget {
       children: [
         BlocBuilder<ThemeSelectorBloc, ThemeSelectorState>(
           builder: (context, state) {
+            final flexSchemes = FlexScheme.values.toList()
+              ..sort((a, b) => a.toString().compareTo(b.toString()));
             return Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -39,7 +41,7 @@ class ThemeSelectorForm extends StatelessWidget {
                     }
                   },
                   value: state.scheme,
-                  items: FlexScheme.values.map(
+                  items: flexSchemes.map(
                     (FlexScheme scheme) {
                       return DropdownMenuItem<FlexScheme>(
                         value: scheme,
