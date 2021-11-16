@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dio/dio.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:my_flutter_bloc_starter_project/app.dart';
 import 'package:my_flutter_bloc_starter_project/app_settings/app_settings.dart';
@@ -36,6 +39,11 @@ void main() async {
   //`appSettingsRepository.serverURI` throws an error.
   WidgetsFlutterBinding.ensureInitialized();
   await baseURIConfigurerRepository.reloadBaseURI();
+  HydratedBloc.storage = await HydratedStorage.build(
+    storageDirectory: kIsWeb
+        ? HydratedStorage.webStorageDirectory
+        : await getApplicationDocumentsDirectory(),
+  );
 
   final authenticationRepository = AuthenticationRepository(
     unAuthenticatedDio: unAuthenticatedDio,

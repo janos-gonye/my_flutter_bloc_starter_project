@@ -17,6 +17,8 @@ dependencies:
   flutter_bloc: ^7.3.3
   flutter_easyloading: ^3.0.3
   flutter_secure_storage: ^5.0.2
+  hydrated_bloc: ^7.1.0
+  path_provider: ^2.0.7
   pretty_dio_logger: ^1.1.1
   string_validator: ^0.3.0
 
