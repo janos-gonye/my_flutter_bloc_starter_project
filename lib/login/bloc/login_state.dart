@@ -11,13 +11,13 @@ enum LoginStateType {
 class LoginState extends MyFormState<LoginStateType> {
   const LoginState({
     this.username = const Username(''),
-    this.password = const Password(''),
+    this.password = const EmptyPassword(''),
     type = LoginStateType.initial,
     this.message = '',
   }) : super(type: type);
 
   final Username username;
-  final Password password;
+  final EmptyPassword password;
   final String message;
 
   @override
@@ -48,7 +48,7 @@ class LoginState extends MyFormState<LoginStateType> {
   @override
   LoginState copyWith({
     Username? username,
-    Password? password,
+    EmptyPassword? password,
     LoginStateType? type,
     String? message,
   }) {

@@ -55,7 +55,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState>
     Emitter<LoginState> emit,
   ) {
     emit(state.copyWith(
-      password: Password(event.password),
+      password: EmptyPassword(event.password),
       type: LoginStateType.data,
     ));
   }
@@ -87,7 +87,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState>
         emit(state.copyWith(
           type: LoginStateType.loggingInError,
           message: message,
-          password: const Password(''),
+          password: const EmptyPassword(''),
         ));
       }
     }

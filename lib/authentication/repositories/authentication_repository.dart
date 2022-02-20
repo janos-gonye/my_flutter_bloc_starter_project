@@ -36,7 +36,7 @@ class AuthenticationRepository {
 
   Future<void> logIn({
     required Username username,
-    required Password password,
+    required EmptyPassword password,
   }) async {
     final response = await unAuthenticatedDio.post(
       constants.apiPathAuthLogin,
